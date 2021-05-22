@@ -6,7 +6,10 @@ public class ModModule {
     private String mineVersion;
     private User user;
 
-
+    public ModModule (){
+        
+        
+    }
     
 
 
