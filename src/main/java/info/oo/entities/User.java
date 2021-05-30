@@ -1,26 +1,26 @@
-package info.oo.enitities;
+package info.oo.entities;
 
 //import java.util.ArrayList;
 
 public class User {
 
-    private String name;
+    private String nameU;
     private String login;
     private String password;
     private ModModule modModules;
 
-    public User (String name, String login, String password, ModModule modModules){
-        this.name = name;
+    public User (String nameU, String login, String password, ModModule modModules){
+        this.nameU = nameU;
         this.login = login;
         this.password = password;
     }
 
-    public String getName(){
-        return name;
+    public String getNameU(){
+        return nameU;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setNameU(String nameU){
+        this.nameU = nameU;
     }
 
     public String getLogin(){
