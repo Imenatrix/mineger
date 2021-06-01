@@ -1,26 +1,27 @@
 package info.oo.entities;
 
-//import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class User {
 
-    private String nameU;
+    private String name;
     private String login;
     private String password;
-    private ModModule modModules;
+    private ArrayList<ModModule> modModules = new ArrayList<ModModule>();
 
-    public User (String nameU, String login, String password, ModModule modModules){
-        this.nameU = nameU;
+    public User (String name, String login, String password, ModModule modModules){
+        this.name = name;
         this.login = login;
         this.password = password;
+        this.modModules.add(modModules);
     }
 
-    public String getNameU(){
-        return nameU;
+    public String getName(){
+        return name;
     }
 
-    public void setNameU(String nameU){
-        this.nameU = nameU;
+    public void setName(String name){
+        this.name = name;
     }
 
     public String getLogin(){
@@ -38,7 +39,14 @@ public class User {
     public void setPassword(String password){
         this.password = password;
     }
-
-
-
+    
+    
+    @Override
+    public String toString(){
+        return "User { name: " 
+            + name + " login: " 
+            + login + " password: " 
+            + password + " modModules: " 
+            + modModules + " }";
+    }
 }
