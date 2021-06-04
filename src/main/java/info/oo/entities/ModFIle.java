@@ -7,14 +7,14 @@ public class ModFile {
     private int id;
     private String fileName;
     private URL url;
-    private String mineVersion;
+    private String minecraftVersion;
     private Mod mod;
 
-    public ModFile(int id, String fileName, URL url, String mineVersion, Mod mod) {
+    public ModFile(int id, String fileName, URL url, String minecraftVersion, Mod mod) {
         this.id = id;
         this.fileName = fileName;
         this.url = url;
-        this.mineVersion = mineVersion;
+        this.minecraftVersion = minecraftVersion;
         this.mod = mod;
     }
 
