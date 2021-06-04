@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class ModOrigin {
 
     private String name;
-    private java.net.URL link;
+    private java.net.URL url;
     private ArrayList<Mod> mods = new ArrayList<Mod>(); 
 
-    public ModOrigin (String name, java.net.URL link, Mod mods){
+    public ModOrigin (String name, java.net.URL url, Mod mods){
         this.name = name;
-        this.link = link;
+        this.url = url;
         this.mods.add(mods);
     }
 
