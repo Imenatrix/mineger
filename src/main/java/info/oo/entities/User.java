@@ -7,13 +7,13 @@ public class User {
     private String name;
     private String login;
     private String password;
-    private ArrayList<ModModule> modModules = new ArrayList<ModModule>();
+    private ArrayList<ModModule> modModules;
 
-    public User (String name, String login, String password, ModModule modModules){
+    public User (String name, String login, String password, ArrayList<ModModule> modModules){
         this.name = name;
         this.login = login;
         this.password = password;
-        this.modModules.add(modModules);
+        this.modModules = modModules;
     }
 
     public String getName(){

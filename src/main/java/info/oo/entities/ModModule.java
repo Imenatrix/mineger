@@ -7,14 +7,14 @@ public class ModModule {
     private String name;
     private String mineVersion;
     private User user;
-    private ArrayList<Mod> mods = new ArrayList<Mod>();
+    private ArrayList<Mod> mods;
     private ModLoader modLoader;
 
-    public ModModule (String name, String mineVersion, User user, Mod mods, ModLoader modLoader){
+    public ModModule (String name, String mineVersion, User user, ArrayList<Mod> mods, ModLoader modLoader){
         this.name = name;
         this.mineVersion = mineVersion;
         this.user = user;
-        this.mods.add(mods);
+        this.mods = mods;
         this.modLoader = modLoader;
     }
 
