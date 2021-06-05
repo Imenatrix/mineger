@@ -5,6 +5,7 @@ import info.oo.entities.ModOrigin;
 
 public interface IModOriginDAO {
 
+    public ModOrigin getById(int id);
     public ArrayList<ModOrigin> getAll();
     
 }
