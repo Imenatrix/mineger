@@ -5,6 +5,7 @@ import info.oo.entities.ModLoader;
 
 public interface IModLoaderDAO {
     
+    public ModLoader getById(int id);
     public ArrayList<ModLoader> getAll();
 
 }
