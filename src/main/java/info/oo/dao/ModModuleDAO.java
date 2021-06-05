@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IUserDAO;
@@ -15,10 +16,12 @@ import info.oo.entities.ModModule;
 public class ModModuleDAO implements IModModuleDAO {
 
     private IUserDAO userDAO;
+    private IModFileDAO modFileDAO;
     private IModLoaderDAO modLoaderDAO;
 
-    public ModModuleDAO(IUserDAO userDAO, IModLoaderDAO modLoaderDAO) {
+    public ModModuleDAO(IUserDAO userDAO, IModFileDAO modFileDAO, IModLoaderDAO modLoaderDAO) {
         this.userDAO = userDAO;
+        this.modFileDAO = modFileDAO;
         this.modLoaderDAO = modLoaderDAO;
     }
     
@@ -38,7 +41,7 @@ public class ModModuleDAO implements IModModuleDAO {
                     result.getString("name"),
                     result.getString("minecraft_version"),
                     userDAO.getById(result.getInt("user_id")),
-                    null,
+                    modFileDAO.getAllByModModuleId(result.getInt("id")),
                     modLoaderDAO.getById(result.getInt("mod_loader_id"))
                 );
                 modModules.add(modModule);
