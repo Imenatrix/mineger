@@ -20,5 +20,8 @@ public class Mod {
         this.modOrigin = modOrigin;
     }
 
+    public int getId() {
+        return this.id;
+    }
 
 }
