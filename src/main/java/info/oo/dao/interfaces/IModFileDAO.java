@@ -5,6 +5,7 @@ import info.oo.entities.ModFile;
 
 public interface IModFileDAO {
     
+    public ModFile getById(int id);
     public ArrayList<ModFile> getAll();
 
 }
