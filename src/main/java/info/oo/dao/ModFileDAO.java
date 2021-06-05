@@ -8,11 +8,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.database.ConnectionFactory;
 import info.oo.entities.ModFile;
 
 public class ModFileDAO implements IModFileDAO {
+
+    private IModDAO modDAO;
+
+    public ModFileDAO(IModDAO modDAO) {
+        this.modDAO = modDAO;
+    }
     
     public ArrayList<ModFile> getAll() {
         String query = "select * from mod_file;";
@@ -29,7 +36,7 @@ public class ModFileDAO implements IModFileDAO {
                     result.getString("file_name"),
                     new URL(result.getString("url")),
                     result.getString("minecraft_version"),
-                    null
+                    modDAO.getById(result.getInt("mod_id"))
                 );
                 modFiles.add(modFile);
             }
