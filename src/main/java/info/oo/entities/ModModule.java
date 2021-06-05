@@ -8,15 +8,15 @@ public class ModModule {
     private String name;
     private String minecraftVersion;
     private User user;
-    private ArrayList<Mod> mods;
+    private ArrayList<ModFile> modFiles;
     private ModLoader modLoader;
 
-    public ModModule(int id, String name, String minecraftVersion, User user, ArrayList<Mod> mods, ModLoader modLoader) {
+    public ModModule(int id, String name, String minecraftVersion, User user, ArrayList<ModFile> modFiles, ModLoader modLoader) {
         this.id = id;
         this.name = name;
         this.minecraftVersion = minecraftVersion;
         this.user = user;
-        this.mods = mods;
+        this.modFiles= modFiles;
         this.modLoader = modLoader;
     }
 
