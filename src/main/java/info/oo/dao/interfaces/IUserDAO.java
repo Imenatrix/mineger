@@ -6,6 +6,7 @@ import info.oo.entities.User;
 
 public interface IUserDAO {
     
+    public User getById(int id);
     public ArrayList<User> getAll();
 
 }
