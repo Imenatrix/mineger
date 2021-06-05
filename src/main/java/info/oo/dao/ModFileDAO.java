@@ -94,4 +94,40 @@ public class ModFileDAO implements IModFileDAO {
         return modFiles;
     }
 
+    public ArrayList<ModFile> getAllByModModuleId(int id) {
+
+        String query = "select * from file_module join mod_file where mod_module_id = ? and id = mod_file_id;";
+        ArrayList<ModFile> modFiles = new ArrayList<ModFile>();
+
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setInt(1, id);
+            try (
+                ResultSet result = stmt.executeQuery();
+            ) {
+                while(result.next()) {
+                    ModFile modFile = new ModFile(
+                        result.getInt("id"),
+                        result.getString("file_name"),
+                        new URL(result.getString("url")),
+                        result.getString("minecraft_version"),
+                        modDAO.getById(result.getInt("mod_id"))
+                    );
+                    modFiles.add(modFile);
+                }
+            }
+        }
+        catch (MalformedURLException e) {
+            System.out.println(e);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return modFiles;
+
+    } 
+
 }
