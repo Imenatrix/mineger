@@ -24,4 +24,8 @@ public class Mod {
         return this.id;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 }
