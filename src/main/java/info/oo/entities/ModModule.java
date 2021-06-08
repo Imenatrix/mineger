@@ -20,6 +20,8 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
-
+    public String getName() {
+        return this.name;
+    }
 
 }
