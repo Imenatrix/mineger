@@ -24,4 +24,8 @@ public class ModModule {
         return this.name;
     }
 
+    public ArrayList<ModFile> getModFiles() {
+        return this.modFiles;
+    }
+
 }
