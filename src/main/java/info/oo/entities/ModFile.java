@@ -26,4 +26,8 @@ public class ModFile {
         return this.fileName;
     }
 
+    public Mod getMod() {
+        return this.mod;
+    }
+
 }
