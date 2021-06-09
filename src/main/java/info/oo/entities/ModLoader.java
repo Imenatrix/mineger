@@ -17,4 +17,13 @@ public class ModLoader {
     public int getId() {
         return this.id;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public URL getURL() {
+        return this.url;
+    }
+    
 }

@@ -26,6 +26,14 @@ public class ModFile {
         return this.fileName;
     }
 
+    public URL getURL() {
+        return this.url;
+    }
+
+    public String getMinecraftVersion() {
+        return this.minecraftVersion;
+    }
+
     public Mod getMod() {
         return this.mod;
     }
