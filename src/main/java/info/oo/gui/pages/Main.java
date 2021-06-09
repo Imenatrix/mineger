@@ -53,7 +53,7 @@ public class Main {
 
     public Main(IModFileDAO modFileDAO, ObservableList<ModModule> modModules) {
         this.page = 0;
-        this.totalPages = 0;
+        this.totalPages = 1;
         this.modFileDAO = modFileDAO;
         this.modModules = modModules;
     }
@@ -61,8 +61,6 @@ public class Main {
     @FXML
     public void initialize() {
         listModModules.setItems(modModules);
-        configureCellFactories();
-
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
@@ -81,6 +79,8 @@ public class Main {
                 updateLblPaginator();
             }
         });
+        configureCellFactories();
+        updateLblPaginator();
     }
 
     private void updateLblPaginator() {
