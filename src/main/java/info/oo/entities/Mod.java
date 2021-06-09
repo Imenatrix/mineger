@@ -28,4 +28,8 @@ public class Mod {
         return this.name;
     }
 
+    public String getSummary() {
+        return this.summary;
+    }
+
 }
