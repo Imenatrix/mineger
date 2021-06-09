@@ -1,7 +1,6 @@
 package info.oo.gui.pages;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import info.oo.entities.ModFile;
