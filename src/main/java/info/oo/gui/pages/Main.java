@@ -1,11 +1,14 @@
 package info.oo.gui.pages;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.gui.components.ModPod;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,21 +41,22 @@ public class Main {
     private ListView<ModFile> listModFiles;
 
     private ObservableList<ModModule> modModules;
-    private ObservableList<ModFile> modFiles;
 
     public Main(ObservableList<ModModule> modModules) {
         this.modModules = modModules;
-        this.modFiles = FXCollections.observableArrayList();
-        for (ModModule modModule : modModules) {
-            modFiles.addAll(modModule.getModFiles());
-        }
     }
 
     @FXML
     public void initialize() {
         listModModules.setItems(modModules);
-        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
         configureCellFactories();
+
+        listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
+            @Override
+            public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
+                listModFiles.setItems(FXCollections.observableArrayList(newValue.getModFiles()));
+            }
+        });
     }
 
     private void configureCellFactories() {
