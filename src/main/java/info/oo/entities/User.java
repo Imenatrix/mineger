@@ -49,6 +49,10 @@ public class User {
     public void setPassword(String password){
         this.password = password;
     }
+
+    public ArrayList<ModModule> getModModules() {
+        return this.modModules;
+    }
     
     
     @Override
