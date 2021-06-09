@@ -50,6 +50,7 @@ public class Main {
     private int totalPages;
     private IModFileDAO modFileDAO;
     private ObservableList<ModModule> modModules;
+    private ModModule selectedModModule;
 
     public Main(IModFileDAO modFileDAO, ObservableList<ModModule> modModules) {
         this.page = 0;
@@ -64,19 +65,15 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
+                selectedModModule = newValue;
                 totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersion(
                     20,
-                    newValue.getModLoader().getId(),
-                    newValue.getMinecraftVersion()
+                    selectedModModule.getModLoader().getId(),
+                    selectedModModule.getMinecraftVersion()
                 );
-                ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
-                    20,
-                    page,
-                    newValue.getModLoader().getId(),
-                    newValue.getMinecraftVersion()
-                );
-                listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+                page = 0;
                 updateLblPaginator();
+                updateListModFiles();
             }
         });
         configureCellFactories();
@@ -85,6 +82,16 @@ public class Main {
 
     private void updateLblPaginator() {
         lblPaginator.setText((page + 1) + " de " + totalPages);
+    }
+
+    private void updateListModFiles() {
+        ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
+            20,
+            page,
+            selectedModModule.getModLoader().getId(),
+            selectedModModule.getMinecraftVersion()
+        );
+        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
 
     private void configureCellFactories() {
@@ -111,6 +118,7 @@ public class Main {
             page--;
         }
         updateLblPaginator();
+        updateListModFiles();
     }
 
     @FXML
@@ -120,6 +128,7 @@ public class Main {
             page++;
         }
         updateLblPaginator();
+        updateListModFiles();
     }
 
 }
