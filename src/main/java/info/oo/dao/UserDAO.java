@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.database.ConnectionFactory;
 import info.oo.entities.User;
@@ -15,8 +16,11 @@ public class UserDAO implements IUserDAO {
 
     private ArrayList<User> cache;
 
-    public UserDAO() {
+    private IModModuleDAO modModuleDAO;
+
+    public UserDAO(IModModuleDAO modModuleDAO) {
         this.cache = new ArrayList<User>();
+        this.modModuleDAO = modModuleDAO;
     }
 
     public User getById(int id) {
@@ -43,7 +47,7 @@ public class UserDAO implements IUserDAO {
                     result.getString("name"),
                     result.getString("login"),
                     result.getString("password"),
-                    null
+                    modModuleDAO.getAllByUserId(result.getInt("id"))
                 );
             }
         }
@@ -71,7 +75,7 @@ public class UserDAO implements IUserDAO {
                     result.getString("name"),
                     result.getString("login"),
                     result.getString("password"),
-                    null
+                    modModuleDAO.getAllByUserId(result.getInt("id"))
                 );
                 users.add(user);
             }
