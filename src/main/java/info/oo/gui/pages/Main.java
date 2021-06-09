@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -41,12 +42,23 @@ public class Main {
     @FXML
     private ListView<ModFile> listModFiles;
 
+    @FXML
+    private Button btnPrevious;
+
+    @FXML
+    private Label lblPaginator;
+
+    @FXML
+    private Button btnNext;
+
     private int page;
+    private int totalPages;
     private IModFileDAO modFileDAO;
     private ObservableList<ModModule> modModules;
 
     public Main(IModFileDAO modFileDAO, ObservableList<ModModule> modModules) {
         this.page = 0;
+        this.totalPages = 0;
         this.modFileDAO = modFileDAO;
         this.modModules = modModules;
     }
@@ -59,6 +71,11 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
+                totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersion(
+                    20,
+                    newValue.getModLoader().getId(),
+                    newValue.getMinecraftVersion()
+                );
                 ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
                     20,
                     page,
@@ -66,11 +83,14 @@ public class Main {
                     newValue.getMinecraftVersion()
                 );
                 listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+                updateLblPaginator();
             }
         });
     }
 
-
+    private void updateLblPaginator() {
+        lblPaginator.setText((page + 1) + " de " + totalPages);
+    }
 
     private void configureCellFactories() {
         listModModules.setCellFactory(list -> new ListCell<ModModule>() {
