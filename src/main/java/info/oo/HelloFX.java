@@ -37,7 +37,10 @@ public class HelloFX extends Application {
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));
-            loader.setControllerFactory(aClass -> new Main(FXCollections.observableArrayList(userDAO.getById(1).getModModules())));
+            loader.setControllerFactory(aClass -> new Main(
+                modFileDAO,
+                FXCollections.observableArrayList(userDAO.getById(1).getModModules())
+            ));
             
             Parent root = loader.load();
             Scene scene = new Scene(root);
