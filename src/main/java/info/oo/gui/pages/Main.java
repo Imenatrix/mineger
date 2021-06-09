@@ -44,13 +44,7 @@ public class Main {
     private ListView<ModFile> listModFiles;
 
     @FXML
-    private Button btnPrevious;
-
-    @FXML
     private Label lblPaginator;
-
-    @FXML
-    private Button btnNext;
 
     private int page;
     private int totalPages;
