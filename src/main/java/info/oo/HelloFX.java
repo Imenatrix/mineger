@@ -28,16 +28,16 @@ public class HelloFX extends Application {
     public void start(Stage stage) {
         
         try {
-            IUserDAO userDAO = new UserDAO();
             IModLoaderDAO modLoaderDAO = new ModLoaderDAO();
             IModOriginDAO modOriginDAO = new ModOriginDAO();
             IModDAO modDAO = new ModDAO(modLoaderDAO, modOriginDAO);
             IModFileDAO modFileDAO = new ModFileDAO(modDAO);
-            IModModuleDAO modModuleDAO = new ModModuleDAO(userDAO, modFileDAO, modLoaderDAO);
+            IModModuleDAO modModuleDAO = new ModModuleDAO(modFileDAO, modLoaderDAO);
+            IUserDAO userDAO = new UserDAO(modModuleDAO);
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));
-            loader.setControllerFactory(aClass -> new Main(FXCollections.observableArrayList(modModuleDAO.getAll())));
+            loader.setControllerFactory(aClass -> new Main(FXCollections.observableArrayList(userDAO.getById(1).getModModules())));
             
             Parent root = loader.load();
             Scene scene = new Scene(root);
