@@ -116,9 +116,9 @@ public class Main {
         event.consume();
         if (page > 0) {
             page--;
+            updateLblPaginator();
+            updateListModFiles();
         }
-        updateLblPaginator();
-        updateListModFiles();
     }
 
     @FXML
@@ -126,9 +126,9 @@ public class Main {
         event.consume();
         if (page < (totalPages - 1)) {
             page++;
+            updateLblPaginator();
+            updateListModFiles();
         }
-        updateLblPaginator();
-        updateListModFiles();
     }
 
 }
