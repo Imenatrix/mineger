@@ -50,4 +50,36 @@ public class ModModuleDAO implements IModModuleDAO {
         return modModules;
     }
 
+    public ArrayList<ModModule> getAllByUserId(int id) {
+        
+        String query = "select * from mod_module where user_id = ?;";
+        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
+
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setInt(1, id);
+            try (        
+                ResultSet result = stmt.executeQuery();
+            ) {
+                while(result.next()) {
+                    ModModule modModule = new ModModule(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("minecraft_version"),
+                        modFileDAO.getAllByModModuleId(result.getInt("id")),
+                        modLoaderDAO.getById(result.getInt("mod_loader_id"))
+                    );
+                    modModules.add(modModule);
+            }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return modModules;
+    }
+
 }
