@@ -128,6 +128,56 @@ public class ModFileDAO implements IModFileDAO {
 
         return modFiles;
 
-    } 
+    }
+
+    public ArrayList<ModFile> getPaginatedByModLoaderIdAndMinecraftVersion(int limit, int page, int modLoaderId, String minecraftVersion) {
+
+        String query =
+            "select f.* from " +
+                "mod_file f join " +
+                "`mod` m " +
+            "where " +
+                "m.id = f.mod_id " +
+                "and f.minecraft_version = ? " +
+                "and m.mod_loader_id = ? " +
+            "order by f.id " +
+            "limit ? " +
+            "offset ?;";
+        
+        ArrayList<ModFile> modFiles = new ArrayList<ModFile>();
+        
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setString(1, minecraftVersion);
+            stmt.setInt(2, modLoaderId);
+            stmt.setInt(3, limit);
+            stmt.setInt(4, page);
+
+            try (
+                ResultSet result = stmt.executeQuery();
+            ) {
+                while (result.next()) {
+                    ModFile modFile = new ModFile(
+                        result.getInt("id"),
+                        result.getString("file_name"),
+                        new URL(result.getString("url")),
+                        result.getString("minecraft_version"),
+                        modDAO.getById(result.getInt("mod_id"))
+                    );
+                    modFiles.add(modFile);
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        catch (MalformedURLException e) {
+            System.out.println(e);
+        }
+
+        return modFiles;
+    }
 
 }
