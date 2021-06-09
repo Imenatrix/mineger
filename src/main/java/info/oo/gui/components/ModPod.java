@@ -53,6 +53,7 @@ public class ModPod extends ListCell<ModFile> {
         else {
             this.container.setVisible(true);
             lblName.setText(item.getMod().getName());
+            lblSummary.setText(item.getMod().getSummary());
         }
     }
 }
