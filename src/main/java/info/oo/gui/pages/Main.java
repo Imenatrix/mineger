@@ -1,8 +1,10 @@
 package info.oo.gui.pages;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.gui.components.ModPod;
@@ -39,9 +41,13 @@ public class Main {
     @FXML
     private ListView<ModFile> listModFiles;
 
+    private int page;
+    private IModFileDAO modFileDAO;
     private ObservableList<ModModule> modModules;
 
-    public Main(ObservableList<ModModule> modModules) {
+    public Main(IModFileDAO modFileDAO, ObservableList<ModModule> modModules) {
+        this.page = 0;
+        this.modFileDAO = modFileDAO;
         this.modModules = modModules;
     }
 
@@ -53,10 +59,18 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
-                listModFiles.setItems(FXCollections.observableArrayList(newValue.getModFiles()));
+                ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
+                    20,
+                    page,
+                    newValue.getModLoader().getId(),
+                    newValue.getMinecraftVersion()
+                );
+                listModFiles.setItems(FXCollections.observableArrayList(modFiles));
             }
         });
     }
+
+
 
     private void configureCellFactories() {
         listModModules.setCellFactory(list -> new ListCell<ModModule>() {
