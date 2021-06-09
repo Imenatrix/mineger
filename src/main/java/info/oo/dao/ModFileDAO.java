@@ -188,7 +188,7 @@ public class ModFileDAO implements IModFileDAO {
             stmt.setString(1, minecraftVersion);
             stmt.setInt(2, modLoaderId);
             stmt.setInt(3, limit);
-            stmt.setInt(4, page);
+            stmt.setInt(4, page * limit);
 
             try (
                 ResultSet result = stmt.executeQuery();
