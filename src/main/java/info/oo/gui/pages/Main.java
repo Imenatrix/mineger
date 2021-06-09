@@ -12,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -107,6 +108,24 @@ public class Main {
         });
 
         listModFiles.setCellFactory(list -> new ModPod());
+    }
+
+    @FXML
+    private void onBtnPreviousAction(ActionEvent event) {
+        event.consume();
+        if (page > 0) {
+            page--;
+        }
+        updateLblPaginator();
+    }
+
+    @FXML
+    private void onBtnNextAction(ActionEvent event) {
+        event.consume();
+        if (page < (totalPages - 1)) {
+            page++;
+        }
+        updateLblPaginator();
     }
 
 }
