@@ -31,7 +31,20 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" />
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onBtnNewAction" text="Novo" />
+                        <Button mnemonicParsing="false" text="Apagar" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
             <VBox HBox.hgrow="ALWAYS">
                <children>
                   <ListView fx:id="listModFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

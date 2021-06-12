@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.entities.ModFile;
+import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.gui.components.ModPod;
 import javafx.beans.value.ChangeListener;
@@ -14,11 +15,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class Main {
 
@@ -51,12 +55,16 @@ public class Main {
     private IModFileDAO modFileDAO;
     private ObservableList<ModModule> modModules;
     private ModModule selectedModModule;
+    private ObservableList<String> versions;
+    private ObservableList<ModLoader> modLoaders;
 
-    public Main(IModFileDAO modFileDAO, ObservableList<ModModule> modModules) {
+    public Main(IModFileDAO modFileDAO, ObservableList<String> versions, ObservableList<ModModule> modModules, ObservableList<ModLoader> modLoaders) {
         this.page = 0;
         this.totalPages = 1;
         this.modFileDAO = modFileDAO;
         this.modModules = modModules;
+        this.versions = versions;
+        this.modLoaders = modLoaders;
     }
 
     @FXML
@@ -129,6 +137,16 @@ public class Main {
             updateLblPaginator();
             updateListModFiles();
         }
+    }
+
+    @FXML
+    void onBtnNewAction(ActionEvent event) {
+        Stage popup = new Stage();
+        NewModModule newModModule = new NewModModule(versions, modLoaders);
+        Scene scene = new Scene(newModModule);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setScene(scene);
+        popup.show();
     }
 
 }
