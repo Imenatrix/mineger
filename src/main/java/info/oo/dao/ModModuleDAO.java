@@ -11,6 +11,7 @@ import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.database.ConnectionFactory;
 import info.oo.entities.ModModule;
+import info.oo.entities.User;
 
 public class ModModuleDAO implements IModModuleDAO {
 
@@ -80,6 +81,27 @@ public class ModModuleDAO implements IModModuleDAO {
         }
 
         return modModules;
+    }
+
+    public boolean insert(ModModule modModule, User user) {
+
+        String query = "insert into mod_module(name, user_id, mod_loader_id, minecraft_version) values (?, ?, ?, ?)";
+
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setString(1, modModule.getName());
+            stmt.setInt(2, user.getId());
+            stmt.setInt(3, modModule.getModLoader().getId());
+            stmt.setString(4, modModule.getMinecraftVersion());
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+
     }
 
 }
