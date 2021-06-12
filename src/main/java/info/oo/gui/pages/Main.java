@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
+import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,19 +54,23 @@ public class Main {
 
     private int page;
     private int totalPages;
-    private IModFileDAO modFileDAO;
-    private ObservableList<ModModule> modModules;
     private ModModule selectedModModule;
+    private User user;
+    private ObservableList<ModModule> modModules;
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
+    private IModFileDAO modFileDAO;
+    private IModModuleDAO modModuleDAO;
 
-    public Main(IModFileDAO modFileDAO, ObservableList<String> versions, ObservableList<ModModule> modModules, ObservableList<ModLoader> modLoaders) {
+    public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO) {
         this.page = 0;
         this.totalPages = 1;
-        this.modFileDAO = modFileDAO;
+        this.user = user;
         this.modModules = modModules;
         this.versions = versions;
         this.modLoaders = modLoaders;
+        this.modFileDAO = modFileDAO;
+        this.modModuleDAO = modModuleDAO;
     }
 
     @FXML
@@ -142,7 +148,7 @@ public class Main {
     @FXML
     void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
-        NewModModule newModModule = new NewModModule(versions, modLoaders);
+        NewModModule newModModule = new NewModModule(user, modModules, versions, modLoaders, modModuleDAO);
         Scene scene = new Scene(newModModule);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);

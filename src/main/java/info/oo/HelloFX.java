@@ -44,10 +44,12 @@ public class HelloFX extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));
             loader.setControllerFactory(aClass -> new Main(
-                modFileDAO,
-                FXCollections.observableArrayList(minecraftVersionDAO.getAll()),
+                user,
                 FXCollections.observableArrayList(user.getModModules()),
-                FXCollections.observableArrayList(modLoaderDAO.getAll())
+                FXCollections.observableArrayList(minecraftVersionDAO.getAll()),
+                FXCollections.observableArrayList(modLoaderDAO.getAll()),
+                modFileDAO,
+                modModuleDAO
             ));
             
             Parent root = loader.load();
