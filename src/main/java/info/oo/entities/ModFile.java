@@ -18,6 +18,10 @@ public class ModFile {
         this.mod = mod;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public String getFileName() {
         return this.fileName;
     }

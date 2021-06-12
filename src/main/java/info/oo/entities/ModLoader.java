@@ -14,4 +14,7 @@ public class ModLoader {
         this.url = url;
     }
 
+    public int getId() {
+        return this.id;
+    }
 }
