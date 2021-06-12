@@ -28,8 +28,20 @@ public class Mod {
         return this.name;
     }
 
+    public URL getURL() {
+        return this.url;
+    }
+
     public String getSummary() {
         return this.summary;
+    }
+
+    public ModLoader modLoader() {
+        return this.modLoader;
+    }
+
+    public ModOrigin getModOrigin() {
+        return this.modOrigin;
     }
 
 }

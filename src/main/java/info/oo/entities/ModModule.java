@@ -18,12 +18,24 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public String getName() {
         return this.name;
     }
 
+    public String getMinecraftVersion() {
+        return this.minecraftVersion;
+    }
+
     public ArrayList<ModFile> getModFiles() {
         return this.modFiles;
+    }
+
+    public ModLoader getModLoader() {
+        return this.modLoader;
     }
 
 }
