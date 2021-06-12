@@ -18,6 +18,12 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
+    public String getName() {
+        return this.name;
+    }
 
+    public ArrayList<ModFile> getModFiles() {
+        return this.modFiles;
+    }
 
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root prefHeight="75.0" prefWidth="500.0" type="ListCell" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <graphic>
+      <HBox fx:id="container" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="lblName" text="Label">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblSummary" text="Label" />
+               </children>
+               <padding>
+                  <Insets left="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <Button minWidth="-Infinity" mnemonicParsing="false" prefHeight="75.0" prefWidth="75.0" text="Button" />
+         </children>
+      </HBox>
+   </graphic>
+</fx:root>

@@ -20,6 +20,13 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.jfxcore</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>15-ea+1</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.25</version>

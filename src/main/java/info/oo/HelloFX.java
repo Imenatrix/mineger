@@ -1,32 +1,53 @@
 package info.oo;
 
+import java.io.IOException;
+
+import info.oo.dao.ModDAO;
+import info.oo.dao.ModFileDAO;
+import info.oo.dao.ModLoaderDAO;
+import info.oo.dao.ModModuleDAO;
+import info.oo.dao.ModOriginDAO;
+import info.oo.dao.UserDAO;
+import info.oo.dao.interfaces.IModDAO;
+import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.dao.interfaces.IModLoaderDAO;
+import info.oo.dao.interfaces.IModModuleDAO;
+import info.oo.dao.interfaces.IModOriginDAO;
+import info.oo.dao.interfaces.IUserDAO;
+import info.oo.gui.pages.Main;
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 public class HelloFX extends Application {
 
     public void start(Stage stage) {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+        
+        try {
+            IModLoaderDAO modLoaderDAO = new ModLoaderDAO();
+            IModOriginDAO modOriginDAO = new ModOriginDAO();
+            IModDAO modDAO = new ModDAO(modLoaderDAO, modOriginDAO);
+            IModFileDAO modFileDAO = new ModFileDAO(modDAO);
+            IModModuleDAO modModuleDAO = new ModModuleDAO(modFileDAO, modLoaderDAO);
+            IUserDAO userDAO = new UserDAO(modModuleDAO);
 
-        ImageView imageView = new ImageView(new Image(HelloFX.class.getResourceAsStream("openduke.png")));
-        imageView.setFitHeight(200);
-        imageView.setPreserveRatio(true);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));
+            loader.setControllerFactory(aClass -> new Main(FXCollections.observableArrayList(userDAO.getById(1).getModModules())));
+            
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
 
-        VBox root = new VBox(30, imageView, label);
-        root.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root, 640, 480);
-        scene.getStylesheets().add(HelloFX.class.getResource("styles.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
     }
 
     public static void main(String[] args) {
