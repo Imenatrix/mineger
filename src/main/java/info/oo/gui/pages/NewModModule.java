@@ -69,6 +69,18 @@ public class NewModModule extends GridPane {
                 }
             }
         });
+        cbModLoader.setButtonCell(new ListCell<ModLoader>() {
+            @Override
+            protected void updateItem(ModLoader item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                }
+                else {
+                    setText(item.getName());
+                }
+            }
+        });
     }
 
     @FXML
