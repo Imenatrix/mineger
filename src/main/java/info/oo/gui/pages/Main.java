@@ -120,7 +120,7 @@ public class Main {
             }
         });
 
-        listModFiles.setCellFactory(list -> new ModPod());
+        listModFiles.setCellFactory(list -> new ModPod(listModModules.getSelectionModel().getSelectedItem()));
     }
 
     @FXML

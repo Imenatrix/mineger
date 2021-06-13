@@ -25,7 +25,7 @@
                   <Insets left="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Button minWidth="-Infinity" mnemonicParsing="false" prefHeight="75.0" prefWidth="75.0" text="Button" />
+            <Button fx:id="btnInstall" minWidth="-Infinity" mnemonicParsing="false" prefHeight="75.0" prefWidth="75.0" text="Button" />
          </children>
       </HBox>
    </graphic>

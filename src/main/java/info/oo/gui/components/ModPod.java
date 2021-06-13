@@ -5,8 +5,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import info.oo.entities.ModFile;
+import info.oo.entities.ModModule;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
@@ -27,9 +29,15 @@ public class ModPod extends ListCell<ModFile> {
 
     @FXML HBox container;
 
-    public ModPod() {
+    @FXML
+    private Button btnInstall;
+
+    private ModModule modModule;
+
+    public ModPod(ModModule modModule) {
         super();
         loadFXML();
+        this.modModule = modModule;
     }
 
     private void loadFXML() {
@@ -44,6 +52,14 @@ public class ModPod extends ListCell<ModFile> {
         }
     }
 
+    private boolean isSelected(ModFile modFile) {
+        return modModule
+            .getModFiles()
+            .stream()
+            .map(item -> item.getId())
+            .anyMatch(id -> id == modFile.getId());
+    }
+
     @Override
     protected void updateItem(ModFile item, boolean empty) {
         super.updateItem(item, empty);
@@ -54,6 +70,12 @@ public class ModPod extends ListCell<ModFile> {
             this.container.setVisible(true);
             lblName.setText(item.getMod().getName());
             lblSummary.setText(item.getMod().getSummary());
+            if (isSelected(item)) {
+                this.btnInstall.setText("Remover");
+            }
+            else {
+                this.btnInstall.setText("Adicionar");
+            }
         }
     }
 }
