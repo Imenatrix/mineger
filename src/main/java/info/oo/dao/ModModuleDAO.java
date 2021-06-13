@@ -104,4 +104,21 @@ public class ModModuleDAO implements IModModuleDAO {
 
     }
 
+    public boolean delete(int id) {
+
+        String query = "delete from mod_module where id = ?";
+
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
 }
