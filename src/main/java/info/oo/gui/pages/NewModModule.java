@@ -105,15 +105,15 @@ public class NewModModule extends GridPane {
 
     @FXML
     void onBtnSaveAction(ActionEvent event) {
-        ModModule modModule = new ModModule(
+        ModModule modModule = modModuleDAO.insert(new ModModule(
             txtName.getText(),
             cbVersion.getSelectionModel().getSelectedItem(),
             cbModLoader.getSelectionModel().getSelectedItem()
-        );
-        modModules.add(modModule);
-        user.getModModules().add(modModule);
-        modModuleDAO.insert(modModule, user);
-
+        ), user);
+        if (modModule != null) {
+            modModules.add(modModule);
+            user.getModModules().add(modModule);
+        }
         close();
     }
 
