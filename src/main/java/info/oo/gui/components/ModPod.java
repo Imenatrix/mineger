@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -33,6 +34,7 @@ public class ModPod extends ListCell<ModFile> {
     private Button btnInstall;
 
     private ModModule modModule;
+    private ModFile modFile;
 
     public ModPod(ModModule modModule) {
         super();
@@ -52,7 +54,7 @@ public class ModPod extends ListCell<ModFile> {
         }
     }
 
-    private boolean isSelected(ModFile modFile) {
+    private boolean isInstalled() {
         return modModule
             .getModFiles()
             .stream()
@@ -64,17 +66,18 @@ public class ModPod extends ListCell<ModFile> {
     protected void updateItem(ModFile item, boolean empty) {
         super.updateItem(item, empty);
         if (item == null || empty) {
-            this.container.setVisible(false);
+            container.setVisible(false);
         }
         else {
-            this.container.setVisible(true);
+            container.setVisible(true);
+            modFile = item;
             lblName.setText(item.getMod().getName());
             lblSummary.setText(item.getMod().getSummary());
-            if (isSelected(item)) {
-                this.btnInstall.setText("Remover");
+            if (isInstalled()) {
+                btnInstall.setText("Remover");
             }
             else {
-                this.btnInstall.setText("Adicionar");
+                btnInstall.setText("Adicionar");
             }
         }
     }
