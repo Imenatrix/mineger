@@ -141,6 +141,25 @@ public class ModModuleDAO implements IModModuleDAO {
 
     }
 
+    public boolean removeModFile(ModModule modModule, ModFile modFile) {
+
+        String query = "delete from file_module where mod_module_id = ? and mod_file_id = ?;";
+
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            stmt.setInt(1, modModule.getId());
+            stmt.setInt(2, modFile.getId());
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+
+    }
+
     public boolean delete(int id) {
 
         String query = "delete from mod_module where id = ?";
