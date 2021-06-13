@@ -155,4 +155,15 @@ public class Main {
         popup.show();
     }
 
+    @FXML
+    private void onBtnDeleteAction(ActionEvent event) {
+        event.consume();
+        if (selectedModModule != null) {
+            modModules.remove(selectedModModule);
+            user.getModModules().remove(selectedModModule);
+            modModuleDAO.delete(selectedModModule.getId());
+            selectedModModule = null;
+        }
+    }
+
 }
