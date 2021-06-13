@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import javafx.event.ActionEvent;
@@ -35,11 +36,13 @@ public class ModPod extends ListCell<ModFile> {
 
     private ModModule modModule;
     private ModFile modFile;
+    private IModModuleDAO modModuleDAO;
 
-    public ModPod(ModModule modModule) {
+    public ModPod(ModModule modModule, IModModuleDAO modModuleDAO) {
         super();
         loadFXML();
         this.modModule = modModule;
+        this.modModuleDAO = modModuleDAO;
     }
 
     private void loadFXML() {
@@ -62,6 +65,15 @@ public class ModPod extends ListCell<ModFile> {
             .anyMatch(id -> id == modFile.getId());
     }
 
+    private void updateBtnInstallText() {
+        if (isInstalled()) {
+            btnInstall.setText("Remover");
+        }
+        else {
+            btnInstall.setText("Adicionar");
+        }
+    }
+
     @Override
     protected void updateItem(ModFile item, boolean empty) {
         super.updateItem(item, empty);
@@ -73,12 +85,19 @@ public class ModPod extends ListCell<ModFile> {
             modFile = item;
             lblName.setText(item.getMod().getName());
             lblSummary.setText(item.getMod().getSummary());
-            if (isInstalled()) {
-                btnInstall.setText("Remover");
-            }
-            else {
-                btnInstall.setText("Adicionar");
-            }
+            updateBtnInstallText();
         }
+    }
+
+    @FXML
+    void onBtnInstallAction(ActionEvent event) {
+        if (isInstalled()) {
+            
+        }
+        else {
+            modModule.getModFiles().add(modFile);
+            modModuleDAO.addModFile(modModule, modFile);
+        }
+        updateBtnInstallText();
     }
 }
