@@ -92,7 +92,14 @@ public class ModPod extends ListCell<ModFile> {
     @FXML
     void onBtnInstallAction(ActionEvent event) {
         if (isInstalled()) {
-            
+            modModule.getModFiles().remove(
+                modModule.getModFiles()
+                    .stream()
+                    .filter(item -> item.getId() == modFile.getId())
+                    .findFirst()
+                    .get()
+            );
+            modModuleDAO.removeModFile(modModule, modFile);
         }
         else {
             modModule.getModFiles().add(modFile);
