@@ -163,7 +163,7 @@ public class Main {
         if (modModule != null) {
             modModules.remove(modModule);
             user.getModModules().remove(modModule);
-            modModuleDAO.delete(modModule.getId());
+            modModuleDAO.delete(modModule);
         }
     }
 

@@ -13,6 +13,6 @@ public interface IModModuleDAO {
     public ModModule insert(ModModule modModule, User user);
     public boolean addModFile(ModModule modModule, ModFile modFile);
     public boolean removeModFile(ModModule modModule, ModFile modFile);
-    public boolean delete(int id);
+    public boolean delete(ModModule modModule);
 
 }
