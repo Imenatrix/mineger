@@ -16,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class NewModModule extends GridPane {
 
@@ -62,6 +63,11 @@ public class NewModModule extends GridPane {
         }
     }
 
+    private void close() {
+        Stage stage = (Stage) getScene().getWindow();
+        stage.close();
+    }
+
     @FXML
     void initialize() {
         cbVersion.setItems(versions);
@@ -94,7 +100,7 @@ public class NewModModule extends GridPane {
 
     @FXML
     void onBtnCancelAction(ActionEvent event) {
-
+        close();
     }
 
     @FXML
@@ -107,6 +113,8 @@ public class NewModModule extends GridPane {
         modModules.add(modModule);
         user.getModModules().add(modModule);
         modModuleDAO.insert(modModule, user);
+
+        close();
     }
 
 }
