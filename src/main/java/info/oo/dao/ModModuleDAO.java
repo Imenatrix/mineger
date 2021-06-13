@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.database.ConnectionFactory;
+import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
 
@@ -83,24 +85,40 @@ public class ModModuleDAO implements IModModuleDAO {
         return modModules;
     }
 
-    public boolean insert(ModModule modModule, User user) {
+    public ModModule insert(ModModule modModule, User user) {
 
         String query = "insert into mod_module(name, user_id, mod_loader_id, minecraft_version) values (?, ?, ?, ?)";
 
         try (
             Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+
+            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
             stmt.setString(1, modModule.getName());
             stmt.setInt(2, user.getId());
             stmt.setInt(3, modModule.getModLoader().getId());
             stmt.setString(4, modModule.getMinecraftVersion());
-            return stmt.executeUpdate() == 1;
+
+            if (stmt.executeUpdate() == 1) {
+                try (
+                    ResultSet result = stmt.getGeneratedKeys();
+                ) {
+                    result.next();
+                    int id = result.getInt(1);
+                    return new ModModule(
+                        id,
+                        modModule.getName(),
+                        modModule.getMinecraftVersion(),
+                        new ArrayList<ModFile>(),
+                        modModule.getModLoader()
+                    );
+                }
+            }
         }
         catch (SQLException e) {
             System.out.println(e);
         }
-        return false;
+        return null;
 
     }
 

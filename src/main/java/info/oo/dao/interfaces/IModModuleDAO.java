@@ -9,7 +9,7 @@ public interface IModModuleDAO {
     
     public ArrayList<ModModule> getAll();
     public ArrayList<ModModule> getAllByUserId(int id);
-    public boolean insert(ModModule modModule, User user);
+    public ModModule insert(ModModule modModule, User user);
     public boolean delete(int id);
 
 }
