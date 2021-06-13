@@ -54,7 +54,6 @@ public class Main {
 
     private int page;
     private int totalPages;
-    private ModModule selectedModModule;
     private User user;
     private ObservableList<ModModule> modModules;
     private ObservableList<String> versions;
@@ -79,15 +78,14 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
-                selectedModModule = newValue;
                 totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersion(
                     20,
-                    selectedModModule.getModLoader().getId(),
-                    selectedModModule.getMinecraftVersion()
+                    newValue.getModLoader().getId(),
+                    newValue.getMinecraftVersion()
                 );
                 page = 0;
                 updateLblPaginator();
-                updateListModFiles();
+                updateListModFiles(newValue);
             }
         });
         configureCellFactories();
@@ -98,12 +96,12 @@ public class Main {
         lblPaginator.setText((page + 1) + " de " + totalPages);
     }
 
-    private void updateListModFiles() {
+    private void updateListModFiles(ModModule modModule) {
         ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
             20,
             page,
-            selectedModModule.getModLoader().getId(),
-            selectedModModule.getMinecraftVersion()
+            modModule.getModLoader().getId(),
+            modModule.getMinecraftVersion()
         );
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
@@ -131,7 +129,7 @@ public class Main {
         if (page > 0) {
             page--;
             updateLblPaginator();
-            updateListModFiles();
+            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -141,7 +139,7 @@ public class Main {
         if (page < (totalPages - 1)) {
             page++;
             updateLblPaginator();
-            updateListModFiles();
+            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -158,11 +156,11 @@ public class Main {
     @FXML
     private void onBtnDeleteAction(ActionEvent event) {
         event.consume();
-        if (selectedModModule != null) {
-            modModules.remove(selectedModModule);
-            user.getModModules().remove(selectedModModule);
-            modModuleDAO.delete(selectedModModule.getId());
-            selectedModModule = null;
+        ModModule modModule = listModModules.getSelectionModel().getSelectedItem();
+        if (modModule != null) {
+            modModules.remove(modModule);
+            user.getModModules().remove(modModule);
+            modModuleDAO.delete(modModule.getId());
         }
     }
 
