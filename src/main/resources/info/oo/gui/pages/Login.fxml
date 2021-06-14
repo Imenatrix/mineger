@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" fx:controller="teste.FXMLDocumentController">
+<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" fx:controller="testeinfo.oo.gui.pages.Login">
     <padding>
         <Insets top="20" right="20" bottom="10" left="20"/>
     </padding>
@@ -19,7 +19,7 @@
     <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     
     <HBox spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Entrar"/>
+        <Button text="Entrar" onAction="$login"/>
     </HBox>
 
     <Label fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
