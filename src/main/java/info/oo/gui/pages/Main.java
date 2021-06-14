@@ -11,6 +11,7 @@ import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
+import info.oo.utils.interfaces.IModModuleInstaller;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -60,8 +61,9 @@ public class Main {
     private ObservableList<ModLoader> modLoaders;
     private IModFileDAO modFileDAO;
     private IModModuleDAO modModuleDAO;
+    private IModModuleInstaller installer;
 
-    public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO) {
+    public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO, IModModuleInstaller installer) {
         this.page = 0;
         this.totalPages = 1;
         this.user = user;
@@ -70,6 +72,7 @@ public class Main {
         this.modLoaders = modLoaders;
         this.modFileDAO = modFileDAO;
         this.modModuleDAO = modModuleDAO;
+        this.installer = installer;
     }
 
     @FXML
@@ -165,6 +168,12 @@ public class Main {
             user.getModModules().remove(modModule);
             modModuleDAO.delete(modModule);
         }
+    }
+
+    @FXML
+    void onBtnInstallAction(ActionEvent event) {
+        event.consume();
+        installer.install(listModModules.getSelectionModel().getSelectedItem());
     }
 
 }
