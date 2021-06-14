@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
-import info.oo.entities.User;
 import info.oo.utils.interfaces.IModModuleInstaller;
 
 public class ModModuleInstaller implements IModModuleInstaller {
