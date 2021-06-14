@@ -59,8 +59,8 @@ public class Main {
     private int count;
     private User user;
     private ObservableList<ModModule> modModules;
-    private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
+    private ObservableList<String> minecraftVersions;
     private IModFileDAO modFileDAO;
     private IModModuleDAO modModuleDAO;
     private IModModuleInstaller installer;
@@ -70,7 +70,7 @@ public class Main {
         User user,
         ObservableList<ModModule> modModules,
         ObservableList<ModLoader> modLoaders,
-        ObservableList<String> versions,
+        ObservableList<String> minecraftVersions,
         IModFileDAO modFileDAO,
         IModModuleDAO modModuleDAO,
         IModModuleInstaller installer
@@ -80,7 +80,7 @@ public class Main {
         this.count = 0;
         this.user = user;
         this.modModules = modModules;
-        this.versions = versions;
+        this.minecraftVersions = minecraftVersions;
         this.modLoaders = modLoaders;
         this.modFileDAO = modFileDAO;
         this.modModuleDAO = modModuleDAO;
@@ -164,7 +164,7 @@ public class Main {
     @FXML
     void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
-        NewModModule newModModule = new NewModModule(user, modModules, versions, modLoaders, modModuleDAO);
+        NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, modModuleDAO);
         Scene scene = new Scene(newModModule);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
