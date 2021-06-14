@@ -35,7 +35,6 @@ public class ModFileDAO implements IModFileDAO {
             query,
             stmt -> stmt.setInt(1, id),
             result -> {
-                result.next();
                 ModFile modFile = resultToModFile(result);
                 cache.add(modFile);
                 return modFile;
@@ -58,9 +57,7 @@ public class ModFileDAO implements IModFileDAO {
         String query = "select * from file_module join mod_file where mod_module_id = ? and id = mod_file_id;";
         return Clarice.executeQueryOr(
             query,
-            stmt -> {
-                stmt.setInt(1, id);
-            },
+            stmt -> stmt.setInt(1, id),
             result -> resultToModFileArrayList(result),
             new ArrayList<ModFile>()
         );
@@ -119,12 +116,17 @@ public class ModFileDAO implements IModFileDAO {
     private ArrayList<ModFile> resultToModFileArrayList(ResultSet result) throws SQLException {
         ArrayList<ModFile> modFiles = new ArrayList<ModFile>();
         while (result.next()) {
-            modFiles.add(resultToModFile(result));
+            modFiles.add(parseModFileFromResult(result));
         }
         return modFiles;
     }
 
     private ModFile resultToModFile(ResultSet result) throws SQLException {
+        result.next();
+        return parseModFileFromResult(result);
+    }
+
+    private ModFile parseModFileFromResult(ResultSet result) throws SQLException {
         try {
             return new ModFile(
                 result.getInt("id"),

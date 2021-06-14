@@ -32,7 +32,6 @@ public class ModLoaderDAO implements IModLoaderDAO {
             query,
             stmt -> stmt.setInt(1, id),
             result -> {
-                result.next();
                 ModLoader modLoader = resultToModLoader(result);
                 cache.add(modLoader);
                 return modLoader;
@@ -54,12 +53,17 @@ public class ModLoaderDAO implements IModLoaderDAO {
     private ArrayList<ModLoader> resultToModLoaderArrayList(ResultSet result) throws SQLException {
         ArrayList<ModLoader> modLoaders = new ArrayList<ModLoader>();
         while(result.next()) {
-            modLoaders.add(resultToModLoader(result));
+            modLoaders.add(parseModLoaderFromResult(result));
         }
         return modLoaders;
     }
 
     private ModLoader resultToModLoader(ResultSet result) throws SQLException{
+        result.next();
+        return parseModLoaderFromResult(result);
+    }
+
+    private ModLoader parseModLoaderFromResult(ResultSet result) throws SQLException{
         try {
             return new ModLoader(
                 result.getInt("id"),

@@ -32,7 +32,6 @@ public class ModOriginDAO implements IModOriginDAO {
             query,
             stmt -> stmt.setInt(1, id),
             result -> {
-                result.next();
                 ModOrigin modOrigin = resultToModOrigin(result);
                 cache.add(modOrigin);
                 return modOrigin;
@@ -55,12 +54,17 @@ public class ModOriginDAO implements IModOriginDAO {
     private ArrayList<ModOrigin> resultToModOriginArrayList(ResultSet result) throws SQLException {
         ArrayList<ModOrigin> modOrigins = new ArrayList<ModOrigin>();
         while(result.next()) {
-            modOrigins.add(resultToModOrigin(result));
+            modOrigins.add(parseModOrigin(result));
         }
         return modOrigins;
     }
 
     private ModOrigin resultToModOrigin(ResultSet result) throws SQLException {
+        result.next();
+        return parseModOrigin(result);
+    }
+
+    private ModOrigin parseModOrigin(ResultSet result) throws SQLException {
         try {
             return new ModOrigin(
                 result.getInt("id"),

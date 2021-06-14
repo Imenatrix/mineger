@@ -36,11 +36,8 @@ public class ModDAO implements IModDAO {
         String query = "select * from `mod` where id = ?";
         return Clarice.executeQueryOr(
             query,
-            stmt -> {
-                stmt.setInt(1, id);
-            },
+            stmt -> stmt.setInt(1, id),
             result -> {
-                result.next();
                 Mod mod = resultToMod(result);
                 cache.add(mod);
                 return mod;
@@ -62,12 +59,17 @@ public class ModDAO implements IModDAO {
     private ArrayList<Mod> resultToModArrayList(ResultSet result) throws SQLException{
         ArrayList<Mod> mods = new ArrayList<Mod>();
         while(result.next()) {
-            mods.add(resultToMod(result));
+            mods.add(parseModFromResult(result));
         }
         return mods;
     }
 
     private Mod resultToMod(ResultSet result) throws SQLException {
+        result.next();
+        return parseModFromResult(result);
+    }
+
+    private Mod parseModFromResult(ResultSet result) throws SQLException {
         try {
             return new Mod(
                 result.getInt("id"),

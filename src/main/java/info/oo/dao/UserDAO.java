@@ -34,7 +34,6 @@ public class UserDAO implements IUserDAO {
             query,
             stmt -> stmt.setInt(1, id),
             result -> {
-                result.next();
                 User user = resultToUser(result);
                 cache.add(user);
                 return user;
@@ -56,13 +55,18 @@ public class UserDAO implements IUserDAO {
     private ArrayList<User> resultToUserArrayList(ResultSet result) throws SQLException {
         ArrayList<User> users = new ArrayList<User>();
         while(result.next()) {
-            User user = resultToUser(result);
+            User user = parseUserFromResult(result);
             users.add(user);
         }
         return users;
     }
 
     private User resultToUser(ResultSet result) throws SQLException {
+        result.next();
+        return parseUserFromResult(result);
+    }
+
+    private User parseUserFromResult(ResultSet result) throws SQLException {
         User user = new User(
             result.getInt("id"),
             result.getString("name"),

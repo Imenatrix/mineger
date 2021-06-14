@@ -54,7 +54,7 @@ public class ModModuleDAO implements IModModuleDAO {
             },
             (updated, result) -> {
                 return updated == 1
-                    ? resultToNewModModule(modModule, result)
+                    ? indexModModule(modModule, result)
                     : null;
             },
             (ModModule) null
@@ -117,22 +117,12 @@ public class ModModuleDAO implements IModModuleDAO {
     private ArrayList<ModModule> resultToModModuleArrayList(ResultSet result) throws SQLException {
         ArrayList<ModModule> modModules = new ArrayList<ModModule>();
         while (result.next()) {
-            modModules.add(resultToModModule(result));
+            modModules.add(parseModModuleFromResult(result));
         }
         return modModules;
     }
 
-    private ModModule resultToModModule(ResultSet result) throws SQLException {
-        return new ModModule(
-            result.getInt("id"),
-            result.getString("name"),
-            result.getString("minecraft_version"),
-            modFileDAO.getAllByModModuleId(result.getInt("id")),
-            modLoaderDAO.getById(result.getInt("mod_loader_id"))
-        );
-    }
-
-    private ModModule resultToNewModModule(ModModule modModule, ResultSet result) throws SQLException {
+    private ModModule indexModModule(ModModule modModule, ResultSet result) throws SQLException {
         result.next();
         int id = result.getInt(1);
         return new ModModule(
@@ -141,6 +131,16 @@ public class ModModuleDAO implements IModModuleDAO {
             modModule.getMinecraftVersion(),
             new ArrayList<ModFile>(),
             modModule.getModLoader()
+        );
+    }
+
+    private ModModule parseModModuleFromResult(ResultSet result) throws SQLException {
+        return new ModModule(
+            result.getInt("id"),
+            result.getString("name"),
+            result.getString("minecraft_version"),
+            modFileDAO.getAllByModModuleId(result.getInt("id")),
+            modLoaderDAO.getById(result.getInt("mod_loader_id"))
         );
     }
 
