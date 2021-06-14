@@ -2,16 +2,14 @@ package info.oo.dao;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import info.oo.dao.interfaces.IModOriginDAO;
-import info.oo.database.ConnectionFactory;
 import info.oo.entities.ModOrigin;
+import info.oo.utils.Clarice;
 
 public class ModOriginDAO implements IModOriginDAO {
 
@@ -29,65 +27,52 @@ public class ModOriginDAO implements IModOriginDAO {
             return optionalModOrigin.get();
         }
 
-        ModOrigin modOrigin = null;
         String query = "select * from mod_origin where id = ?";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, id);
-
-            try (ResultSet result = stmt.executeQuery()) {
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> stmt.setInt(1, id),
+            result -> {
                 result.next();
-                modOrigin = new ModOrigin(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    new URL(result.getString("url")),
-                    null
-                );
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        catch (MalformedURLException e) {
-            System.out.println(e);
-        } 
-
-        cache.add(modOrigin);
-        return modOrigin;
+                ModOrigin modOrigin = resultToModOrigin(result);
+                cache.add(modOrigin);
+                return modOrigin;
+            },
+            null
+        );
 
     }
 
     public ArrayList<ModOrigin> getAll() {
-
         String query = "select * from mod_origin;";
-        ArrayList<ModOrigin> modOrigins = new ArrayList<ModOrigin>();
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToModOriginArrayList(result),
+            new ArrayList<ModOrigin>()
+        );
+    }
 
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery();
-        ) {
-            while(result.next()) {
-                ModOrigin modOrigin = new ModOrigin(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    new URL(result.getString("url")),
-                    null
-                );
-                modOrigins.add(modOrigin);
-            }
+    private ArrayList<ModOrigin> resultToModOriginArrayList(ResultSet result) throws SQLException {
+        ArrayList<ModOrigin> modOrigins = new ArrayList<ModOrigin>();
+        while(result.next()) {
+            modOrigins.add(resultToModOrigin(result));
+        }
+        return modOrigins;
+    }
+
+    private ModOrigin resultToModOrigin(ResultSet result) throws SQLException {
+        try {
+            return new ModOrigin(
+                result.getInt("id"),
+                result.getString("name"),
+                new URL(result.getString("url")),
+                null
+            );
         }
         catch (MalformedURLException e) {
             System.out.println(e);
         }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return modOrigins;
+        return null;
     }
     
 }
