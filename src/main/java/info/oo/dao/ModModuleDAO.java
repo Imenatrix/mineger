@@ -52,12 +52,12 @@ public class ModModuleDAO implements IModModuleDAO {
                 stmt.setInt(3, modModule.getModLoader().getId());
                 stmt.setString(4, modModule.getMinecraftVersion());
             },
-            (updated, result) -> {
-                return updated == 1
+            (updated, result) -> (
+                updated == 1
                     ? indexModModule(modModule, result)
-                    : null;
-            },
-            (ModModule) null
+                    : null
+            ),
+            null
         );
     }
 
