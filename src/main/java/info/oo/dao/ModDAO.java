@@ -2,8 +2,6 @@ package info.oo.dao;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,8 +10,8 @@ import java.util.Optional;
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModOriginDAO;
-import info.oo.database.ConnectionFactory;
 import info.oo.entities.Mod;
+import info.oo.utils.Clarice;
 
 public class ModDAO implements IModDAO {
 
@@ -35,68 +33,55 @@ public class ModDAO implements IModDAO {
             return optionalMod.get();
         }
 
-        Mod mod = null;
         String query = "select * from `mod` where id = ?";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, id);
-
-            try (ResultSet result = stmt.executeQuery()) {
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, id);
+            },
+            result -> {
                 result.next();
-                mod = new Mod(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    new URL(result.getString("url")),
-                    result.getString("summary"),
-                    modLoaderDAO.getById(result.getInt("mod_loader_id")),
-                    modOriginDAO.getById(result.getInt("mod_origin_id"))
-                );
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        catch (MalformedURLException e) {
-            System.out.println(e);
-        } 
-
-        cache.add(mod);
-        return mod;
-
+                Mod mod = resultToMod(result);
+                cache.add(mod);
+                return mod;
+            },
+            null
+        );
     }
     
     public ArrayList<Mod> getAll() {
         String query = "select * from `mod`;";
-        ArrayList<Mod> mods = new ArrayList<Mod>();
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToModArrayList(result),
+            new ArrayList<Mod>()
+        );
+    }
 
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery();
-        ) {
-            while(result.next()) {
-                Mod mod = new Mod(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    new URL(result.getString("url")),
-                    result.getString("summary"),
-                    modLoaderDAO.getById(result.getInt("mod_loader_id")),
-                    modOriginDAO.getById(result.getInt("mod_origin_id"))
-                );
-                mods.add(mod);
-            }
+    private ArrayList<Mod> resultToModArrayList(ResultSet result) throws SQLException{
+        ArrayList<Mod> mods = new ArrayList<Mod>();
+        while(result.next()) {
+            mods.add(resultToMod(result));
+        }
+        return mods;
+    }
+
+    private Mod resultToMod(ResultSet result) throws SQLException {
+        try {
+            return new Mod(
+                result.getInt("id"),
+                result.getString("name"),
+                new URL(result.getString("url")),
+                result.getString("summary"),
+                modLoaderDAO.getById(result.getInt("mod_loader_id")),
+                modOriginDAO.getById(result.getInt("mod_origin_id"))
+            );
         }
         catch (MalformedURLException e) {
             System.out.println(e);
         }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return mods;
+        return null;
     }
 
 }
