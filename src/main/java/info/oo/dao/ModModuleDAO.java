@@ -14,6 +14,8 @@ import info.oo.database.ConnectionFactory;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
+import info.oo.utils.Preparer;
+import info.oo.utils.Solver;
 
 public class ModModuleDAO implements IModModuleDAO {
 
@@ -26,63 +28,23 @@ public class ModModuleDAO implements IModModuleDAO {
     }
     
     public ArrayList<ModModule> getAll() {
-
         String query = "select * from mod_module;";
-        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery();
-        ) {
-            while(result.next()) {
-                ModModule modModule = new ModModule(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    result.getString("minecraft_version"),
-                    modFileDAO.getAllByModModuleId(result.getInt("id")),
-                    modLoaderDAO.getById(result.getInt("mod_loader_id"))
-                );
-                modModules.add(modModule);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return modModules;
+        return executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToModModuleArrayList(result),
+            new ArrayList<ModModule>()
+        );
     }
 
     public ArrayList<ModModule> getAllByUserId(int id) {
-        
         String query = "select * from mod_module where user_id = ?;";
-        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, id);
-            try (        
-                ResultSet result = stmt.executeQuery();
-            ) {
-                while(result.next()) {
-                    ModModule modModule = new ModModule(
-                        result.getInt("id"),
-                        result.getString("name"),
-                        result.getString("minecraft_version"),
-                        modFileDAO.getAllByModModuleId(result.getInt("id")),
-                        modLoaderDAO.getById(result.getInt("mod_loader_id"))
-                    );
-                    modModules.add(modModule);
-            }
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return modModules;
+        return executeQueryOr(
+            query,
+            stmt -> stmt.setInt(1, id),
+            result -> resultToModModuleArrayList(result),
+            new ArrayList<ModModule>()
+        );
     }
 
     public ModModule insert(ModModule modModule, User user) {
@@ -193,6 +155,46 @@ public class ModModuleDAO implements IModModuleDAO {
             System.out.println(e);
         }
         return false;
+    }
+
+    private <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            preparer.call(stmt);
+            return solveResult(stmt, solver);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return or;
+        }
+    }
+
+    private <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
+        try (        
+            ResultSet result = stmt.executeQuery();
+        ) {
+            return solver.call(result);
+        }
+    }
+
+    private ArrayList<ModModule> resultToModModuleArrayList(ResultSet result) throws SQLException {
+        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
+        while (result.next()) {
+            modModules.add(resultToModModule(result));
+        }
+        return modModules;
+    }
+
+    private ModModule resultToModModule(ResultSet result) throws SQLException {
+        return new ModModule(
+            result.getInt("id"),
+            result.getString("name"),
+            result.getString("minecraft_version"),
+            modFileDAO.getAllByModModuleId(result.getInt("id")),
+            modLoaderDAO.getById(result.getInt("mod_loader_id"))
+        );
     }
 
 }
