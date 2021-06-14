@@ -10,7 +10,7 @@ import java.util.Optional;
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.entities.ModFile;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class ModFileDAO implements IModFileDAO {
 

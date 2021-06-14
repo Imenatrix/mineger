@@ -11,7 +11,7 @@ import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.entities.Mod;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class ModDAO implements IModDAO {
 

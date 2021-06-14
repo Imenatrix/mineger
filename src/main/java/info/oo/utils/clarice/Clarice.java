@@ -1,4 +1,4 @@
-package info.oo.utils;
+package info.oo.utils.clarice;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import info.oo.database.ConnectionFactory;
+import info.oo.utils.Preparer;
+import info.oo.utils.Solver;
+import info.oo.utils.UpdateSolver;
 
 public class Clarice {
     public static <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
