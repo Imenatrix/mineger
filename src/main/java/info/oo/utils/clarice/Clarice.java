@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import info.oo.database.ConnectionFactory;
-import info.oo.utils.Preparer;
-import info.oo.utils.Solver;
-import info.oo.utils.UpdateSolver;
+import info.oo.utils.clarice.interfaces.Preparer;
+import info.oo.utils.clarice.interfaces.Solver;
+import info.oo.utils.clarice.interfaces.UpdateSolver;
 
 public class Clarice {
     public static <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
