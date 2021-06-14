@@ -18,6 +18,12 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
+    public ModModule(String name, String minecraftVersion, ModLoader modLoader) {
+        this.name = name;
+        this.minecraftVersion = minecraftVersion;
+        this.modLoader = modLoader;
+    }
+
     public int getId() {
         return this.id;
     }

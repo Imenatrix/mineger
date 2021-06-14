@@ -1,20 +1,30 @@
 package info.oo.gui.pages;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
+import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
+import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class Main {
 
@@ -39,23 +49,61 @@ public class Main {
     @FXML
     private ListView<ModFile> listModFiles;
 
-    private ObservableList<ModModule> modModules;
+    @FXML
+    private Label lblPaginator;
 
-    public Main(ObservableList<ModModule> modModules) {
+    private int page;
+    private int totalPages;
+    private User user;
+    private ObservableList<ModModule> modModules;
+    private ObservableList<String> versions;
+    private ObservableList<ModLoader> modLoaders;
+    private IModFileDAO modFileDAO;
+    private IModModuleDAO modModuleDAO;
+
+    public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO) {
+        this.page = 0;
+        this.totalPages = 1;
+        this.user = user;
         this.modModules = modModules;
+        this.versions = versions;
+        this.modLoaders = modLoaders;
+        this.modFileDAO = modFileDAO;
+        this.modModuleDAO = modModuleDAO;
     }
 
     @FXML
     public void initialize() {
         listModModules.setItems(modModules);
-        configureCellFactories();
-
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
-                listModFiles.setItems(FXCollections.observableArrayList(newValue.getModFiles()));
+                totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersion(
+                    20,
+                    newValue.getModLoader().getId(),
+                    newValue.getMinecraftVersion()
+                );
+                page = 0;
+                updateLblPaginator();
+                updateListModFiles(newValue);
             }
         });
+        configureCellFactories();
+        updateLblPaginator();
+    }
+
+    private void updateLblPaginator() {
+        lblPaginator.setText((page + 1) + " de " + totalPages);
+    }
+
+    private void updateListModFiles(ModModule modModule) {
+        ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
+            20,
+            page,
+            modModule.getModLoader().getId(),
+            modModule.getMinecraftVersion()
+        );
+        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
 
     private void configureCellFactories() {
@@ -72,7 +120,51 @@ public class Main {
             }
         });
 
-        listModFiles.setCellFactory(list -> new ModPod());
+        listModFiles.setCellFactory(list -> new ModPod(
+            listModModules.getSelectionModel().getSelectedItem(),
+            modModuleDAO
+        ));
+    }
+
+    @FXML
+    private void onBtnPreviousAction(ActionEvent event) {
+        event.consume();
+        if (page > 0) {
+            page--;
+            updateLblPaginator();
+            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    @FXML
+    private void onBtnNextAction(ActionEvent event) {
+        event.consume();
+        if (page < (totalPages - 1)) {
+            page++;
+            updateLblPaginator();
+            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    @FXML
+    void onBtnNewAction(ActionEvent event) {
+        Stage popup = new Stage();
+        NewModModule newModModule = new NewModModule(user, modModules, versions, modLoaders, modModuleDAO);
+        Scene scene = new Scene(newModModule);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setScene(scene);
+        popup.show();
+    }
+
+    @FXML
+    private void onBtnDeleteAction(ActionEvent event) {
+        event.consume();
+        ModModule modModule = listModModules.getSelectionModel().getSelectedItem();
+        if (modModule != null) {
+            modModules.remove(modModule);
+            user.getModModules().remove(modModule);
+            modModuleDAO.delete(modModule);
+        }
     }
 
 }

@@ -2,18 +2,21 @@ package info.oo;
 
 import java.io.IOException;
 
+import info.oo.dao.MinecraftVersionDAO;
 import info.oo.dao.ModDAO;
 import info.oo.dao.ModFileDAO;
 import info.oo.dao.ModLoaderDAO;
 import info.oo.dao.ModModuleDAO;
 import info.oo.dao.ModOriginDAO;
 import info.oo.dao.UserDAO;
+import info.oo.dao.interfaces.IMinecraftVersionDAO;
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.dao.interfaces.IUserDAO;
+import info.oo.entities.User;
 import info.oo.gui.pages.Main;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -34,10 +37,20 @@ public class HelloFX extends Application {
             IModFileDAO modFileDAO = new ModFileDAO(modDAO);
             IModModuleDAO modModuleDAO = new ModModuleDAO(modFileDAO, modLoaderDAO);
             IUserDAO userDAO = new UserDAO(modModuleDAO);
+            IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
+
+            User user = userDAO.getById(1);
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));
-            loader.setControllerFactory(aClass -> new Main(FXCollections.observableArrayList(userDAO.getById(1).getModModules())));
+            loader.setControllerFactory(aClass -> new Main(
+                user,
+                FXCollections.observableArrayList(user.getModModules()),
+                FXCollections.observableArrayList(minecraftVersionDAO.getAll()),
+                FXCollections.observableArrayList(modLoaderDAO.getAll()),
+                modFileDAO,
+                modModuleDAO
+            ));
             
             Parent root = loader.load();
             Scene scene = new Scene(root);
