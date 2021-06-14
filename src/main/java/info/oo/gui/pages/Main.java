@@ -128,7 +128,7 @@ public class Main {
         });
 
         listModFiles.setCellFactory(list -> new ModPod(
-            listModModules.getSelectionModel().getSelectedItem(),
+            getSelectedModModule(),
             modModuleDAO
         ));
     }
@@ -139,7 +139,7 @@ public class Main {
         if (page > 0) {
             page--;
             updateLblPaginator();
-            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
+            updateListModFiles(getSelectedModModule());
         }
     }
 
@@ -149,7 +149,7 @@ public class Main {
         if (page < (totalPages - 1)) {
             page++;
             updateLblPaginator();
-            updateListModFiles(listModModules.getSelectionModel().getSelectedItem());
+            updateListModFiles(getSelectedModModule());
         }
     }
 
@@ -166,7 +166,7 @@ public class Main {
     @FXML
     private void onBtnDeleteAction(ActionEvent event) {
         event.consume();
-        ModModule modModule = listModModules.getSelectionModel().getSelectedItem();
+        ModModule modModule = getSelectedModModule();
         if (modModule != null) {
             modModules.remove(modModule);
             user.getModModules().remove(modModule);
@@ -174,16 +174,20 @@ public class Main {
         }
     }
 
+    private ModModule getSelectedModModule() {
+        return listModModules.getSelectionModel().getSelectedItem();
+    }
+
     private void onInstallerFetchOne(Warning warning) {
         Platform.runLater(() -> {
-            warning.setLblMessageText(count + " / " + listModModules.getSelectionModel().getSelectedItem().getModFiles().size());
+            warning.setLblMessageText(count + " / " + getSelectedModModule().getModFiles().size());
         });
         count++;
     }
 
     private void onInstallerFinish(Warning warning) {
         Platform.runLater(() -> {
-            warning.setLblMessageText(listModModules.getSelectionModel().getSelectedItem().getName() + " instalado!");
+            warning.setLblMessageText(getSelectedModModule().getName() + " instalado!");
             warning.setBtnDimissDisable(false);
         });
     }
@@ -195,13 +199,13 @@ public class Main {
         Warning warning = new Warning();
         Scene scene = new Scene(warning);
         warning.setBtnDimissDisable(true);
-        warning.setLblMessageText("0 / " + listModModules.getSelectionModel().getSelectedItem().getModFiles().size());
+        warning.setLblMessageText("0 / " + getSelectedModModule().getModFiles().size());
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
         popup.show();
         count = 0;
         Thread thread = new Thread(() -> installer.install(
-            listModModules.getSelectionModel().getSelectedItem(),
+            getSelectedModModule(),
             modFile -> onInstallerFetchOne(warning),
             modFile -> onInstallerFinish(warning)
         ));
