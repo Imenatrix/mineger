@@ -12,6 +12,7 @@ import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
 import info.oo.utils.interfaces.IModModuleInstaller;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -55,6 +56,7 @@ public class Main {
 
     private int page;
     private int totalPages;
+    private int count;
     private User user;
     private ObservableList<ModModule> modModules;
     private ObservableList<String> versions;
@@ -63,9 +65,11 @@ public class Main {
     private IModModuleDAO modModuleDAO;
     private IModModuleInstaller installer;
 
+
     public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO, IModModuleInstaller installer) {
         this.page = 0;
         this.totalPages = 1;
+        this.count = 0;
         this.user = user;
         this.modModules = modModules;
         this.versions = versions;
@@ -170,10 +174,39 @@ public class Main {
         }
     }
 
+    private void onInstallerFetchOne(Warning warning) {
+        Platform.runLater(() -> {
+            warning.setLblMessageText(count + " / " + listModModules.getSelectionModel().getSelectedItem().getModFiles().size());
+        });
+        count++;
+    }
+
+    private void onInstallerFinish(Warning warning) {
+        Platform.runLater(() -> {
+            warning.setLblMessageText(listModModules.getSelectionModel().getSelectedItem().getName() + " instalado!");
+            warning.setBtnDimissDisable(false);
+        });
+    }
+
     @FXML
     void onBtnInstallAction(ActionEvent event) {
         event.consume();
-        installer.install(listModModules.getSelectionModel().getSelectedItem());
+        Stage popup = new Stage();
+        Warning warning = new Warning();
+        Scene scene = new Scene(warning);
+        warning.setBtnDimissDisable(true);
+        warning.setLblMessageText("0 / " + listModModules.getSelectionModel().getSelectedItem().getModFiles().size());
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setScene(scene);
+        popup.show();
+        count = 0;
+        Thread thread = new Thread(() -> installer.install(
+            listModModules.getSelectionModel().getSelectedItem(),
+            modFile -> onInstallerFetchOne(warning),
+            modFile -> onInstallerFinish(warning)
+        ));
+        thread.start();
+        
     }
 
 }
