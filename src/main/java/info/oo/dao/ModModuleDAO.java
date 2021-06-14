@@ -16,6 +16,7 @@ import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.utils.Preparer;
 import info.oo.utils.Solver;
+import info.oo.utils.UpdateSolver;
 
 public class ModModuleDAO implements IModModuleDAO {
 
@@ -48,94 +49,60 @@ public class ModModuleDAO implements IModModuleDAO {
     }
 
     public ModModule insert(ModModule modModule, User user) {
-
         String query = "insert into mod_module(name, user_id, mod_loader_id, minecraft_version) values (?, ?, ?, ?)";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        ) {
-            stmt.setString(1, modModule.getName());
-            stmt.setInt(2, user.getId());
-            stmt.setInt(3, modModule.getModLoader().getId());
-            stmt.setString(4, modModule.getMinecraftVersion());
-
-            if (stmt.executeUpdate() == 1) {
-                try (
-                    ResultSet result = stmt.getGeneratedKeys();
-                ) {
-                    result.next();
-                    int id = result.getInt(1);
-                    return new ModModule(
-                        id,
-                        modModule.getName(),
-                        modModule.getMinecraftVersion(),
-                        new ArrayList<ModFile>(),
-                        modModule.getModLoader()
-                    );
-                }
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-
+        return executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setString(1, modModule.getName());
+                stmt.setInt(2, user.getId());
+                stmt.setInt(3, modModule.getModLoader().getId());
+                stmt.setString(4, modModule.getMinecraftVersion());
+            },
+            (updated, result) -> {
+                return updated == 1
+                    ? resultToNewModModule(modModule, result)
+                    : null;
+            },
+            (ModModule) null
+        );
     }
 
     public boolean addModFile(ModModule modModule, ModFile modFile) {
-
         String query = "insert into file_module(mod_module_id, mod_file_id) values (?, ?);";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            stmt.setInt(2, modFile.getId());
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
-
+        return 1 == executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+                stmt.setInt(2, modFile.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     public boolean removeModFile(ModModule modModule, ModFile modFile) {
-
         String query = "delete from file_module where mod_module_id = ? and mod_file_id = ?;";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            stmt.setInt(2, modFile.getId());
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
-
+        return 1 == executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+                stmt.setInt(2, modFile.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     private boolean removeFileModuleRelationships(ModModule modModule) {
         String query = "delete from file_module where mod_module_id = ?;";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            return stmt.executeUpdate() >= 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
+        return 1 <= executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     public boolean delete(ModModule modModule) {
@@ -143,18 +110,14 @@ public class ModModuleDAO implements IModModuleDAO {
         removeFileModuleRelationships(modModule);
 
         String query = "delete from mod_module where id = ?";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
+        return 1 == executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     private <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
@@ -171,11 +134,34 @@ public class ModModuleDAO implements IModModuleDAO {
         }
     }
 
+    private <T> T executeUpdateOr(String query, Preparer preparer, UpdateSolver<T> solver, T or) {
+        try (
+            Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            preparer.call(stmt);
+            int updated = stmt.executeUpdate();
+            return solveUpdateResult(updated, stmt, solver);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return or;
+        }
+    }
+
     private <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
         try (        
             ResultSet result = stmt.executeQuery();
         ) {
             return solver.call(result);
+        }
+    }
+
+    private <T> T solveUpdateResult(int updated, PreparedStatement stmt, UpdateSolver<T> solver) throws SQLException {
+        try (        
+            ResultSet result = stmt.getGeneratedKeys();
+        ) {
+            return solver.call(updated, result);
         }
     }
 
@@ -194,6 +180,18 @@ public class ModModuleDAO implements IModModuleDAO {
             result.getString("minecraft_version"),
             modFileDAO.getAllByModModuleId(result.getInt("id")),
             modLoaderDAO.getById(result.getInt("mod_loader_id"))
+        );
+    }
+
+    private ModModule resultToNewModModule(ModModule modModule, ResultSet result) throws SQLException {
+        result.next();
+        int id = result.getInt(1);
+        return new ModModule(
+            id,
+            modModule.getName(),
+            modModule.getMinecraftVersion(),
+            new ArrayList<ModFile>(),
+            modModule.getModLoader()
         );
     }
 
