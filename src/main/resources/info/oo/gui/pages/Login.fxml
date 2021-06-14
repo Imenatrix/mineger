@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        prefHeight="200.0" prefWidth="300.0" vgap="10" hgap="10">
+
+    
+    <Label text="Login:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+    
+    <Label text="Senha:" GridPane.columnIndex=""/>
+    <TextField GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+    <Button text="Entrar"/> 
