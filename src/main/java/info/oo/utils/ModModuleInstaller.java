@@ -34,12 +34,12 @@ public class ModModuleInstaller implements IModModuleInstaller {
         "mods"
     );
 
-    public void install(ModModule modModule) {
+    public void install(ModModule modModule, VoidCallback<ModFile> onFetchOne, VoidCallback<ModFile> onFinish) {
         createCacheFolderIfNotExists();
         createModsFolderIfNotExists();
-        fetchModFilesFromModModule(modModule);
+        fetchModFilesFromModModule(modModule, onFetchOne);
         copyModLoaderFromCacheToModsFolder(modModule);
-        
+        onFinish.call(modModule.getModFiles().get(1));
     }
 
     private void createModsFolderIfNotExists() {
@@ -60,7 +60,7 @@ public class ModModuleInstaller implements IModModuleInstaller {
         }
     }
 
-    private void fetchModFilesFromModModule(ModModule modModule) {
+    private void fetchModFilesFromModModule(ModModule modModule, VoidCallback<ModFile> onFetchOne) {
         for (ModFile modFile : modModule.getModFiles()) {
             
             Path path = cache.resolve(modFile.getFileName());
@@ -69,6 +69,7 @@ public class ModModuleInstaller implements IModModuleInstaller {
             if (!file.exists()) {
                 fetchModFile(modFile, file);
             }
+            onFetchOne.call(modFile);
         }
     }
 
