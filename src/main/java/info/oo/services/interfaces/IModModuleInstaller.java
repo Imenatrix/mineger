@@ -1,4 +1,4 @@
-package info.oo.utils.interfaces;
+package info.oo.services.interfaces;
 
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
