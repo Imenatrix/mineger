@@ -103,7 +103,7 @@ public class Main {
                 updateListModFiles(newValue);
             }
         });
-        configureCellFactories();
+        setCellFactories();
         updateLblPaginator();
     }
 
@@ -121,7 +121,12 @@ public class Main {
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
 
-    private void configureCellFactories() {
+    private void setCellFactories() {
+        setListModModulesCellFactory();
+        setListModFilesCellFactory();
+    }
+
+    private void setListModModulesCellFactory() {
         listModModules.setCellFactory(list -> new ListCell<ModModule>() {
             @Override
             public void updateItem(ModModule item, boolean empty) {
@@ -134,7 +139,9 @@ public class Main {
                 }
             }
         });
+    }
 
+    private void setListModFilesCellFactory() {
         listModFiles.setCellFactory(list -> new ModPod(
             getSelectedModModule(),
             modModuleDAO
