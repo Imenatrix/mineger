@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import info.oo.database.ConnectionFactory;
 import info.oo.utils.clarice.interfaces.Preparer;
 import info.oo.utils.clarice.interfaces.Solver;
 import info.oo.utils.clarice.interfaces.UpdateSolver;
