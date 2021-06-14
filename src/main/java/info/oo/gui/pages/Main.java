@@ -118,6 +118,7 @@ public class Main {
             modModule.getModLoader().getId(),
             modModule.getMinecraftVersion()
         );
+        setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
 
