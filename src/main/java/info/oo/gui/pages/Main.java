@@ -66,7 +66,15 @@ public class Main {
     private IModModuleInstaller installer;
 
 
-    public Main(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModFileDAO modFileDAO, IModModuleDAO modModuleDAO, IModModuleInstaller installer) {
+    public Main(
+        User user,
+        ObservableList<ModModule> modModules,
+        ObservableList<ModLoader> modLoaders,
+        ObservableList<String> versions,
+        IModFileDAO modFileDAO,
+        IModModuleDAO modModuleDAO,
+        IModModuleInstaller installer
+    ) {
         this.page = 0;
         this.totalPages = 1;
         this.count = 0;

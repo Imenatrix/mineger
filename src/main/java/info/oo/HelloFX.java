@@ -60,8 +60,8 @@ public class HelloFX extends Application {
                 loadMainPage(
                     user,
                     modModules,
-                    minecraftVersions,
                     modLoaders,
+                    minecraftVersions,
                     modFileDAO,
                     modModuleDAO,
                     installer
@@ -74,8 +74,8 @@ public class HelloFX extends Application {
     private Parent loadMainPage(
         User user,
         ArrayList<ModModule> modModules,
-        ArrayList<String> minecraftVersions,
         ArrayList<ModLoader> modLoaders,
+        ArrayList<String> minecraftVersions,
         IModFileDAO modFileDAO,
         IModModuleDAO modModuleDAO,
         IModModuleInstaller installer
@@ -85,8 +85,8 @@ public class HelloFX extends Application {
         loader.setControllerFactory(aClass -> new Main(
             user,
             observable(modModules),
-            observable(minecraftVersions),
             observable(modLoaders),
+            observable(minecraftVersions),
             modFileDAO,
             modModuleDAO,
             installer
