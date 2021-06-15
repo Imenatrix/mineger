@@ -24,6 +24,12 @@ public class User {
         this.modModules = modModules;
     }
 
+    public User(String name, String login, String password) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }
