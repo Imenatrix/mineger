@@ -14,3 +14,13 @@ O desenvolvimento ainda está um pouco lento, pois essa semana foi reservada par
 
 # Semana 03
 Foi implementada a camada DAO como prevista no diagrama de classe. Algumas porções da camada de entidades foi refatorada para melhor representar a necessidade do sistema.
+
+# Semana 04
+- Foi adicionada uma tela principal para a aplicação, usando javafx e FXML;
+- A cadamada de entidades foi refatorada para evitar avisos do compilador;
+- Foi implementada inserção de ModModules pela interface de usuario;
+- Foi implementada inserção da relação entre ModModules e ModFile pela interface de usuario;
+- Foi implementada a instalação de ModFiles;
+- Boa parte do código foi refatorado para aumentar a legibilidade, seguindo os principios do Clean Code;
+- Foi criado um utilitario como wrapper para o JDBC chamado Clarice;
+- Foi implementado cadastro de login de usuario;
