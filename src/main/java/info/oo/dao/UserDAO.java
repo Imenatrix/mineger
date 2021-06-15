@@ -52,6 +52,19 @@ public class UserDAO implements IUserDAO {
         );
     }
 
+    public User getByLoginAndPassword(String login, String password) {
+        String query = "select id, name from user where login = ? and password = ?";
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {
+                stmt.setString(1, login);
+                stmt.setString(2, password);
+            },
+            result -> resultToLoginUser(result),
+            null
+        );
+    }
+
     private ArrayList<User> resultToUserArrayList(ResultSet result) throws SQLException {
         ArrayList<User> users = new ArrayList<User>();
         while(result.next()) {
@@ -75,6 +88,19 @@ public class UserDAO implements IUserDAO {
             modModuleDAO.getAllByUserId(result.getInt("id"))
         );
         return user;
+    }
+
+    private User resultToLoginUser(ResultSet result) throws SQLException {
+        result.next();
+        return parseLoginUserFromResult(result);
+    }
+
+    private User parseLoginUserFromResult(ResultSet result) throws SQLException {
+        return new User(
+            result.getInt("id"),
+            result.getString("name"),
+            modModuleDAO.getAllByUserId(result.getInt("id"))
+        );
     }
 
 }

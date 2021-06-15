@@ -8,5 +8,6 @@ public interface IUserDAO {
     
     public User getById(int id);
     public ArrayList<User> getAll();
+    public User getByLoginAndPassword(String login, String password);
 
 }
