@@ -1,7 +1,5 @@
 package info.oo.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,8 +7,8 @@ import java.util.Optional;
 
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IUserDAO;
-import info.oo.database.ConnectionFactory;
 import info.oo.entities.User;
+import info.oo.utils.Clarice;
 
 public class UserDAO implements IUserDAO {
 
@@ -31,60 +29,52 @@ public class UserDAO implements IUserDAO {
             return optinalUser.get();
         }
 
-        User user = null;
         String query = "select * from user where id = ?";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, id);
-
-            try (ResultSet result = stmt.executeQuery()) {
-                result.next();
-                user = new User(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    result.getString("login"),
-                    result.getString("password"),
-                    modModuleDAO.getAllByUserId(result.getInt("id"))
-                );
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        cache.add(user);
-        return user;
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> stmt.setInt(1, id),
+            result -> {
+                User user = resultToUser(result);
+                cache.add(user);
+                return user;
+            },
+            null
+        );
     }
     
     public ArrayList<User> getAll() {
-
         String query = "select * from user;";
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToUserArrayList(result),
+            new ArrayList<User>()
+        );
+    }
+
+    private ArrayList<User> resultToUserArrayList(ResultSet result) throws SQLException {
         ArrayList<User> users = new ArrayList<User>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery();
-        ) {
-            while(result.next()) {
-                User user = new User(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    result.getString("login"),
-                    result.getString("password"),
-                    modModuleDAO.getAllByUserId(result.getInt("id"))
-                );
-                users.add(user);
-            }
+        while(result.next()) {
+            User user = parseUserFromResult(result);
+            users.add(user);
         }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
         return users;
+    }
+
+    private User resultToUser(ResultSet result) throws SQLException {
+        result.next();
+        return parseUserFromResult(result);
+    }
+
+    private User parseUserFromResult(ResultSet result) throws SQLException {
+        User user = new User(
+            result.getInt("id"),
+            result.getString("name"),
+            result.getString("login"),
+            result.getString("password"),
+            modModuleDAO.getAllByUserId(result.getInt("id"))
+        );
+        return user;
     }
 
 }

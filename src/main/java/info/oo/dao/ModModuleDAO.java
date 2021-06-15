@@ -1,19 +1,16 @@
 package info.oo.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
-import info.oo.database.ConnectionFactory;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
+import info.oo.utils.Clarice;
 
 public class ModModuleDAO implements IModModuleDAO {
 
@@ -26,154 +23,80 @@ public class ModModuleDAO implements IModModuleDAO {
     }
     
     public ArrayList<ModModule> getAll() {
-
         String query = "select * from mod_module;";
-        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery();
-        ) {
-            while(result.next()) {
-                ModModule modModule = new ModModule(
-                    result.getInt("id"),
-                    result.getString("name"),
-                    result.getString("minecraft_version"),
-                    modFileDAO.getAllByModModuleId(result.getInt("id")),
-                    modLoaderDAO.getById(result.getInt("mod_loader_id"))
-                );
-                modModules.add(modModule);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return modModules;
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToModModuleArrayList(result),
+            new ArrayList<ModModule>()
+        );
     }
 
     public ArrayList<ModModule> getAllByUserId(int id) {
-        
         String query = "select * from mod_module where user_id = ?;";
-        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, id);
-            try (        
-                ResultSet result = stmt.executeQuery();
-            ) {
-                while(result.next()) {
-                    ModModule modModule = new ModModule(
-                        result.getInt("id"),
-                        result.getString("name"),
-                        result.getString("minecraft_version"),
-                        modFileDAO.getAllByModModuleId(result.getInt("id")),
-                        modLoaderDAO.getById(result.getInt("mod_loader_id"))
-                    );
-                    modModules.add(modModule);
-            }
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return modModules;
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> stmt.setInt(1, id),
+            result -> resultToModModuleArrayList(result),
+            new ArrayList<ModModule>()
+        );
     }
 
     public ModModule insert(ModModule modModule, User user) {
-
         String query = "insert into mod_module(name, user_id, mod_loader_id, minecraft_version) values (?, ?, ?, ?)";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        ) {
-            stmt.setString(1, modModule.getName());
-            stmt.setInt(2, user.getId());
-            stmt.setInt(3, modModule.getModLoader().getId());
-            stmt.setString(4, modModule.getMinecraftVersion());
-
-            if (stmt.executeUpdate() == 1) {
-                try (
-                    ResultSet result = stmt.getGeneratedKeys();
-                ) {
-                    result.next();
-                    int id = result.getInt(1);
-                    return new ModModule(
-                        id,
-                        modModule.getName(),
-                        modModule.getMinecraftVersion(),
-                        new ArrayList<ModFile>(),
-                        modModule.getModLoader()
-                    );
-                }
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-
+        return Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setString(1, modModule.getName());
+                stmt.setInt(2, user.getId());
+                stmt.setInt(3, modModule.getModLoader().getId());
+                stmt.setString(4, modModule.getMinecraftVersion());
+            },
+            (updated, result) -> (
+                updated == 1
+                    ? indexModModule(modModule, result)
+                    : null
+            ),
+            null
+        );
     }
 
     public boolean addModFile(ModModule modModule, ModFile modFile) {
-
         String query = "insert into file_module(mod_module_id, mod_file_id) values (?, ?);";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            stmt.setInt(2, modFile.getId());
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
-
+        return 1 == Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+                stmt.setInt(2, modFile.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     public boolean removeModFile(ModModule modModule, ModFile modFile) {
-
         String query = "delete from file_module where mod_module_id = ? and mod_file_id = ?;";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            stmt.setInt(2, modFile.getId());
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
-
+        return 1 == Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+                stmt.setInt(2, modFile.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     private boolean removeFileModuleRelationships(ModModule modModule) {
         String query = "delete from file_module where mod_module_id = ?;";
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            return stmt.executeUpdate() >= 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
+        return 1 <= Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
     }
 
     public boolean delete(ModModule modModule) {
@@ -181,18 +104,44 @@ public class ModModuleDAO implements IModModuleDAO {
         removeFileModuleRelationships(modModule);
 
         String query = "delete from mod_module where id = ?";
+        return 1 == Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, modModule.getId());
+            },
+            (updated, result) -> updated,
+            0
+        );
+    }
 
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            stmt.setInt(1, modModule.getId());
-            return stmt.executeUpdate() == 1;
+    private ArrayList<ModModule> resultToModModuleArrayList(ResultSet result) throws SQLException {
+        ArrayList<ModModule> modModules = new ArrayList<ModModule>();
+        while (result.next()) {
+            modModules.add(parseModModuleFromResult(result));
         }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return false;
+        return modModules;
+    }
+
+    private ModModule indexModModule(ModModule modModule, ResultSet result) throws SQLException {
+        result.next();
+        int id = result.getInt(1);
+        return new ModModule(
+            id,
+            modModule.getName(),
+            modModule.getMinecraftVersion(),
+            new ArrayList<ModFile>(),
+            modModule.getModLoader()
+        );
+    }
+
+    private ModModule parseModModuleFromResult(ResultSet result) throws SQLException {
+        return new ModModule(
+            result.getInt("id"),
+            result.getString("name"),
+            result.getString("minecraft_version"),
+            modFileDAO.getAllByModModuleId(result.getInt("id")),
+            modLoaderDAO.getById(result.getInt("mod_loader_id"))
+        );
     }
 
 }

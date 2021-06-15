@@ -11,19 +11,41 @@ public class DBConfig {
     private static String password;
     
     static {
-        try (InputStream configFile = DBConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
-
-            Properties properties = new Properties();
-            properties.load(configFile);
-
-            url = properties.getProperty("DB_URL") + "/" + properties.getProperty("DB_SCHEMA");
-            user = properties.getProperty("DB_USER");
-            password = properties.getProperty("DB_PASSWORD");
-
+        try (
+            InputStream configFile = getResourceAsStream("config.properties");
+        ) {
+            loadConfigFile(configFile);
         }
         catch (IOException e) {
             System.out.println(e);
         }
+    }
+
+    private static InputStream getResourceAsStream(String res) {
+        return DBConfig.class
+            .getClassLoader()
+            .getResourceAsStream(res);
+    }
+
+    private static void loadConfigFile(InputStream configFile) throws IOException {
+        Properties props = new Properties();
+        props.load(configFile);
+        parseConfigProperties(props);
+    }
+
+    private static void parseConfigProperties(Properties props) {
+
+        user = props.getProperty("DB_USER");
+        password = props.getProperty("DB_PASSWORD");
+
+        url = composeDatabaseURL(
+            props.getProperty("DB_URL"),
+            props.getProperty("DB_SCHEMA")
+        );
+    }
+
+    private static String composeDatabaseURL(String url, String schema) {
+        return url + "/" + schema;
     }
 
     public static String getURL() {

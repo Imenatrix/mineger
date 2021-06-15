@@ -1,35 +1,29 @@
 package info.oo.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IMinecraftVersionDAO;
-import info.oo.database.ConnectionFactory;
+import info.oo.utils.Clarice;
 
 public class MinecraftVersionDAO implements IMinecraftVersionDAO {
     
     public ArrayList<String> getAll() {
-
         String query = "select * from minecraft_version;";
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {},
+            result -> resultToVersionArrayList(result),
+            new ArrayList<String>()
+        );
+    }
 
+    private ArrayList<String> resultToVersionArrayList(ResultSet result) throws SQLException {
         ArrayList<String> versions = new ArrayList<String>();
-
-        try (
-            Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet result = stmt.executeQuery()
-        ) {
-            while(result.next()) {
-                versions.add(result.getString("version"));
-            }
+        while (result.next()) {
+            versions.add(result.getString("version"));
         }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-
         return versions;
     }
 
