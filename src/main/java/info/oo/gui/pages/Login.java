@@ -2,6 +2,8 @@ package info.oo.gui.pages;
 
 import java.io.IOException;
 
+import info.oo.dao.interfaces.IUserDAO;
+import info.oo.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +22,12 @@ public class Login extends VBox {
     @FXML
     private TextField txtPassword;
 
-    public Login() {
+    private IUserDAO userDAO;
+
+    public Login(IUserDAO userDAO) {
         super();
         loadFXML();
+        this.userDAO = userDAO;
     }
 
     private void loadFXML() {
@@ -38,14 +43,16 @@ public class Login extends VBox {
     }
 
     @FXML
-    public void initialize() {
-        lblError.setText("");
-        lblError.setManaged(false);
-    }
-
-    @FXML
     void onBtnLoginAction(ActionEvent event) {
-
+        String login = txtLogin.getText();
+        String password = txtPassword.getText();
+        User user = userDAO.getByLoginAndPassword(login, password);
+        if (user == null) {
+            lblError.setText("Login ou senha incorretos.");
+        }
+        else {
+            lblError.setText("Ok");
+        }
     }
 
     @FXML
