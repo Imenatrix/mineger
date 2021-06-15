@@ -20,6 +20,7 @@ import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
+import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
 import info.oo.services.ModModuleInstaller;
 import info.oo.services.interfaces.IModModuleInstaller;
@@ -50,24 +51,28 @@ public class HelloFX extends Application {
         
         IModModuleInstaller installer = new ModModuleInstaller();
 
-        User user = userDAO.getById(1);
-        ArrayList<ModModule> modModules = user.getModModules();
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
         
-        stage.setScene(
-            new Scene(
-                loadMainPage(
+        Scene login = new Scene(new Login(userDAO, user -> {
+            try {
+                Scene main = new Scene(loadMainPage(
                     user,
-                    modModules,
+                    user.getModModules(),
                     modLoaders,
                     minecraftVersions,
                     modFileDAO,
                     modModuleDAO,
                     installer
-                )
-            )
-        );
+                ));
+                stage.setScene(main);
+                stage.centerOnScreen();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+            }
+        }));
+        stage.setScene(login);
         stage.show();
     }
 
