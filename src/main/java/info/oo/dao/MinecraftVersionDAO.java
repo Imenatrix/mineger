@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IMinecraftVersionDAO;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class MinecraftVersionDAO implements IMinecraftVersionDAO {
     

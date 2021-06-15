@@ -11,7 +11,7 @@ import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
-import info.oo.utils.interfaces.IModModuleInstaller;
+import info.oo.services.interfaces.IModModuleInstaller;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

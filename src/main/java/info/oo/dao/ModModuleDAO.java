@@ -10,7 +10,7 @@ import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class ModModuleDAO implements IModModuleDAO {
 

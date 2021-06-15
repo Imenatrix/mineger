@@ -1,4 +1,4 @@
-package info.oo.utils;
+package info.oo.utils.clarice.interfaces;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

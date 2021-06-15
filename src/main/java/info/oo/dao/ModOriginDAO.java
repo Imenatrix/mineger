@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.entities.ModOrigin;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class ModOriginDAO implements IModOriginDAO {
 

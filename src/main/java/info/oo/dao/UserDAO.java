@@ -8,7 +8,7 @@ import java.util.Optional;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.User;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class UserDAO implements IUserDAO {
 

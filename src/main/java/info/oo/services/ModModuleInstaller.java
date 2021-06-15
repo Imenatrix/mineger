@@ -1,4 +1,4 @@
-package info.oo.utils;
+package info.oo.services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,8 @@ import org.apache.commons.io.FileUtils;
 
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
-import info.oo.utils.interfaces.IModModuleInstaller;
+import info.oo.services.interfaces.IModModuleInstaller;
+import info.oo.utils.VoidCallback;
 
 public class ModModuleInstaller implements IModModuleInstaller {
 

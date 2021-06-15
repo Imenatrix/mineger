@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.entities.ModLoader;
-import info.oo.utils.Clarice;
+import info.oo.utils.clarice.Clarice;
 
 public class ModLoaderDAO implements IModLoaderDAO {
 

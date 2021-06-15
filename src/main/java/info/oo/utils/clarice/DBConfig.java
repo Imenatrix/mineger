@@ -1,4 +1,4 @@
-package info.oo.database;
+package info.oo.utils.clarice;
 
 import java.io.IOException;
 import java.io.InputStream;
