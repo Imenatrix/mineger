@@ -18,6 +18,12 @@ public class User {
         this.modModules = modModules;
     }
 
+    public User(int id, String name, ArrayList<ModModule> modModules) {
+        this.id = id;
+        this.name = name;
+        this.modModules = modModules;
+    }
+
     public int getId() {
         return id;
     }
