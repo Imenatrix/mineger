@@ -8,9 +8,11 @@ import info.oo.utils.VoidCallback;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class Login extends VBox {
 
@@ -60,7 +62,13 @@ public class Login extends VBox {
 
     @FXML
     void onBtnRegisterAction(ActionEvent event) {
-
+        Stage stage = (Stage) getScene().getWindow();
+        stage.setScene(
+            new Scene(
+                new Register(userDAO, getScene())
+            )
+        );
+        stage.centerOnScreen();
     }
 
 }
