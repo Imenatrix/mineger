@@ -18,6 +18,8 @@ import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.User;
 import info.oo.gui.pages.Main;
+import info.oo.utils.ModModuleInstaller;
+import info.oo.utils.interfaces.IModModuleInstaller;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +40,7 @@ public class HelloFX extends Application {
             IModModuleDAO modModuleDAO = new ModModuleDAO(modFileDAO, modLoaderDAO);
             IUserDAO userDAO = new UserDAO(modModuleDAO);
             IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
+            IModModuleInstaller installer = new ModModuleInstaller();
 
             User user = userDAO.getById(1);
 
@@ -49,7 +52,8 @@ public class HelloFX extends Application {
                 FXCollections.observableArrayList(minecraftVersionDAO.getAll()),
                 FXCollections.observableArrayList(modLoaderDAO.getAll()),
                 modFileDAO,
-                modModuleDAO
+                modModuleDAO,
+                installer
             ));
             
             Parent root = loader.load();
