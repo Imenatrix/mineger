@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.dao.interfaces.IUserDAO;
+import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.utils.clarice.Clarice;
 
@@ -62,6 +63,34 @@ public class UserDAO implements IUserDAO {
             },
             result -> resultToLoginUser(result),
             null
+        );
+    }
+
+    public User insert(User user) {
+        String query = "insert into user(name, login, password) values(?, ?, ?);";
+        return Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setString(1, user.getName());
+                stmt.setString(2, user.getLogin());
+                stmt.setString(3, user.getPassword());
+            },
+            (updated, result) -> (
+                updated == 1
+                    ? indexUser(user, result)
+                    : null
+            ),
+            null
+        );
+    }
+
+    private User indexUser(User user, ResultSet result) throws SQLException {
+        result.next();
+        int id = result.getInt(1);
+        return new User(
+            id,
+            user.getName(),
+            new ArrayList<ModModule>()
         );
     }
 
