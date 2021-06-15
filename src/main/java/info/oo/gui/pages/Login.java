@@ -4,11 +4,10 @@ import java.io.IOException;
 
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.User;
+import info.oo.utils.VoidCallback;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -24,14 +23,14 @@ public class Login extends VBox {
     @FXML
     private TextField txtPassword;
 
-    private Parent page;
     private IUserDAO userDAO;
+    private VoidCallback<User> onSuccess;
 
-    public Login(Parent page, IUserDAO userDAO) {
+    public Login(IUserDAO userDAO,  VoidCallback<User> onSuccess) {
         super();
         loadFXML();
-        this.page = page;
         this.userDAO = userDAO;
+        this.onSuccess = onSuccess;
     }
 
     private void loadFXML() {
@@ -55,10 +54,7 @@ public class Login extends VBox {
             lblError.setText("Login ou senha incorretos.");
         }
         else {
-            Scene scene = getScene();
-            scene.setRoot(page);
-            scene.getWindow().sizeToScene();
-            scene.getWindow().centerOnScreen();
+            onSuccess.call(user);
         }
     }
 
