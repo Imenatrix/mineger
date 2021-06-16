@@ -122,19 +122,6 @@ public class Main {
     }
 
     private void updateListModFiles(ModModule modModule) {
-        ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
-            20,
-            page,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
-        setListModFilesCellFactory();
-        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
-    }
-
-    private void updateListModFilesWithSearch(ModModule modModule) {
         totalPages = modFileDAO.getTotalPages(
             20,
             modLoaderId,
@@ -267,7 +254,7 @@ public class Main {
         else {
             search = txtBusca.getText();
         }
-        updateListModFilesWithSearch(modModule);
+        updateListModFiles(modModule);
     }
 
     @FXML
@@ -282,7 +269,7 @@ public class Main {
                 modLoaderId = modLoader == null ? null : modLoader.getId();
                 modOriginId = modOrigin == null ? null : modOrigin.getId();
                 this.minecraftVersion = minecraftVersion;
-                updateListModFilesWithSearch(modModule);
+                updateListModFiles(modModule);
             }
         );
         Scene scene = new Scene(filter);
