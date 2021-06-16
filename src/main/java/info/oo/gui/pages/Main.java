@@ -109,20 +109,19 @@ public class Main {
                 modLoaderId = modModule.getModLoader().getId();
                 minecraftVersion = modModule.getMinecraftVersion();
                 page = 0;
-                updateLblPaginator();
                 enableFilterButtons();
                 updateListModFiles(newValue);
             }
         });
         setCellFactories();
-        updateLblPaginator();
+        updateLblPaginator(totalPages);
     }
 
-    private void updateLblPaginator() {
+    private void updateLblPaginator(int totalPages) {
         lblPaginator.setText((page + 1) + " de " + totalPages);
     }
-    
-    private void updateListModFiles(ModModule modModule) {
+
+    private void updateTotalPages() {
         totalPages = modFileDAO.getTotalPages(
             20,
             modLoaderId,
@@ -130,6 +129,9 @@ public class Main {
             minecraftVersion,
             search
         );
+    }
+    
+    private void updateListModFiles(ModModule modModule) {
         ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
             20,
             page,
@@ -138,7 +140,8 @@ public class Main {
             minecraftVersion,
             search
         );
-        updateLblPaginator();
+        updateTotalPages();
+        updateLblPaginator(totalPages);
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
@@ -175,7 +178,7 @@ public class Main {
         event.consume();
         if (page > 0) {
             page--;
-            updateLblPaginator();
+            updateLblPaginator(totalPages);
             updateListModFiles(modModule);
         }
     }
@@ -185,7 +188,7 @@ public class Main {
         event.consume();
         if (page < (totalPages - 1)) {
             page++;
-            updateLblPaginator();
+            updateLblPaginator(totalPages);
             updateListModFiles(modModule);
         }
     }
