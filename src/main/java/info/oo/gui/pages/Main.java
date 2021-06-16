@@ -274,7 +274,17 @@ public class Main {
     void onBtnFilterAction(ActionEvent event) {
         event.consume();
         Stage popup = new Stage();
-        Filter filter = new Filter(minecraftVersions, modLoaders, modOrigins);
+        Filter filter = new Filter(
+            modLoaders,
+            modOrigins,
+            minecraftVersions,
+            (modLoader, modOrigin, minecraftVersion, nonAdded) -> {
+                modLoaderId = modLoader == null ? null : modLoader.getId();
+                modOriginId = modOrigin == null ? null : modOrigin.getId();
+                this.minecraftVersion = minecraftVersion;
+                updateListModFilesWithSearch(modModule);
+            }
+        );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
