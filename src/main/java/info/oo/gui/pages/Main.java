@@ -246,7 +246,7 @@ public class Main {
         Thread thread = new Thread(() -> installer.install(
             modModule,
             modFile -> onInstallerFetchOne(warning),
-            modFile -> onInstallerFinish(warning)
+            modModule -> onInstallerFinish(warning)
         ));
         thread.start();
         
