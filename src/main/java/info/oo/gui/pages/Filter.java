@@ -46,12 +46,29 @@ public class Filter extends GridPane {
     private ObservableList<ModOrigin> modOrigins;
     private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
 
-    public Filter(ObservableList<ModLoader> modLoaders, ObservableList<ModOrigin> modOrigins, ObservableList<String> versions, QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply) {
+    private Integer modLoaderId;
+    private Integer modOriginId;
+    private String version;
+
+    public Filter(
+        ObservableList<ModLoader> modLoaders,
+        ObservableList<ModOrigin> modOrigins,
+        ObservableList<String> versions,
+        QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply,
+        Integer modLoaderId,
+        Integer modOriginId,
+        String version
+    ) {
         super();
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
         this.versions = versions;
         this.onApply = onApply;
+
+        this.modLoaderId = modLoaderId;
+        this.modOriginId = modOriginId;
+        this.version = version;
+
         loadFXML();
     }
 
@@ -77,6 +94,29 @@ public class Filter extends GridPane {
         cbVersion.setItems(versions);
         cbModLoader.setItems(modLoaders);
         cbOrigin.setItems(modOrigins);
+        try {
+            cbVersion.getSelectionModel().select(
+                versions.stream()
+                    .filter(item -> item.equals(version))
+                    .findFirst()
+                    .orElseGet(null)
+            );
+            cbModLoader.getSelectionModel().select(
+                modLoaders.stream()
+                    .filter(item -> item.getId() == modLoaderId)
+                    .findFirst()
+                    .orElseGet(null)
+            );
+            cbOrigin.getSelectionModel().select(
+                modOrigins.stream()
+                    .filter(item -> item.getId() == modOriginId)
+                    .findFirst()
+                    .orElseGet(null)
+            );
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
             @Override
             protected void updateItem(ModLoader item, boolean empty) {

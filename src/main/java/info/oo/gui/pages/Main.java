@@ -306,7 +306,10 @@ public class Main {
                     setListModFilesCellFactory();
                     listModFiles.setItems(FXCollections.observableArrayList(modFiles));
                 }
-            }
+            },
+            modLoaderId,
+            modOriginId,
+            minecraftVersion
         );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
