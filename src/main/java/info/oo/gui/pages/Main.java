@@ -101,13 +101,6 @@ public class Main {
                 modModule = newValue;
                 modLoaderId = modModule.getModLoader().getId();
                 minecraftVersion = modModule.getMinecraftVersion();
-                totalPages = modFileDAO.getTotalPages(
-                    20,
-                    modLoaderId,
-                    modOriginId,
-                    minecraftVersion,
-                    search
-                );
                 page = 0;
                 updateLblPaginator();
                 updateListModFiles(newValue);
@@ -120,7 +113,7 @@ public class Main {
     private void updateLblPaginator() {
         lblPaginator.setText((page + 1) + " de " + totalPages);
     }
-
+    
     private void updateListModFiles(ModModule modModule) {
         totalPages = modFileDAO.getTotalPages(
             20,
