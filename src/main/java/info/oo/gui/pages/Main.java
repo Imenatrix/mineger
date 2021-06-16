@@ -3,6 +3,8 @@ package info.oo.gui.pages;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
@@ -281,7 +283,29 @@ public class Main {
                 modLoaderId = modLoader == null ? null : modLoader.getId();
                 modOriginId = modOrigin == null ? null : modOrigin.getId();
                 this.minecraftVersion = minecraftVersion;
-                updateListModFiles(modModule);
+                if (nonAdded) {
+                    updateListModFiles(modModule);
+                }
+                else {
+                    Stream<ModFile> modFileStream = modModule.getModFiles().stream();
+                    if (modLoaderId != null) {
+                        modFileStream = modFileStream.filter(
+                            item -> item.getMod().modLoader().getId() == modLoaderId
+                        );
+                    }
+                    if (modOriginId != null) {
+                        modFileStream = modFileStream.filter(
+                            item -> item.getMod().getModOrigin().getId() == modOriginId
+                        );
+                    }
+                    if (minecraftVersion != null) {
+                        modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
+                    }
+                    ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
+                    updateLblPaginator(modFiles.size());
+                    setListModFilesCellFactory();
+                    listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+                }
             }
         );
         Scene scene = new Scene(filter);
