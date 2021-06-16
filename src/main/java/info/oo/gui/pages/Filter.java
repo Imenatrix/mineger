@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModOrigin;
+import info.oo.utils.QuadriCallback;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,12 +40,14 @@ public class Filter extends GridPane {
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<ModOrigin> modOrigins;
+    private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
 
-    public Filter(ObservableList<String> versions, ObservableList<ModLoader> modLoaders, ObservableList<ModOrigin> modOrigins) {
+    public Filter(ObservableList<ModLoader> modLoaders, ObservableList<ModOrigin> modOrigins, ObservableList<String> versions, QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply) {
         super();
-        this.versions = versions;
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
+        this.versions = versions;
+        this.onApply = onApply;
         loadFXML();
     }
 
@@ -110,12 +113,20 @@ public class Filter extends GridPane {
 
     @FXML
     void onBtnCancelAction(ActionEvent event) {
+        event.consume();
         close();
     }
 
     @FXML
     void onBtnApplyAction(ActionEvent event) {
-        
+        event.consume();
+        onApply.call(
+            cbModLoader.getSelectionModel().getSelectedItem(),
+            cbOrigin.getSelectionModel().getSelectedItem(),
+            cbVersion.getSelectionModel().getSelectedItem(),
+            true
+        );
+        close();
     }
 
 }
