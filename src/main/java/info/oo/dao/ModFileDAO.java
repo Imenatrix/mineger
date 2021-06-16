@@ -63,7 +63,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public int getTotalPagesByModLoaderIdAndMinecraftVersion(int limit, int modLoaderId, String minecraftVersion) {
+    public int getTotalPages(int limit, int modLoaderId, String minecraftVersion) {
         String query =
             "select ceil(count(*) / ?) as 'totalPages' from " +
                 "mod_file f join " +
@@ -87,7 +87,7 @@ public class ModFileDAO implements IModFileDAO {
         0);
     }
 
-    public ArrayList<ModFile> getPaginatedByModLoaderIdAndMinecraftVersion(int limit, int page, int modLoaderId, String minecraftVersion) {
+    public ArrayList<ModFile> getPaginated(int limit, int page, int modLoaderId, String minecraftVersion) {
         String query =
             "select f.* from " +
                 "mod_file f join " +
@@ -113,7 +113,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public ArrayList<ModFile> getPaginatedByModLoaderIdAndMinecraftVersionAndSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+    public ArrayList<ModFile> getPaginatedSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
         String query =
             "select * from " +
                 "mod_file f join " +
@@ -140,7 +140,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public int getTotalPagesByModLoaderIdAndMinecraftVersionAndSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+    public int getTotalPagesSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
         String query =
             "select ceil(count(*) / ?) as totalPages from " +
                 "mod_file f join " +

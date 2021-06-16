@@ -90,7 +90,7 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
-                totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersion(
+                totalPages = modFileDAO.getTotalPages(
                     20,
                     newValue.getModLoader().getId(),
                     newValue.getMinecraftVersion()
@@ -109,7 +109,7 @@ public class Main {
     }
 
     private void updateListModFiles(ModModule modModule) {
-        ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersion(
+        ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
             20,
             page,
             modModule.getModLoader().getId(),
@@ -120,14 +120,14 @@ public class Main {
     }
 
     private void updateListModFilesWithSearch(ModModule modModule) {
-        totalPages = modFileDAO.getTotalPagesByModLoaderIdAndMinecraftVersionAndSearch(
+        totalPages = modFileDAO.getTotalPagesSearch(
             20,
             page,
             modModule.getModLoader().getId(),
             modModule.getMinecraftVersion(),
             txtBusca.getText()
         );
-        ArrayList<ModFile> modFiles = modFileDAO.getPaginatedByModLoaderIdAndMinecraftVersionAndSearch(
+        ArrayList<ModFile> modFiles = modFileDAO.getPaginatedSearch(
             20,
             page,
             modModule.getModLoader().getId(),
