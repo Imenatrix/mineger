@@ -122,7 +122,6 @@ public class Main {
     private void updateListModFilesWithSearch(ModModule modModule) {
         totalPages = modFileDAO.getTotalPages(
             20,
-            page,
             modModule.getModLoader().getId(),
             modModule.getMinecraftVersion(),
             txtBusca.getText()

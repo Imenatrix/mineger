@@ -140,7 +140,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public int getTotalPages(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+    public int getTotalPages(int limit, int modLoaderId, String minecraftVersion, String search) {
         String query =
             "select ceil(count(*) / ?) as totalPages from " +
                 "mod_file f join " +
@@ -149,9 +149,7 @@ public class ModFileDAO implements IModFileDAO {
                 "m.id = f.mod_id " +
                 "and f.minecraft_version = ? " +
                 "and m.mod_loader_id = ? " +
-                "and match(m.name, m.summary) against(? in boolean mode)" +
-            "limit ? " +
-            "offset ?;";
+                "and match(m.name, m.summary) against(? in boolean mode)";
 
         return Clarice.executeQueryOr(
             query,
@@ -160,8 +158,6 @@ public class ModFileDAO implements IModFileDAO {
                 stmt.setString(2, minecraftVersion);
                 stmt.setInt(3, modLoaderId);
                 stmt.setString(4, search + "*");
-                stmt.setInt(5, limit);
-                stmt.setInt(6, page * limit);
             },
             result -> {
                 result.next();
