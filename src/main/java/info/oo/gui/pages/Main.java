@@ -52,6 +52,11 @@ public class Main {
     private int totalPages;
     private int count;
     private User user;
+    private ModModule modModule;
+    private Integer modLoaderId;
+    private Integer modOriginId;
+    private String minecraftVersion;
+    private String search;
     private ObservableList<ModModule> modModules;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<String> minecraftVersions;
@@ -90,12 +95,18 @@ public class Main {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
+                if (txtBusca.getText().equals("")) {
+                    search = null;
+                }
+                modModule = newValue;
+                modLoaderId = modModule.getModLoader().getId();
+                minecraftVersion = modModule.getMinecraftVersion();
                 totalPages = modFileDAO.getTotalPages(
                     20,
-                    newValue.getModLoader().getId(),
-                    null,
-                    newValue.getMinecraftVersion(),
-                    null
+                    modLoaderId,
+                    modOriginId,
+                    minecraftVersion,
+                    search
                 );
                 page = 0;
                 updateLblPaginator();
@@ -114,10 +125,10 @@ public class Main {
         ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
             20,
             page,
-            modModule.getModLoader().getId(),
-            null,
-            modModule.getMinecraftVersion(),
-            null
+            modLoaderId,
+            modOriginId,
+            minecraftVersion,
+            search
         );
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
@@ -126,18 +137,18 @@ public class Main {
     private void updateListModFilesWithSearch(ModModule modModule) {
         totalPages = modFileDAO.getTotalPages(
             20,
-            modModule.getModLoader().getId(),
-            null,
-            modModule.getMinecraftVersion(),
-            txtBusca.getText()
+            modLoaderId,
+            modOriginId,
+            minecraftVersion,
+            search
         );
         ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
             20,
             page,
-            modModule.getModLoader().getId(),
-            null,
-            modModule.getMinecraftVersion(),
-            txtBusca.getText()
+            modLoaderId,
+            modOriginId,
+            minecraftVersion,
+            search
         );
         updateLblPaginator();
         setListModFilesCellFactory();
@@ -166,7 +177,7 @@ public class Main {
 
     private void setListModFilesCellFactory() {
         listModFiles.setCellFactory(list -> new ModPod(
-            getSelectedModModule(),
+            modModule,
             modModuleDAO
         ));
     }
@@ -177,7 +188,7 @@ public class Main {
         if (page > 0) {
             page--;
             updateLblPaginator();
-            updateListModFiles(getSelectedModModule());
+            updateListModFiles(modModule);
         }
     }
 
@@ -187,7 +198,7 @@ public class Main {
         if (page < (totalPages - 1)) {
             page++;
             updateLblPaginator();
-            updateListModFiles(getSelectedModModule());
+            updateListModFiles(modModule);
         }
     }
 
@@ -204,7 +215,7 @@ public class Main {
     @FXML
     private void onBtnDeleteAction(ActionEvent event) {
         event.consume();
-        ModModule modModule = getSelectedModModule();
+        ModModule modModule = this.modModule;
         if (modModule != null) {
             modModules.remove(modModule);
             user.getModModules().remove(modModule);
@@ -212,20 +223,16 @@ public class Main {
         }
     }
 
-    private ModModule getSelectedModModule() {
-        return listModModules.getSelectionModel().getSelectedItem();
-    }
-
     private void onInstallerFetchOne(Warning warning) {
         Platform.runLater(() -> {
-            warning.setLblMessageText(count + " / " + getSelectedModModule().getModFiles().size());
+            warning.setLblMessageText(count + " / " + modModule.getModFiles().size());
         });
         count++;
     }
 
     private void onInstallerFinish(Warning warning) {
         Platform.runLater(() -> {
-            warning.setLblMessageText(getSelectedModModule().getName() + " instalado!");
+            warning.setLblMessageText(modModule.getName() + " instalado!");
             warning.setBtnDimissDisable(false);
         });
     }
@@ -237,13 +244,13 @@ public class Main {
         Warning warning = new Warning();
         Scene scene = new Scene(warning);
         warning.setBtnDimissDisable(true);
-        warning.setLblMessageText("0 / " + getSelectedModModule().getModFiles().size());
+        warning.setLblMessageText("0 / " + modModule.getModFiles().size());
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
         popup.show();
         count = 0;
         Thread thread = new Thread(() -> installer.install(
-            getSelectedModModule(),
+            modModule,
             modFile -> onInstallerFetchOne(warning),
             modFile -> onInstallerFinish(warning)
         ));
@@ -254,7 +261,13 @@ public class Main {
     @FXML
     void onBtnSearchAction(ActionEvent event) {
         event.consume();
-        updateListModFilesWithSearch(getSelectedModModule());
+        if (txtBusca.getText().equals("")) {
+            search = null;
+        }
+        else {
+            search = txtBusca.getText();
+        }
+        updateListModFilesWithSearch(modModule);
     }
 
     @FXML
