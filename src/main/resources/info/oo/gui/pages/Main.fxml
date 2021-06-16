@@ -23,7 +23,7 @@
             </Label>
             <TextField fx:id="txtBusca" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#onBtnSearchAction" text="Buscar" />
-            <Button mnemonicParsing="false" text="Filtrar" />
+            <Button mnemonicParsing="false" onAction="#onBtnFilterAction" text="Filtrar" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -9,6 +9,7 @@ import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
+import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
 import info.oo.services.interfaces.IModModuleInstaller;
@@ -54,6 +55,7 @@ public class Main {
     private ObservableList<ModModule> modModules;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<String> minecraftVersions;
+    private ObservableList<ModOrigin> modOrigins;
     private IModFileDAO modFileDAO;
     private IModModuleDAO modModuleDAO;
     private IModModuleInstaller installer;
@@ -64,6 +66,7 @@ public class Main {
         ObservableList<ModModule> modModules,
         ObservableList<ModLoader> modLoaders,
         ObservableList<String> minecraftVersions,
+        ObservableList<ModOrigin> modOrigins,
         IModFileDAO modFileDAO,
         IModModuleDAO modModuleDAO,
         IModModuleInstaller installer
@@ -75,6 +78,7 @@ public class Main {
         this.modModules = modModules;
         this.minecraftVersions = minecraftVersions;
         this.modLoaders = modLoaders;
+        this.modOrigins = modOrigins;
         this.modFileDAO = modFileDAO;
         this.modModuleDAO = modModuleDAO;
         this.installer = installer;
@@ -246,6 +250,18 @@ public class Main {
     void onBtnSearchAction(ActionEvent event) {
         event.consume();
         updateListModFilesWithSearch(getSelectedModModule());
+    }
+
+    @FXML
+    void onBtnFilterAction(ActionEvent event) {
+        event.consume();
+        Stage popup = new Stage();
+        Filter filter = new Filter(minecraftVersions, modLoaders, modOrigins);
+        Scene scene = new Scene(filter);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setScene(scene);
+        popup.show();
+        count = 0;
     }
 
 }
