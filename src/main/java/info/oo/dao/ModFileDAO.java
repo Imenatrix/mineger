@@ -113,7 +113,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public ArrayList<ModFile> getPaginatedSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+    public ArrayList<ModFile> getPaginated(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
         String query =
             "select * from " +
                 "mod_file f join " +
@@ -140,7 +140,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public int getTotalPagesSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+    public int getTotalPages(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
         String query =
             "select ceil(count(*) / ?) as totalPages from " +
                 "mod_file f join " +
