@@ -49,6 +49,7 @@ public class Filter extends GridPane {
     private Integer modLoaderId;
     private Integer modOriginId;
     private String version;
+    private Boolean nonAdded;
 
     public Filter(
         ObservableList<ModLoader> modLoaders,
@@ -57,7 +58,8 @@ public class Filter extends GridPane {
         QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply,
         Integer modLoaderId,
         Integer modOriginId,
-        String version
+        String version,
+        Boolean nonAdded
     ) {
         super();
         this.modLoaders = modLoaders;
@@ -68,6 +70,7 @@ public class Filter extends GridPane {
         this.modLoaderId = modLoaderId;
         this.modOriginId = modOriginId;
         this.version = version;
+        this.nonAdded = nonAdded;
 
         loadFXML();
     }
@@ -116,6 +119,9 @@ public class Filter extends GridPane {
         }
         catch (NullPointerException e) {
             e.printStackTrace();
+        }
+        if (nonAdded != null) {
+            chkNonAdded.setSelected(nonAdded);
         }
         cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
             @Override

@@ -66,6 +66,7 @@ public class Main {
     private Integer modOriginId;
     private String minecraftVersion;
     private String search;
+    private Boolean nonAdded;
     private ObservableList<ModModule> modModules;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<String> minecraftVersions;
@@ -280,6 +281,7 @@ public class Main {
             modOrigins,
             minecraftVersions,
             (modLoader, modOrigin, minecraftVersion, nonAdded) -> {
+                this.nonAdded = nonAdded;
                 modLoaderId = modLoader == null ? null : modLoader.getId();
                 modOriginId = modOrigin == null ? null : modOrigin.getId();
                 this.minecraftVersion = minecraftVersion;
@@ -309,7 +311,8 @@ public class Main {
             },
             modLoaderId,
             modOriginId,
-            minecraftVersion
+            minecraftVersion,
+            nonAdded
         );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
