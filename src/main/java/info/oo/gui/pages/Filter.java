@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
@@ -36,6 +37,9 @@ public class Filter extends GridPane {
 
     @FXML
     private ComboBox<ModOrigin> cbOrigin;
+
+    @FXML
+    private CheckBox chkNonAdded;
 
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
@@ -124,7 +128,7 @@ public class Filter extends GridPane {
             cbModLoader.getSelectionModel().getSelectedItem(),
             cbOrigin.getSelectionModel().getSelectedItem(),
             cbVersion.getSelectionModel().getSelectedItem(),
-            true
+            chkNonAdded.isSelected()
         );
         close();
     }

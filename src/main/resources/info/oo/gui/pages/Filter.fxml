@@ -34,7 +34,7 @@
             <Button mnemonicParsing="false" onAction="#onBtnApplyAction" text="Aplicar" />
          </children>
       </HBox>
-      <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <CheckBox fx:id="chkNonAdded" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Label text="Origem:" GridPane.rowIndex="2" />
       <ComboBox fx:id="cbOrigin" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
