@@ -260,6 +260,9 @@ public class Main {
     @FXML
     void onBtnFilterAction(ActionEvent event) {
         event.consume();
+        if (txtBusca.getText().equals("")) {
+            search = null;
+        }
         Stage popup = new Stage();
         Filter filter = new Filter(
             modLoaders,
