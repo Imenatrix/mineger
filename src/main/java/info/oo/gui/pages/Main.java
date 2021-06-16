@@ -93,7 +93,9 @@ public class Main {
                 totalPages = modFileDAO.getTotalPages(
                     20,
                     newValue.getModLoader().getId(),
-                    newValue.getMinecraftVersion()
+                    null,
+                    newValue.getMinecraftVersion(),
+                    null
                 );
                 page = 0;
                 updateLblPaginator();
@@ -113,7 +115,9 @@ public class Main {
             20,
             page,
             modModule.getModLoader().getId(),
-            modModule.getMinecraftVersion()
+            null,
+            modModule.getMinecraftVersion(),
+            null
         );
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
@@ -123,6 +127,7 @@ public class Main {
         totalPages = modFileDAO.getTotalPages(
             20,
             modModule.getModLoader().getId(),
+            null,
             modModule.getMinecraftVersion(),
             txtBusca.getText()
         );
@@ -130,6 +135,7 @@ public class Main {
             20,
             page,
             modModule.getModLoader().getId(),
+            null,
             modModule.getMinecraftVersion(),
             txtBusca.getText()
         );

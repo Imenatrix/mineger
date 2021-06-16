@@ -63,39 +63,56 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public int getTotalPages(int limit, int modLoaderId, String minecraftVersion) {
+    public int getTotalPages(int limit, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
         String query =
             "select ceil(count(*) / ?) as 'totalPages' from " +
                 "mod_file f join " +
                 "`mod` m " +
             "where " +
                 "m.id = f.mod_id " +
-                "and f.minecraft_version = ? " +
-                "and m.mod_loader_id = ?;";
+                (modLoaderId != null ? "and m.mod_loader_id = ? " : "") +
+                (modOriginId != null ? "and m.mod_origin_id = ? " : "") +
+                (minecraftVersion != null ? "and f.minecraft_version = ? " : "") +
+                (search != null ? "and match(m.name, m.summary) against(? in boolean mode) " : "") +
+                ";";
 
         return Clarice.executeQueryOr(
             query,
             stmt -> {
-                stmt.setInt(1, limit);
-                stmt.setString(2, minecraftVersion);
-                stmt.setInt(3, modLoaderId);
+                int counter = 1;
+                stmt.setInt(counter++, limit);
+                if (modLoaderId != null) {
+                    stmt.setInt(counter++, modLoaderId);
+                };
+                if (modOriginId != null) {
+                    stmt.setInt(counter++, modOriginId);
+                };
+                if (minecraftVersion != null) {
+                    stmt.setString(counter++, minecraftVersion);
+                };
+                if (search != null) {
+                    stmt.setString(counter++, search + "*");
+                };
             },
             result -> {
                 result.next();
                 return result.getInt("totalPages");
             },
-        0);
+            0
+        );
     }
 
-    public ArrayList<ModFile> getPaginated(int limit, int page, int modLoaderId, String minecraftVersion) {
+    public ArrayList<ModFile> getPaginated(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
         String query =
             "select f.* from " +
                 "mod_file f join " +
                 "`mod` m " +
             "where " +
                 "m.id = f.mod_id " +
-                "and f.minecraft_version = ? " +
-                "and m.mod_loader_id = ? " +
+                (modLoaderId != null ? "and m.mod_loader_id = ? " : "") +
+                (modOriginId != null ? "and m.mod_origin_id = ? " : "") +
+                (minecraftVersion != null ? "and f.minecraft_version = ? " : "") +
+                (search != null ? "and match(m.name, m.summary) against(? in boolean mode) " : "") +
             "order by f.id " +
             "limit ? " +
             "offset ?;";
@@ -103,67 +120,24 @@ public class ModFileDAO implements IModFileDAO {
         return Clarice.executeQueryOr(
             query,
             stmt -> {
-                stmt.setString(1, minecraftVersion);
-                stmt.setInt(2, modLoaderId);
-                stmt.setInt(3, limit);
-                stmt.setInt(4, page * limit);
+                int counter = 1;
+                if (modLoaderId != null) {
+                    stmt.setInt(counter++, modLoaderId);
+                };
+                if (modOriginId != null) {
+                    stmt.setInt(counter++, modOriginId);
+                };
+                if (minecraftVersion != null) {
+                    stmt.setString(counter++, minecraftVersion);
+                };
+                if (search != null) {
+                    stmt.setString(counter++, search + "*");
+                };
+                stmt.setInt(counter++, limit);
+                stmt.setInt(counter++, page * limit);
             },
             result -> resultToModFileArrayList(result),
             new ArrayList<ModFile>()
-        );
-    }
-
-    public ArrayList<ModFile> getPaginated(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
-        String query =
-            "select * from " +
-                "mod_file f join " +
-                "`mod` m " +
-            "where " +
-                "m.id = f.mod_id " +
-                "and f.minecraft_version = ? " +
-                "and m.mod_loader_id = ? " +
-                "and match(m.name, m.summary) against(? in boolean mode)" +
-            "limit ? " +
-            "offset ?;";
-
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {
-                stmt.setString(1, minecraftVersion);
-                stmt.setInt(2, modLoaderId);
-                stmt.setString(3, search + "*");
-                stmt.setInt(4, limit);
-                stmt.setInt(5, page * limit);
-            },
-            result -> resultToModFileArrayList(result),
-            new ArrayList<ModFile>()
-        );
-    }
-
-    public int getTotalPages(int limit, int modLoaderId, String minecraftVersion, String search) {
-        String query =
-            "select ceil(count(*) / ?) as totalPages from " +
-                "mod_file f join " +
-                "`mod` m " +
-            "where " +
-                "m.id = f.mod_id " +
-                "and f.minecraft_version = ? " +
-                "and m.mod_loader_id = ? " +
-                "and match(m.name, m.summary) against(? in boolean mode)";
-
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {
-                stmt.setInt(1, limit);
-                stmt.setString(2, minecraftVersion);
-                stmt.setInt(3, modLoaderId);
-                stmt.setString(4, search + "*");
-            },
-            result -> {
-                result.next();
-                return result.getInt("totalPages");
-            },
-            0
         );
     }
 
