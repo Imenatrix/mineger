@@ -3,6 +3,10 @@
     -fx-text-fill: white;
 }
 
+.scroll-bar .thumb {
+    -fx-background-color: #252525;
+}
+
 .modPod {
     -fx-background-color: #252525;
     -fx-padding: 10px 0px 0px 15px;
