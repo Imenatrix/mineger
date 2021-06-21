@@ -19,6 +19,7 @@ import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
+import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
@@ -53,6 +54,7 @@ public class HelloFX extends Application {
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
+        ArrayList<ModOrigin> modOrigins = modOriginDAO.getAll();
         
         Scene login = new Scene(new Login(userDAO, user -> {
             try {
@@ -61,6 +63,7 @@ public class HelloFX extends Application {
                     user.getModModules(),
                     modLoaders,
                     minecraftVersions,
+                    modOrigins,
                     modFileDAO,
                     modModuleDAO,
                     installer
@@ -81,6 +84,7 @@ public class HelloFX extends Application {
         ArrayList<ModModule> modModules,
         ArrayList<ModLoader> modLoaders,
         ArrayList<String> minecraftVersions,
+        ArrayList<ModOrigin> modOrigins,
         IModFileDAO modFileDAO,
         IModModuleDAO modModuleDAO,
         IModModuleInstaller installer
@@ -92,6 +96,7 @@ public class HelloFX extends Application {
             observable(modModules),
             observable(modLoaders),
             observable(minecraftVersions),
+            observable(modOrigins),
             modFileDAO,
             modModuleDAO,
             installer

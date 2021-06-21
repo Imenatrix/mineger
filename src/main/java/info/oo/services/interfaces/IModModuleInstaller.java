@@ -6,6 +6,6 @@ import info.oo.utils.VoidCallback;
 
 public interface IModModuleInstaller {
     
-    public void install(ModModule modModule, VoidCallback<ModFile> onFetchOne, VoidCallback<ModFile> onFinish);
+    public void install(ModModule modModule, VoidCallback<ModFile> onFetchOne, VoidCallback<ModModule> onFinish);
 
 }

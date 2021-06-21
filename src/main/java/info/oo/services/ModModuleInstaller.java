@@ -35,12 +35,12 @@ public class ModModuleInstaller implements IModModuleInstaller {
         "mods"
     );
 
-    public void install(ModModule modModule, VoidCallback<ModFile> onFetchOne, VoidCallback<ModFile> onFinish) {
+    public void install(ModModule modModule, VoidCallback<ModFile> onFetchOne, VoidCallback<ModModule> onFinish) {
         createCacheFolderIfNotExists();
         createModsFolderIfNotExists();
         fetchModFilesFromModModule(modModule, onFetchOne);
         copyModLoaderFromCacheToModsFolder(modModule);
-        onFinish.call(modModule.getModFiles().get(1));
+        onFinish.call(modModule);
     }
 
     private void createModsFolderIfNotExists() {
