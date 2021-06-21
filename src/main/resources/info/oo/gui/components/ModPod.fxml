@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="75.0" prefWidth="500.0" type="ListCell" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefWidth="500.0" styleClass="modPod" type="ListCell" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <graphic>
       <HBox fx:id="container" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
          <children>
@@ -27,6 +27,9 @@
             </VBox>
             <Button fx:id="btnInstall" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBtnInstallAction" prefHeight="75.0" prefWidth="75.0" text="Button" />
          </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </HBox>
    </graphic>
 </fx:root>
