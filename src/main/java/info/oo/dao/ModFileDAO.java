@@ -113,6 +113,64 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
+    public ArrayList<ModFile> getPaginatedByModLoaderIdAndMinecraftVersionAndSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+        String query =
+            "select * from " +
+                "mod_file f join " +
+                "`mod` m " +
+            "where " +
+                "m.id = f.mod_id " +
+                "and f.minecraft_version = ? " +
+                "and m.mod_loader_id = ? " +
+                "and match(m.name, m.summary) against(? in boolean mode)" +
+            "limit ? " +
+            "offset ?;";
+
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {
+                stmt.setString(1, minecraftVersion);
+                stmt.setInt(2, modLoaderId);
+                stmt.setString(3, search + "*");
+                stmt.setInt(4, limit);
+                stmt.setInt(5, page * limit);
+            },
+            result -> resultToModFileArrayList(result),
+            new ArrayList<ModFile>()
+        );
+    }
+
+    public int getTotalPagesByModLoaderIdAndMinecraftVersionAndSearch(int limit, int page, int modLoaderId, String minecraftVersion, String search) {
+        String query =
+            "select ceil(count(*) / ?) as totalPages from " +
+                "mod_file f join " +
+                "`mod` m " +
+            "where " +
+                "m.id = f.mod_id " +
+                "and f.minecraft_version = ? " +
+                "and m.mod_loader_id = ? " +
+                "and match(m.name, m.summary) against(? in boolean mode)" +
+            "limit ? " +
+            "offset ?;";
+
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, limit);
+                stmt.setString(2, minecraftVersion);
+                stmt.setInt(3, modLoaderId);
+                stmt.setString(4, search + "*");
+                stmt.setInt(5, limit);
+                stmt.setInt(6, page * limit);
+            },
+            result -> {
+                result.next();
+                return result.getInt("totalPages");
+            },
+            0
+        );
+    }
+
     private ArrayList<ModFile> resultToModFileArrayList(ResultSet result) throws SQLException {
         ArrayList<ModFile> modFiles = new ArrayList<ModFile>();
         while (result.next()) {
