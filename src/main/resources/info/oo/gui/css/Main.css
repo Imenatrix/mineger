@@ -3,8 +3,10 @@
     -fx-text-fill: white;
 }
 
-.list-cell {
+.modPod {
     -fx-background-color: #252525;
+    -fx-padding: 10px 0px 0px 15px;
+    -fx-background-insets: 10px 0px 0px 0px;
 }
 
 .txtBusca, .txtBusca * {
