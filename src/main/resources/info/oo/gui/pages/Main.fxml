@@ -22,8 +22,8 @@
                </HBox.margin>
             </Label>
             <TextField fx:id="txtBusca" HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnSearch" disable="true" mnemonicParsing="false" onAction="#onBtnSearchAction" text="Buscar" />
-            <Button fx:id="btnFilter" disable="true" mnemonicParsing="false" onAction="#onBtnFilterAction" text="Filtrar" />
+            <Button fx:id="btnSearch" styleClass="icon" disable="true" mnemonicParsing="false" onAction="#onBtnSearchAction" text="&#xe8b6;" />
+            <Button fx:id="btnFilter" styleClass="icon" disable="true" mnemonicParsing="false" onAction="#onBtnFilterAction" text="&#xef4f;" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
