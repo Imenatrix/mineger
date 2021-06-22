@@ -32,8 +32,8 @@
       <ComboBox fx:id="cbModLoader" prefWidth="300.0" promptText="Mod Loader" GridPane.rowIndex="1" />
       <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="4">
          <children>
-            <Button mnemonicParsing="false" onAction="#onBtnCancelAction" styleClass="btnAlt" text="Cancelar" />
-            <Button mnemonicParsing="false" onAction="#onBtnApplyAction" text="Aplicar" />
+            <Button mnemonicParsing="false" onAction="#onBtnCancelAction" prefWidth="9999.0" styleClass="btnAlt" text="Cancelar" />
+            <Button mnemonicParsing="false" onAction="#onBtnApplyAction" prefWidth="9999.0" text="Aplicar" />
          </children>
       </HBox>
       <ComboBox fx:id="cbOrigin" prefWidth="300.0" promptText="Origem" GridPane.rowIndex="2" />
