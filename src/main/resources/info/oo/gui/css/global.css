@@ -3,6 +3,10 @@
     -fx-text-fill: white;
 }
 
+.arrow-button {
+    -fx-background-color: #252525;
+}
+
 Button {
     -fx-background-color: #24914D
 }
