@@ -1,0 +1,24 @@
+* {
+    -fx-background-color: #151515;
+    -fx-text-fill: white;
+}
+
+Button {
+    -fx-background-color: #24914D
+}
+
+TextField, TextField * {
+    -fx-background-color: #252525;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #252525;
+}
+
+.list-cell {
+    -fx-background-color: #252525;
+}
+
+.list-cell:filled:hover, .list-cell:filled:selected {
+    -fx-background-color: #353535;
+}

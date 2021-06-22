@@ -1,19 +1,6 @@
-* {
-    -fx-background-color: #151515;
-    -fx-text-fill: white;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #252525;
-}
-
 ModPod {
     -fx-padding: 10px 0px 0px 15px;
     -fx-background-insets: 10px 0px 0px 0px;
-}
-
-TextField, TextField * {
-    -fx-background-color: #252525;
 }
 
 #btnGroup {
@@ -21,18 +8,10 @@ TextField, TextField * {
     -fx-background-radius: 5px 5px 0px 0px;
 }
 
-.list-cell, #listModModules {
+#listModModules {
     -fx-background-color: #252525;
-}
-
-.list-cell:filled:hover, .list-cell:filled:selected {
-    -fx-background-color: #353535;
 }
 
 #listModFiles {
     -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
-}
-
-Button {
-    -fx-background-color: #24914D
 }
