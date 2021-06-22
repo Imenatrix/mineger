@@ -29,6 +29,10 @@
     -fx-background-color: #353535;
 }
 
+#listModFiles {
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
 Button {
     -fx-background-color: #24914D
 }
