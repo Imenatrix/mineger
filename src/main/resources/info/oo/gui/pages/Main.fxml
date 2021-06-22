@@ -43,12 +43,12 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" styleClass="listModModules" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox HBox.hgrow="ALWAYS">
                <children>
-                  <ListView fx:id="listModFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <ListView fx:id="listModFiles" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets left="10.0" />
                      </padding></ListView>
