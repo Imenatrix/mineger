@@ -17,6 +17,11 @@
     -fx-background-color: #252525;
 }
 
+.btnGroup {
+    -fx-background-color: #252525;
+    -fx-background-radius: 5px 5px 0px 0px;
+}
+
 Button {
     -fx-background-color: #24914D
 }

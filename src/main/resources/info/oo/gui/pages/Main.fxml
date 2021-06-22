@@ -33,7 +33,7 @@
          <children>
             <VBox>
                <children>
-                  <HBox prefWidth="200.0" spacing="5.0">
+                  <HBox styleClass="btnGroup" prefWidth="200.0" spacing="5.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onBtnNewAction" prefWidth="9999.0" text="Novo" />
                         <Button mnemonicParsing="false" onAction="#onBtnDeleteAction" prefWidth="9999.0" text="Apagar" />
