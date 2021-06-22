@@ -21,7 +21,7 @@
                   <Insets left="26.0" right="26.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="txtBusca" styleClass="txtBusca" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtBusca" HBox.hgrow="ALWAYS" />
             <Button fx:id="btnSearch" disable="true" mnemonicParsing="false" onAction="#onBtnSearchAction" text="Buscar" />
             <Button fx:id="btnFilter" disable="true" mnemonicParsing="false" onAction="#onBtnFilterAction" text="Filtrar" />
          </children>
@@ -33,7 +33,7 @@
          <children>
             <VBox>
                <children>
-                  <HBox prefWidth="200.0" spacing="5.0" styleClass="btnGroup">
+                  <HBox fx:id="btnGroup" prefWidth="200.0" spacing="5.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onBtnNewAction" prefWidth="9999.0" text="Novo" />
                         <Button mnemonicParsing="false" onAction="#onBtnDeleteAction" prefWidth="9999.0" text="Apagar" />
@@ -43,7 +43,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" styleClass="listModModules" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="listModModules" prefHeight="200.0" prefWidth="205.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox HBox.hgrow="ALWAYS">

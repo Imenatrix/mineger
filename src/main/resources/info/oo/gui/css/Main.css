@@ -7,21 +7,21 @@
     -fx-background-color: #252525;
 }
 
-.modPod {
+ModPod {
     -fx-padding: 10px 0px 0px 15px;
     -fx-background-insets: 10px 0px 0px 0px;
 }
 
-.txtBusca, .txtBusca * {
+TextField, TextField * {
     -fx-background-color: #252525;
 }
 
-.btnGroup {
+#btnGroup {
     -fx-background-color: #252525;
     -fx-background-radius: 5px 5px 0px 0px;
 }
 
-.list-cell, .listModModules {
+.list-cell, #listModModules {
     -fx-background-color: #252525;
 }
 
