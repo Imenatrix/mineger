@@ -7,6 +7,14 @@
     -fx-background-color: #252525;
 }
 
+CheckBox, CheckBox * {
+    -fx-background-color: #353535;
+}
+
+CheckBox:selected .mark {
+    -fx-background-color: #151515;
+}
+
 Button {
     -fx-background-color: #24914D
 }
