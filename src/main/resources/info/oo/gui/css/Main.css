@@ -1,0 +1,13 @@
+* {
+    -fx-background-color: #151515;
+    -fx-text-fill: white;
+}
+
+.list-cell {
+    -fx-background-color: #252525;
+    -fx-text-fill: white;
+}
+
+Button {
+    -fx-background-color: #24914D
+}
