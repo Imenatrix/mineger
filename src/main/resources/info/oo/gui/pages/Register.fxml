@@ -8,21 +8,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0" spacing="10.0" type="VBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/global.css">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="10.0" stylesheets="@../css/global.css" type="VBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Nome:" />
-      <TextField fx:id="txtName" />
-      <Label text="Login:" />
-      <TextField fx:id="txtLogin" />
-      <Label text="Senha:" />
-      <PasswordField fx:id="txtPassword" />
-      <Label text="Confirme sua senha:" />
-      <PasswordField fx:id="txtConfirmPassword" />
+      <TextField fx:id="txtName" promptText="Nome" />
+      <TextField fx:id="txtLogin" promptText="Login" />
+      <PasswordField fx:id="txtPassword" promptText="Senha" />
+      <PasswordField fx:id="txtConfirmPassword" promptText="Confirmar Senha" />
       <Label fx:id="lblError" />
       <HBox spacing="10.0">
          <children>
             <Button mnemonicParsing="false" onAction="#onBtnRegisterAction" text="Registrar" />
-            <Button styleClass="btnAlt" mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
+            <Button mnemonicParsing="false" onAction="#onBtnCancelAction" styleClass="btnAlt" text="Cancelar" />
          </children>
       </HBox>
    </children>
