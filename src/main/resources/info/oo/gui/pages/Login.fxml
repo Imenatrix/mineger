@@ -18,7 +18,7 @@
       <HBox prefWidth="200.0" spacing="10.0">
          <children>
             <Button mnemonicParsing="false" onAction="#onBtnLoginAction" text="Entrar" />
-            <Button mnemonicParsing="false" onAction="#onBtnRegisterAction" text="Registrar" />
+            <Button styleClass="btnAlt" mnemonicParsing="false" onAction="#onBtnRegisterAction" text="Registrar" />
          </children>
       </HBox>
    </children>
