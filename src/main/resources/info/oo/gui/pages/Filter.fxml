@@ -30,7 +30,7 @@
       <ComboBox fx:id="cbModLoader" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
-            <Button mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
+            <Button styleClass="btnAlt" mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
             <Button mnemonicParsing="false" onAction="#onBtnApplyAction" text="Aplicar" />
          </children>
       </HBox>
