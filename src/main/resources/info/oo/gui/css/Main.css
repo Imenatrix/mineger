@@ -8,7 +8,6 @@
 }
 
 .modPod {
-    -fx-background-color: #252525;
     -fx-padding: 10px 0px 0px 15px;
     -fx-background-insets: 10px 0px 0px 0px;
 }
@@ -20,6 +19,14 @@
 .btnGroup {
     -fx-background-color: #252525;
     -fx-background-radius: 5px 5px 0px 0px;
+}
+
+.list-cell, .listModModules {
+    -fx-background-color: #252525;
+}
+
+.list-cell:filled:hover, .list-cell:filled:selected {
+    -fx-background-color: #353535;
 }
 
 Button {
