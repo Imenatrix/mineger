@@ -7,7 +7,7 @@ Button {
     -fx-background-color: #24914D
 }
 
-TextField, TextField * {
+TextField, TextField *, PasswordField, PasswordField * {
     -fx-background-color: #252525;
 }
 
