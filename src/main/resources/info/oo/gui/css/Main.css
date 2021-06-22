@@ -5,7 +5,10 @@
 
 .list-cell {
     -fx-background-color: #252525;
-    -fx-text-fill: white;
+}
+
+.txtBusca, .txtBusca * {
+    -fx-background-color: #252525;
 }
 
 Button {

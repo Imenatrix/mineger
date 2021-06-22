@@ -21,7 +21,7 @@
                   <Insets left="26.0" right="26.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="txtBusca" HBox.hgrow="ALWAYS" />
+            <TextField styleClass="txtBusca" fx:id="txtBusca" HBox.hgrow="ALWAYS" />
             <Button fx:id="btnSearch" disable="true" mnemonicParsing="false" onAction="#onBtnSearchAction" text="Buscar" />
             <Button fx:id="btnFilter" disable="true" mnemonicParsing="false" onAction="#onBtnFilterAction" text="Filtrar" />
          </children>
