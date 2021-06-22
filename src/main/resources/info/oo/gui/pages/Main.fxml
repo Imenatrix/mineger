@@ -18,13 +18,16 @@
                <image>
                   <Image url="@../../images/logo.png" />
                </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
             </ImageView>
             <TextField fx:id="txtBusca" HBox.hgrow="ALWAYS" />
             <Button fx:id="btnSearch" disable="true" mnemonicParsing="false" onAction="#onBtnSearchAction" styleClass="icon" text="" />
             <Button fx:id="btnFilter" disable="true" mnemonicParsing="false" onAction="#onBtnFilterAction" styleClass="icon" text="" />
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
