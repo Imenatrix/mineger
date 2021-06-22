@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -55,6 +56,8 @@ public class HelloFX extends Application {
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
         ArrayList<ModOrigin> modOrigins = modOriginDAO.getAll();
+
+        Font.loadFont(getClass().getResourceAsStream("fonts/MaterialIcons-Regular.ttf"), 10);
         
         Scene login = new Scene(new Login(userDAO, user -> {
             try {
