@@ -57,9 +57,9 @@
                      </VBox.margin></ListView>
                   <HBox alignment="CENTER" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#onBtnPreviousAction" text="Anterior" />
+                        <Button styleClass="icon" mnemonicParsing="false" onAction="#onBtnPreviousAction" text="&#xe408;" />
                         <Label fx:id="lblPaginator" text="1 de 1" />
-                        <Button mnemonicParsing="false" onAction="#onBtnNextAction" text="Próxima" />
+                        <Button styleClass="icon" mnemonicParsing="false" onAction="#onBtnNextAction" text="&#xe409;" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" top="10.0" />
