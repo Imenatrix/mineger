@@ -39,3 +39,8 @@ TextField, TextField *, PasswordField, PasswordField * {
     -fx-font-family: "Material Icons";
     -fx-font-size: 14px;
 }
+
+.icon-large {
+    -fx-font-family: "Material Icons";
+    -fx-font-size: 30px;
+}
