@@ -33,7 +33,7 @@
          <children>
             <VBox>
                <children>
-                  <HBox styleClass="btnGroup" prefWidth="200.0" spacing="5.0">
+                  <HBox prefWidth="200.0" spacing="5.0" styleClass="btnGroup">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onBtnNewAction" prefWidth="9999.0" text="Novo" />
                         <Button mnemonicParsing="false" onAction="#onBtnDeleteAction" prefWidth="9999.0" text="Apagar" />
@@ -48,7 +48,10 @@
             </VBox>
             <VBox HBox.hgrow="ALWAYS">
                <children>
-                  <ListView fx:id="listModFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="listModFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding></ListView>
                   <HBox alignment="CENTER" spacing="10.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onBtnPreviousAction" text="Anterior" />
