@@ -15,8 +15,8 @@
       <Label fx:id="lblError" />
       <HBox prefWidth="200.0" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onBtnLoginAction" text="Entrar" />
-            <Button mnemonicParsing="false" onAction="#onBtnRegisterAction" styleClass="btnAlt" text="Registrar" />
+            <Button mnemonicParsing="false" onAction="#onBtnLoginAction" prefWidth="9999.0" text="Entrar" />
+            <Button mnemonicParsing="false" onAction="#onBtnRegisterAction" prefWidth="9999.0" styleClass="btnAlt" text="Registrar" />
          </children>
       </HBox>
    </children>
