@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ModModule {
     
-    private int id;
+    private Integer id;
     private String name;
     private String minecraftVersion;
     private ArrayList<ModFile> modFiles;
@@ -36,8 +36,14 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
+    }
+
+    public void setId(int id) {
+        if (this.id == null) {
+            this.id = id;
+        }
     }
 
     public String getName() {
