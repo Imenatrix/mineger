@@ -5,6 +5,7 @@ import java.io.IOException;
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.User;
 import info.oo.utils.VoidCallback;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,7 @@ public class Login extends VBox {
         loadFXML();
         this.userDAO = userDAO;
         this.onSuccess = onSuccess;
+        Platform.runLater(() -> requestFocus());
     }
 
     private void loadFXML() {

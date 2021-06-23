@@ -135,6 +135,18 @@ public class Filter extends GridPane {
                 }
             }
         });
+        cbOrigin.setCellFactory(combo -> new ListCell<ModOrigin>() {
+            @Override
+            protected void updateItem(ModOrigin item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                }
+                else {
+                    setText(item.getName());
+                }
+            }
+        });
         cbModLoader.setButtonCell(new ListCell<ModLoader>() {
             @Override
             protected void updateItem(ModLoader item, boolean empty) {
