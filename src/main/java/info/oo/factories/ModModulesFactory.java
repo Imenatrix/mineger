@@ -28,26 +28,34 @@ public class ModModulesFactory implements IModModulesFactory {
         ArrayList<ModLoader> modLoaders,
         ArrayList<ModOrigin> modOrigins
     ) {
-        ArrayList<ModFile> createdModFiles = modFilesFactory.create(modFiles, mods, modLoaders, modOrigins);
         return new ArrayList<ModModule>(modModules.stream().map(modModule -> new ModModule(
             modModule.getId(),
             modModule.getName(),
             modModule.getMinecraftVersion(),
-            getModFilesFromModModule(fileModules, createdModFiles, modModule),
+            getModFilesFromModModule(
+                modFilesFactory.create(
+                    modFiles,
+                    mods,
+                    modLoaders,
+                    modOrigins
+                ),
+                modModule,
+                fileModules
+            ),
             modModule.getModLoader(),
             modModule.getUser()
         )).collect(Collectors.toList()));
     }
 
-    private ArrayList<ModFile> getModFilesFromModModule(ArrayList<FileModule> fileModules, ArrayList<ModFile> modFiles, ModModule modModule) {
+    private ArrayList<ModFile> getModFilesFromModModule(ArrayList<ModFile> modFiles, ModModule modModule, ArrayList<FileModule> fileModules) {
         return new ArrayList<ModFile>(
             modFiles.stream()
-                .filter(modFile -> isModFileFromModModule(fileModules, modModule, modFile))
+                .filter(modFile -> isModFileFromModModule(modModule, modFile, fileModules))
                 .collect(Collectors.toList())
         );
     }
 
-    private boolean isModFileFromModModule(ArrayList<FileModule> fileModules, ModModule modModule, ModFile modFile) {
+    private boolean isModFileFromModModule(ModModule modModule, ModFile modFile, ArrayList<FileModule> fileModules) {
         return fileModules.stream().anyMatch(fileModule ->
             fileModule.getModModuleId() == modModule.getId() &&
             fileModule.getModFileId() == modFile.getId()
