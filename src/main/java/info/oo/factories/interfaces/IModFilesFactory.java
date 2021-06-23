@@ -7,7 +7,7 @@ import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModOrigin;
 
-public interface IModFilePageFactory {
+public interface IModFilesFactory {
     public ArrayList<ModFile> create(
         ArrayList<ModFile> modFiles,
         ArrayList<Mod> mods,

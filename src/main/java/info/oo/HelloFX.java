@@ -23,9 +23,9 @@ import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
-import info.oo.factories.ModFilePageFactory;
+import info.oo.factories.ModFilesFactory;
 import info.oo.factories.UserFactory;
-import info.oo.factories.interfaces.IModFilePageFactory;
+import info.oo.factories.interfaces.IModFilesFactory;
 import info.oo.factories.interfaces.IUserFactory;
 import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
@@ -60,7 +60,7 @@ public class HelloFX extends Application {
         IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
 
         IUserFactory userFactory = new UserFactory();
-        IModFilePageFactory modFilePageFactory = new ModFilePageFactory();
+        IModFilesFactory modFilePageFactory = new ModFilesFactory();
 
         IUserRepository userRepository = new UserRespository(
             userDAO,

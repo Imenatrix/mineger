@@ -7,9 +7,9 @@ import info.oo.entities.Mod;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModOrigin;
-import info.oo.factories.interfaces.IModFilePageFactory;
+import info.oo.factories.interfaces.IModFilesFactory;
 
-public class ModFilePageFactory implements IModFilePageFactory {
+public class ModFilesFactory implements IModFilesFactory {
 
     public ArrayList<ModFile> create(
         ArrayList<ModFile> modFiles,
