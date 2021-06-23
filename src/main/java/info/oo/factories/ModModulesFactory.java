@@ -29,23 +29,29 @@ public class ModModulesFactory implements IModModulesFactory {
         ArrayList<ModOrigin> modOrigins
     ) {
         ArrayList<ModFile> createdModFiles = modFilesFactory.create(modFiles, mods, modLoaders, modOrigins);
-        ArrayList<ModModule> createdModModules = new ArrayList<ModModule>(modModules.stream().map(item -> new ModModule(
-            item.getId(),
-            item.getName(),
-            item.getMinecraftVersion(),
-            new ArrayList<ModFile>(
-                createdModFiles.stream()
-                    .filter(
-                        item2 -> fileModules.stream()
-                            .filter(item3 -> item3.getModModuleId() == item.getId())
-                            .anyMatch(item3 -> item3.getModFileId() == item2.getId())
-                    )
-                    .collect(Collectors.toList())
-            ),
-            item.getModLoader(),
-            item.getUser()
+        return new ArrayList<ModModule>(modModules.stream().map(modModule -> new ModModule(
+            modModule.getId(),
+            modModule.getName(),
+            modModule.getMinecraftVersion(),
+            getModFilesFromModModule(fileModules, createdModFiles, modModule),
+            modModule.getModLoader(),
+            modModule.getUser()
         )).collect(Collectors.toList()));
-        return createdModModules;
+    }
+
+    private ArrayList<ModFile> getModFilesFromModModule(ArrayList<FileModule> fileModules, ArrayList<ModFile> modFiles, ModModule modModule) {
+        return new ArrayList<ModFile>(
+            modFiles.stream()
+                .filter(modFile -> isModFileFromModModule(fileModules, modModule, modFile))
+                .collect(Collectors.toList())
+        );
+    }
+
+    private boolean isModFileFromModModule(ArrayList<FileModule> fileModules, ModModule modModule, ModFile modFile) {
+        return fileModules.stream().anyMatch(fileModule ->
+            fileModule.getModModuleId() == modModule.getId() &&
+            fileModule.getModFileId() == modFile.getId()
+        );
     }
 
 }
