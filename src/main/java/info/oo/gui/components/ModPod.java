@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
+import info.oo.entities.User;
+import info.oo.repositories.interfaces.IUserRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,15 +35,17 @@ public class ModPod extends ListCell<ModFile> {
     @FXML
     private Button btnInstall;
 
+    private User user;
     private ModModule modModule;
     private ModFile modFile;
-    private IModModuleDAO modModuleDAO;
+    private IUserRepository userRepository;
 
-    public ModPod(ModModule modModule, IModModuleDAO modModuleDAO) {
+    public ModPod(User user, ModModule modModule, IUserRepository userRepository) {
         super();
         loadFXML();
+        this.user = user;
         this.modModule = modModule;
-        this.modModuleDAO = modModuleDAO;
+        this.userRepository = userRepository;
     }
 
     private void loadFXML() {
@@ -94,18 +97,22 @@ public class ModPod extends ListCell<ModFile> {
     @FXML
     void onBtnInstallAction(ActionEvent event) {
         if (isInstalled()) {
-            modModule.getModFiles().remove(
-                modModule.getModFiles()
-                    .stream()
-                    .filter(item -> item.getId() == modFile.getId())
-                    .findFirst()
-                    .get()
-            );
-            modModuleDAO.removeModFile(modModule, modFile);
+            user.getModModules().stream()
+                .filter(item -> item.getId() == modModule.getId())
+                .findFirst()
+                .get()
+                .getModFiles()
+                .removeIf(item -> item.getId() == modFile.getId());
+            userRepository.save(user);
         }
         else {
-            modModule.getModFiles().add(modFile);
-            modModuleDAO.addModFile(modModule, modFile);
+            user.getModModules().stream()
+                .filter(item -> item.getId() == modModule.getId())
+                .findFirst()
+                .get()
+                .getModFiles()
+                .add(modFile);
+            userRepository.save(user);
         }
         updateBtnInstallText();
     }

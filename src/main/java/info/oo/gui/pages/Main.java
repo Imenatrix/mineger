@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
@@ -14,6 +13,7 @@ import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
 import info.oo.repositories.interfaces.IModFilePageRepository;
+import info.oo.repositories.interfaces.IUserRepository;
 import info.oo.services.interfaces.IModModuleInstaller;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -72,7 +72,7 @@ public class Main {
     private ObservableList<String> minecraftVersions;
     private ObservableList<ModOrigin> modOrigins;
     private IModFilePageRepository modFilePageRepository;
-    private IModModuleDAO modModuleDAO;
+    private IUserRepository userRepository;
     private IModModuleInstaller installer;
 
 
@@ -83,7 +83,7 @@ public class Main {
         ObservableList<String> minecraftVersions,
         ObservableList<ModOrigin> modOrigins,
         IModFilePageRepository modFilePageRepository,
-        IModModuleDAO modModuleDAO,
+        IUserRepository userRepository,
         IModModuleInstaller installer
     ) {
         this.page = 0;
@@ -95,7 +95,7 @@ public class Main {
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
         this.modFilePageRepository = modFilePageRepository;
-        this.modModuleDAO = modModuleDAO;
+        this.userRepository = userRepository;
         this.installer = installer;
     }
 
@@ -171,8 +171,9 @@ public class Main {
 
     private void setListModFilesCellFactory() {
         listModFiles.setCellFactory(list -> new ModPod(
+            user,
             modModule,
-            modModuleDAO
+            userRepository
         ));
     }
 
@@ -199,7 +200,7 @@ public class Main {
     @FXML
     void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
-        NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, modModuleDAO);
+        NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, userRepository);
         Scene scene = new Scene(newModModule);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
@@ -213,7 +214,7 @@ public class Main {
         if (modModule != null) {
             modModules.remove(modModule);
             user.getModModules().remove(modModule);
-            modModuleDAO.delete(modModule);
+            userRepository.save(user);
         }
     }
 

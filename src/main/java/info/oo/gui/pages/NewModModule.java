@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
+import info.oo.repositories.interfaces.IUserRepository;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,15 +39,15 @@ public class NewModModule extends GridPane {
     private ObservableList<ModModule> modModules;
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
-    private IModModuleDAO modModuleDAO;
+    private IUserRepository userRepository;
 
-    public NewModModule(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IModModuleDAO modModuleDAO) {
+    public NewModModule(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IUserRepository userRepository) {
         super();
         this.user = user;
         this.modModules = modModules;
         this.versions = versions;
         this.modLoaders = modLoaders;
-        this.modModuleDAO = modModuleDAO;
+        this.userRepository = userRepository;
         loadFXML();
     }
 
@@ -105,15 +105,14 @@ public class NewModModule extends GridPane {
 
     @FXML
     void onBtnSaveAction(ActionEvent event) {
-        ModModule modModule = modModuleDAO.insert(new ModModule(
+        ModModule modModule = new ModModule(
             txtName.getText(),
             cbVersion.getSelectionModel().getSelectedItem(),
             cbModLoader.getSelectionModel().getSelectedItem()
-        ), user);
-        if (modModule != null) {
-            modModules.add(modModule);
-            user.getModModules().add(modModule);
-        }
+        );
+        modModules.add(modModule);
+        user.getModModules().add(modModule);
+        userRepository.save(user);
         close();
     }
 

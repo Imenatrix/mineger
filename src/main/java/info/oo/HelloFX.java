@@ -90,7 +90,7 @@ public class HelloFX extends Application {
                     minecraftVersions,
                     modOrigins,
                     modFilePageRepository,
-                    modModuleDAO,
+                    userRepository,
                     installer
                 ));
                 stage.setScene(main);
@@ -111,7 +111,7 @@ public class HelloFX extends Application {
         ArrayList<String> minecraftVersions,
         ArrayList<ModOrigin> modOrigins,
         IModFilePageRepository modFilePageRepository,
-        IModModuleDAO modModuleDAO,
+        IUserRepository userRepository,
         IModModuleInstaller installer
     ) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -123,7 +123,7 @@ public class HelloFX extends Application {
             observable(minecraftVersions),
             observable(modOrigins),
             modFilePageRepository,
-            modModuleDAO,
+            userRepository,
             installer
         ));
         return loader.load();
