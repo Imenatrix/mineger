@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
@@ -14,6 +13,7 @@ import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
+import info.oo.repositories.interfaces.IModFilePageRepository;
 import info.oo.services.interfaces.IModModuleInstaller;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -71,7 +71,7 @@ public class Main {
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<String> minecraftVersions;
     private ObservableList<ModOrigin> modOrigins;
-    private IModFileDAO modFileDAO;
+    private IModFilePageRepository modFilePageRepository;
     private IModModuleDAO modModuleDAO;
     private IModModuleInstaller installer;
 
@@ -82,7 +82,7 @@ public class Main {
         ObservableList<ModLoader> modLoaders,
         ObservableList<String> minecraftVersions,
         ObservableList<ModOrigin> modOrigins,
-        IModFileDAO modFileDAO,
+        IModFilePageRepository modFilePageRepository,
         IModModuleDAO modModuleDAO,
         IModModuleInstaller installer
     ) {
@@ -94,7 +94,7 @@ public class Main {
         this.minecraftVersions = minecraftVersions;
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
-        this.modFileDAO = modFileDAO;
+        this.modFilePageRepository = modFilePageRepository;
         this.modModuleDAO = modModuleDAO;
         this.installer = installer;
     }
@@ -125,7 +125,7 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFileDAO.getTotalPages(
+        totalPages = modFilePageRepository.getTotalPages(
             20,
             modLoaderId,
             modOriginId,
@@ -135,7 +135,7 @@ public class Main {
     }
     
     private void updateListModFiles(ModModule modModule) {
-        ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
+        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(
             20,
             page,
             modLoaderId,
