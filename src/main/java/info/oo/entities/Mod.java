@@ -11,13 +11,11 @@ public class Mod {
     private ModLoader modLoader;
     private ModOrigin modOrigin;
 
-    public Mod(int id, String name, URL url, String summary, ModLoader modLoader, ModOrigin modOrigin) {
+    public Mod(int id, String name, URL url, String summary) {
         this.id = id;
         this.name = name;
         this.url = url;
         this.summary = summary;
-        this.modLoader = modLoader;
-        this.modOrigin = modOrigin;
     }
 
     public int getId() {
