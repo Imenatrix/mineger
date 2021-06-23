@@ -8,20 +8,14 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import info.oo.dao.interfaces.IModDAO;
-import info.oo.dao.interfaces.IModLoaderDAO;
-import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.entities.Mod;
 import info.oo.utils.clarice.Clarice;
 
 public class ModDAO implements IModDAO {
 
-    private IModLoaderDAO modLoaderDAO;
-    private IModOriginDAO modOriginDAO;
     private ArrayList<Mod> cache;
 
-    public ModDAO(IModLoaderDAO modLoaderDAO, IModOriginDAO modOriginDAO) {
-        this.modLoaderDAO = modLoaderDAO;
-        this.modOriginDAO = modOriginDAO;
+    public ModDAO() {
         this.cache = new ArrayList<Mod>();
     }
 
@@ -75,9 +69,7 @@ public class ModDAO implements IModDAO {
                 result.getInt("id"),
                 result.getString("name"),
                 new URL(result.getString("url")),
-                result.getString("summary"),
-                modLoaderDAO.getById(result.getInt("mod_loader_id")),
-                modOriginDAO.getById(result.getInt("mod_origin_id"))
+                result.getString("summary")
             );
         }
         catch (MalformedURLException e) {
