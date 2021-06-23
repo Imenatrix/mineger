@@ -68,9 +68,11 @@ public class ModPod extends ListCell<ModFile> {
     private void updateBtnInstallText() {
         if (isInstalled()) {
             btnInstall.setText("Remover");
+            btnInstall.setStyle("-fx-background-color: #C84B31");
         }
         else {
             btnInstall.setText("Adicionar");
+            btnInstall.setStyle("-fx-background-color: #24914D");
         }
     }
 

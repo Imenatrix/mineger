@@ -1,0 +1,18 @@
+ModPod {
+    -fx-padding: 10px 0px 0px 15px;
+    -fx-background-insets: 10px 0px 0px 0px;
+}
+
+#btnGroup {
+    -fx-background-color: #252525;
+    -fx-background-radius: 5px 5px 0px 0px;
+}
+
+#listModModules {
+    -fx-background-color: #252525;
+}
+
+#listModFiles {
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+    -fx-background-radius: 5px;
+}

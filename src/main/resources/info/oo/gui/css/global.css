@@ -1,0 +1,36 @@
+* {
+    -fx-background-color: #151515;
+    -fx-text-fill: white;
+}
+
+.arrow-button {
+    -fx-background-color: #252525;
+}
+
+CheckBox, CheckBox * {
+    -fx-background-color: #353535;
+}
+
+CheckBox:selected .mark {
+    -fx-background-color: #151515;
+}
+
+Button {
+    -fx-background-color: #24914D
+}
+
+TextField, TextField *, PasswordField, PasswordField * {
+    -fx-background-color: #252525;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #252525;
+}
+
+.list-cell {
+    -fx-background-color: #252525;
+}
+
+.list-cell:filled:hover, .list-cell:filled:selected {
+    -fx-background-color: #353535;
+}
