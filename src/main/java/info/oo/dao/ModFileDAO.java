@@ -40,16 +40,6 @@ public class ModFileDAO implements IModFileDAO {
             null
         );
     }
-    
-    public ArrayList<ModFile> getAll() {
-        String query = "select * from mod_file;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModFileArrayList(result),
-            new ArrayList<ModFile>()
-        );
-    }
 
     public ArrayList<ModFile> getAllByModModuleId(int id) {
         String query = "select * from file_module join mod_file where mod_module_id = ? and id = mod_file_id;";

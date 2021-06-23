@@ -12,16 +12,6 @@ import info.oo.entities.User;
 import info.oo.utils.clarice.Clarice;
 
 public class ModModuleDAO implements IModModuleDAO {
-    
-    public ArrayList<ModModule> getAll() {
-        String query = "select * from mod_module;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModModuleArrayList(result),
-            new ArrayList<ModModule>()
-        );
-    }
 
     public ArrayList<ModModule> getAllByUserId(int id) {
         String query = "select * from mod_module where user_id = ?;";

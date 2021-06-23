@@ -41,24 +41,6 @@ public class ModDAO implements IModDAO {
             null
         );
     }
-    
-    public ArrayList<Mod> getAll() {
-        String query = "select * from `mod`;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModArrayList(result),
-            new ArrayList<Mod>()
-        );
-    }
-
-    private ArrayList<Mod> resultToModArrayList(ResultSet result) throws SQLException{
-        ArrayList<Mod> mods = new ArrayList<Mod>();
-        while(result.next()) {
-            mods.add(parseModFromResult(result));
-        }
-        return mods;
-    }
 
     private Mod resultToMod(ResultSet result) throws SQLException {
         result.next();

@@ -37,16 +37,6 @@ public class UserDAO implements IUserDAO {
             null
         );
     }
-    
-    public ArrayList<User> getAll() {
-        String query = "select * from user;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToUserArrayList(result),
-            new ArrayList<User>()
-        );
-    }
 
     public User getByLoginAndPassword(String login, String password) {
         String query = "select id, name from user where login = ? and password = ?";
@@ -86,15 +76,6 @@ public class UserDAO implements IUserDAO {
             id,
             user.getName()
         );
-    }
-
-    private ArrayList<User> resultToUserArrayList(ResultSet result) throws SQLException {
-        ArrayList<User> users = new ArrayList<User>();
-        while(result.next()) {
-            User user = parseUserFromResult(result);
-            users.add(user);
-        }
-        return users;
     }
 
     private User resultToUser(ResultSet result) throws SQLException {
