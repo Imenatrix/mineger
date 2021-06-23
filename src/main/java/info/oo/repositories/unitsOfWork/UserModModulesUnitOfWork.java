@@ -35,7 +35,8 @@ public class UserModModulesUnitOfWork {
 
     public void commit() {
         for (ModModule modModule : insertedModModules) {
-            modModuleDAO.insert(modModule, user);
+            ModModule newModModule = modModuleDAO.insert(modModule, user);
+            modModule.setId(newModModule.getId());
         }
         for (ModModule modModule : deletedModModules) {
             modModuleDAO.delete(modModule);
