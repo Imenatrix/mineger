@@ -8,11 +8,9 @@ import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
-import info.oo.entities.User;
 
-public interface IUserFactory {
-    public User create(
-        User user,
+public interface IModModulesFactory {
+    public ArrayList<ModModule> create(
         ArrayList<ModModule> modModules,
         ArrayList<FileModule> fileModules,
         ArrayList<ModFile> modFiles,
