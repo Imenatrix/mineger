@@ -27,6 +27,12 @@ public class User {
         this.modModules = new ArrayList<ModModule>();
     }
 
+    public User(int id, String name, ArrayList<ModModule> modModules) {
+        this.id = id;
+        this.name = name;
+        this.modModules = modModules;
+    }
+
     public User(String name, String login, String password) {
         this.name = name;
         this.login = login;
