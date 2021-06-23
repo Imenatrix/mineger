@@ -16,15 +16,23 @@ public class ModsFactory implements IModsFactory {
             item.getName(),
             item.getURL(),
             item.getSummary(),
-            modLoaders.stream()
-                .filter(item2 -> item2.getId() == item.getModLoader().getId())
-                .findFirst()
-                .get(),
-            modOrigins.stream()
-                .filter(item2 -> item2.getId() == item.getModOrigin().getId())
-                .findFirst()
-                .get()
+            getModLoaderFromMod(modLoaders, item),
+            getModOriginFromMod(modOrigins, item)
         )).collect(Collectors.toList()));
+    }
+
+    private ModOrigin getModOriginFromMod(ArrayList<ModOrigin> modOrigins, Mod mod) {
+        return modOrigins.stream()
+            .filter(modOrigin -> modOrigin.getId() == mod.getModOrigin().getId())
+            .findFirst()
+            .get();
+    }
+
+    private ModLoader getModLoaderFromMod(ArrayList<ModLoader> modLoaders, Mod mod) {
+        return modLoaders.stream()
+            .filter(modLoader -> modLoader.getId() == mod.getModLoader().getId())
+            .findFirst()
+            .get();
     }
 
 }
