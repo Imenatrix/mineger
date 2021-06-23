@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import info.oo.dao.interfaces.IModFileDAO;
-import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModModule;
@@ -13,14 +11,6 @@ import info.oo.entities.User;
 import info.oo.utils.clarice.Clarice;
 
 public class ModModuleDAO implements IModModuleDAO {
-
-    private IModFileDAO modFileDAO;
-    private IModLoaderDAO modLoaderDAO;
-
-    public ModModuleDAO(IModFileDAO modFileDAO, IModLoaderDAO modLoaderDAO) {
-        this.modFileDAO = modFileDAO;
-        this.modLoaderDAO = modLoaderDAO;
-    }
     
     public ArrayList<ModModule> getAll() {
         String query = "select * from mod_module;";
@@ -129,7 +119,6 @@ public class ModModuleDAO implements IModModuleDAO {
             id,
             modModule.getName(),
             modModule.getMinecraftVersion(),
-            new ArrayList<ModFile>(),
             modModule.getModLoader()
         );
     }
@@ -138,9 +127,7 @@ public class ModModuleDAO implements IModModuleDAO {
         return new ModModule(
             result.getInt("id"),
             result.getString("name"),
-            result.getString("minecraft_version"),
-            modFileDAO.getAllByModModuleId(result.getInt("id")),
-            modLoaderDAO.getById(result.getInt("mod_loader_id"))
+            result.getString("minecraft_version")
         );
     }
 
