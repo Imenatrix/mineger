@@ -7,18 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.entities.ModFile;
 import info.oo.utils.clarice.Clarice;
 
 public class ModFileDAO implements IModFileDAO {
 
-    private IModDAO modDAO;
     private ArrayList<ModFile> cache;
 
-    public ModFileDAO(IModDAO modDAO) {
-        this.modDAO = modDAO;
+    public ModFileDAO() {
         this.cache = new ArrayList<ModFile>();
     }
 
@@ -160,8 +157,7 @@ public class ModFileDAO implements IModFileDAO {
                 result.getInt("id"),
                 result.getString("file_name"),
                 new URL(result.getString("url")),
-                result.getString("minecraft_version"),
-                modDAO.getById(result.getInt("mod_id"))
+                result.getString("minecraft_version")
             );
         }
         catch (MalformedURLException e) {
