@@ -40,7 +40,7 @@ public class Mod {
         return this.summary;
     }
 
-    public ModLoader modLoader() {
+    public ModLoader getModLoader() {
         return this.modLoader;
     }
 
