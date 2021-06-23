@@ -16,6 +16,8 @@ import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.factories.interfaces.IUserFactory;
 import info.oo.repositories.interfaces.IUserRepository;
+import info.oo.repositories.unitsOfWork.ModModuleUnitOfWork;
+import info.oo.repositories.unitsOfWork.UserModModulesUnitOfWork;
 
 import java.util.ArrayList;
 
@@ -70,6 +72,34 @@ public class UserRespository implements IUserRepository {
             mods,
             modOrigins
         );
+    }
+
+    public void save(User user) {
+        User oldUser = getById(user.getId());
+        ArrayList<ModModule> modModules = user.getModModules();
+        ArrayList<ModModule> oldModModules = oldUser.getModModules();
+        UserModModulesUnitOfWork userModModulesUnitOfWork = new UserModModulesUnitOfWork(
+            user,
+            modModules,
+            oldModModules,
+            modModuleDAO
+        );
+        userModModulesUnitOfWork.commit();
+
+        ArrayList<ModModule> mantainedModModules = new ArrayList<ModModule>(modModules);
+        mantainedModModules.removeIf(item ->
+            !oldModModules.stream()
+                .map(item2 -> item2.getId())
+                .anyMatch(item2 -> item2 == item.getId())
+        );
+        for (ModModule modModule : mantainedModModules) {
+            ModModule oldModModule = oldModModules.stream()
+                .filter(item -> item.getId() == modModule.getId())
+                .findFirst()
+                .get();
+            ModModuleUnitOfWork modModuleUnitOfWork = new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
+            modModuleUnitOfWork.commit();
+        }
     }
 
     private void updateModLoadersFromMods(ArrayList<ModLoader> modLoaders, ArrayList<Mod> mods) {
