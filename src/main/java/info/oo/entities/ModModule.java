@@ -36,12 +36,6 @@ public class ModModule {
         this.modLoader = modLoader;
     }
 
-    public ModModule(int id, String name, String minecraftVersion) {
-        this.id = id;
-        this.name = name;
-        this.minecraftVersion = minecraftVersion;
-    }
-
     public int getId() {
         return this.id;
     }
