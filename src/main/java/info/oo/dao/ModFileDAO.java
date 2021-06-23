@@ -100,7 +100,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public ArrayList<ModFile> getPaginated(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
+    public ArrayList<ModFile> getPage(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
         String query =
             "select f.* from " +
                 "mod_file f join " +

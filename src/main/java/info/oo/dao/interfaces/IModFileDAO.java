@@ -9,5 +9,5 @@ public interface IModFileDAO {
     public ArrayList<ModFile> getAll();
     public ArrayList<ModFile> getAllByModModuleId(int id);
     public int getTotalPages(int limit, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search);
-    public ArrayList<ModFile> getPaginated(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search);
+    public ArrayList<ModFile> getPage(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search);
 }
