@@ -29,20 +29,18 @@ public class UserFactory implements IUserFactory{
         ArrayList<ModLoader> modLoaders,
         ArrayList<ModOrigin> modOrigins
     ) {
-        ArrayList<ModModule> createdModModules = modModulesFactory.create(
-            modModules,
-            fileModules,
-            modFiles,
-            mods,
-            modLoaders,
-            modOrigins
-        );
-        User createdUser = new User(
+        return new User(
             user.getId(),
             user.getName(),
-            createdModModules
+            modModulesFactory.create(
+                modModules,
+                fileModules,
+                modFiles,
+                mods,
+                modLoaders,
+                modOrigins
+            )
         );
-        return createdUser;
     }
 
 }
