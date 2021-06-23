@@ -10,18 +10,25 @@ public class ModModule {
     private ArrayList<ModFile> modFiles;
     private ModLoader modLoader;
 
-    public ModModule(int id, String name, String minecraftVersion, ArrayList<ModFile> modFiles, ModLoader modLoader) {
+    public ModModule(int id, String name, String minecraftVersion, ModLoader modLoader) {
         this.id = id;
         this.name = name;
         this.minecraftVersion = minecraftVersion;
-        this.modFiles= modFiles;
+        this.modFiles = new ArrayList<ModFile>();
         this.modLoader = modLoader;
     }
 
     public ModModule(String name, String minecraftVersion, ModLoader modLoader) {
         this.name = name;
         this.minecraftVersion = minecraftVersion;
+        this.modFiles = new ArrayList<ModFile>();
         this.modLoader = modLoader;
+    }
+
+    public ModModule(int id, String name, String minecraftVersion) {
+        this.id = id;
+        this.name = name;
+        this.minecraftVersion = minecraftVersion;
     }
 
     public int getId() {
