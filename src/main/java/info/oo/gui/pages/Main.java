@@ -292,7 +292,7 @@ public class Main {
                     Stream<ModFile> modFileStream = modModule.getModFiles().stream();
                     if (modLoaderId != null) {
                         modFileStream = modFileStream.filter(
-                            item -> item.getMod().modLoader().getId() == modLoaderId
+                            item -> item.getMod().getModLoader().getId() == modLoaderId
                         );
                     }
                     if (modOriginId != null) {
