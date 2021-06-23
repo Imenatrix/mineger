@@ -2,8 +2,6 @@ package info.oo.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Optional;
 
 import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.User;
@@ -11,29 +9,12 @@ import info.oo.utils.clarice.Clarice;
 
 public class UserDAO implements IUserDAO {
 
-    private ArrayList<User> cache;
-
-    public UserDAO() {
-        this.cache = new ArrayList<User>();
-    }
-
     public User getById(int id) {
-        
-        Optional<User> optinalUser = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optinalUser.isPresent()) {
-            return optinalUser.get();
-        }
-
         String query = "select * from user where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                User user = resultToUser(result);
-                cache.add(user);
-                return user;
-            },
+            result -> resultToUser(result),
             null
         );
     }

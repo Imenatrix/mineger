@@ -5,7 +5,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import info.oo.dao.interfaces.IModFileDAO;
 import info.oo.entities.Mod;
@@ -14,29 +13,12 @@ import info.oo.utils.clarice.Clarice;
 
 public class ModFileDAO implements IModFileDAO {
 
-    private ArrayList<ModFile> cache;
-
-    public ModFileDAO() {
-        this.cache = new ArrayList<ModFile>();
-    }
-
     public ModFile getById(int id) {
-        
-        Optional<ModFile> optionalModFile = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optionalModFile.isPresent()) {
-            return optionalModFile.get();
-        }
-
         String query = "select * from mod_file where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                ModFile modFile = resultToModFile(result);
-                cache.add(modFile);
-                return modFile;
-            },
+            result ->  resultToModFile(result),
             null
         );
     }
