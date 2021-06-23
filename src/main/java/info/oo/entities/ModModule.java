@@ -11,6 +11,15 @@ public class ModModule {
     private ModLoader modLoader;
     private User user;
 
+    public ModModule(int id, String name, String minecraftVersion, ArrayList<ModFile> modFiles, ModLoader modLoader, User user) {
+        this.id = id;
+        this.name = name;
+        this.minecraftVersion = minecraftVersion;
+        this.modFiles = modFiles;
+        this.modLoader = modLoader;
+        this.user = user;
+    }
+
     public ModModule(int id, String name, String minecraftVersion, ModLoader modLoader, User user) {
         this.id = id;
         this.name = name;
