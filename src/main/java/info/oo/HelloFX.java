@@ -39,19 +39,14 @@ public class HelloFX extends Application {
 
     public void start(Stage stage) throws IOException {
 
+        IModDAO modDAO = new ModDAO();
+        IUserDAO userDAO = new UserDAO();
+        IModFileDAO modFileDAO = new ModFileDAO();
         IModLoaderDAO modLoaderDAO = new ModLoaderDAO();
         IModOriginDAO modOriginDAO = new ModOriginDAO();
-        IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
-
-        IModDAO modDAO = new ModDAO(modLoaderDAO, modOriginDAO);
-        
-        IModFileDAO modFileDAO = new ModFileDAO(modDAO);
-
-        IModModuleDAO modModuleDAO = new ModModuleDAO(modFileDAO, modLoaderDAO);
-
-        IUserDAO userDAO = new UserDAO(modModuleDAO);
-        
+        IModModuleDAO modModuleDAO = new ModModuleDAO();
         IModModuleInstaller installer = new ModModuleInstaller();
+        IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
