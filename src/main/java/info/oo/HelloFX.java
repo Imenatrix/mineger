@@ -3,6 +3,7 @@ package info.oo;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import info.oo.dao.FileModuleDAO;
 import info.oo.dao.MinecraftVersionDAO;
 import info.oo.dao.ModDAO;
 import info.oo.dao.ModFileDAO;
@@ -10,6 +11,7 @@ import info.oo.dao.ModLoaderDAO;
 import info.oo.dao.ModModuleDAO;
 import info.oo.dao.ModOriginDAO;
 import info.oo.dao.UserDAO;
+import info.oo.dao.interfaces.IFileModuleDAO;
 import info.oo.dao.interfaces.IMinecraftVersionDAO;
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
@@ -21,8 +23,12 @@ import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
+import info.oo.factories.UserFactory;
+import info.oo.factories.interfaces.IUserFactory;
 import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
+import info.oo.repositories.UserRespository;
+import info.oo.repositories.interfaces.IUserRepository;
 import info.oo.services.ModModuleInstaller;
 import info.oo.services.interfaces.IModModuleInstaller;
 import javafx.application.Application;
@@ -45,8 +51,22 @@ public class HelloFX extends Application {
         IModLoaderDAO modLoaderDAO = new ModLoaderDAO();
         IModOriginDAO modOriginDAO = new ModOriginDAO();
         IModModuleDAO modModuleDAO = new ModModuleDAO();
+        IFileModuleDAO fileModuleDAO = new FileModuleDAO();
         IModModuleInstaller installer = new ModModuleInstaller();
         IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
+
+        IUserFactory userFactory = new UserFactory();
+
+        IUserRepository userRepository = new UserRespository(
+            userDAO,
+            modModuleDAO,
+            modLoaderDAO,
+            modFileDAO,
+            fileModuleDAO,
+            modDAO,
+            modOriginDAO,
+            userFactory
+        );
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
@@ -54,7 +74,7 @@ public class HelloFX extends Application {
 
         Font.loadFont(getClass().getResourceAsStream("fonts/MaterialIcons-Regular.ttf"), 10);
         
-        Scene login = new Scene(new Login(userDAO, user -> {
+        Scene login = new Scene(new Login(userDAO, userRepository, user -> {
             try {
                 Scene main = new Scene(loadMainPage(
                     user,
