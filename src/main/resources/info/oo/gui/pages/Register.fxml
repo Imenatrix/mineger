@@ -22,7 +22,7 @@
       <HBox spacing="10.0">
          <children>
             <Button mnemonicParsing="false" onAction="#onBtnRegisterAction" text="Registrar" />
-            <Button mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
+            <Button styleClass="btnAlt" mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
          </children>
       </HBox>
    </children>

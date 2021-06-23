@@ -44,3 +44,7 @@ TextField, TextField *, PasswordField, PasswordField * {
     -fx-font-family: "Material Icons";
     -fx-font-size: 30px;
 }
+
+.btnAlt {
+    -fx-background-color: #C84B31;
+}
