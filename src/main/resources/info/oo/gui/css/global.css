@@ -34,3 +34,13 @@ TextField, TextField *, PasswordField, PasswordField * {
 .list-cell:filled:hover, .list-cell:filled:selected {
     -fx-background-color: #353535;
 }
+
+.icon {
+    -fx-font-family: "Material Icons";
+    -fx-font-size: 14px;
+}
+
+.icon-large {
+    -fx-font-family: "Material Icons";
+    -fx-font-size: 30px;
+}
