@@ -11,6 +11,10 @@ public class Mod {
     private ModLoader modLoader;
     private ModOrigin modOrigin;
 
+    public Mod(int id) {
+        this.id = id;
+    }
+
     public Mod(int id, String name, URL url, String summary, ModLoader modLoader, ModOrigin modOrigin) {
         this.id = id;
         this.name = name;

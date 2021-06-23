@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.entities.Mod;
 import info.oo.entities.ModFile;
 import info.oo.utils.clarice.Clarice;
 
@@ -157,7 +158,8 @@ public class ModFileDAO implements IModFileDAO {
                 result.getInt("id"),
                 result.getString("file_name"),
                 new URL(result.getString("url")),
-                result.getString("minecraft_version")
+                result.getString("minecraft_version"),
+                new Mod(result.getInt("mod_id"))
             );
         }
         catch (MalformedURLException e) {
