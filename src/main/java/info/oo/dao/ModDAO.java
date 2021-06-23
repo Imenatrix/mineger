@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.entities.Mod;
+import info.oo.entities.ModLoader;
+import info.oo.entities.ModOrigin;
 import info.oo.utils.clarice.Clarice;
 
 public class ModDAO implements IModDAO {
@@ -69,7 +71,9 @@ public class ModDAO implements IModDAO {
                 result.getInt("id"),
                 result.getString("name"),
                 new URL(result.getString("url")),
-                result.getString("summary")
+                result.getString("summary"),
+                new ModLoader(result.getInt("mod_loader_id")),
+                new ModOrigin(result.getInt("mod_origin_id"))
             );
         }
         catch (MalformedURLException e) {

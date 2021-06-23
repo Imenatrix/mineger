@@ -10,6 +10,10 @@ public class ModOrigin {
     private URL url;
     private ArrayList<Mod> mods; 
 
+    public ModOrigin(int id) {
+        this.id = id;
+    }
+
     public ModOrigin(int id, String name, URL url, ArrayList<Mod> mods) {
         this.id = id;
         this.name = name;
