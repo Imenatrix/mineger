@@ -10,18 +10,17 @@ public class User {
     private String password;
     private ArrayList<ModModule> modModules;
 
-    public User(int id, String name, String login, String password, ArrayList<ModModule> modModules) {
+    public User(int id, String name, String login, String password) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.password = password;
-        this.modModules = modModules;
     }
 
-    public User(int id, String name, ArrayList<ModModule> modModules) {
+    public User(int id, String name) {
         this.id = id;
         this.name = name;
-        this.modModules = modModules;
+        this.modModules = new ArrayList<ModModule>();
     }
 
     public User(String name, String login, String password) {
