@@ -9,13 +9,15 @@ public class ModModule {
     private String minecraftVersion;
     private ArrayList<ModFile> modFiles;
     private ModLoader modLoader;
+    private User user;
 
-    public ModModule(int id, String name, String minecraftVersion, ModLoader modLoader) {
+    public ModModule(int id, String name, String minecraftVersion, ModLoader modLoader, User user) {
         this.id = id;
         this.name = name;
         this.minecraftVersion = minecraftVersion;
         this.modFiles = new ArrayList<ModFile>();
         this.modLoader = modLoader;
+        this.user = user;
     }
 
     public ModModule(String name, String minecraftVersion, ModLoader modLoader) {
@@ -49,6 +51,10 @@ public class ModModule {
 
     public ModLoader getModLoader() {
         return this.modLoader;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 
 }

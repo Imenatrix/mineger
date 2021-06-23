@@ -10,6 +10,10 @@ public class User {
     private String password;
     private ArrayList<ModModule> modModules;
 
+    public User(int id) {
+        this.id = id;
+    }
+
     public User(int id, String name, String login, String password) {
         this.id = id;
         this.name = name;

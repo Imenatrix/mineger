@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
+import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.utils.clarice.Clarice;
@@ -119,7 +120,8 @@ public class ModModuleDAO implements IModModuleDAO {
             id,
             modModule.getName(),
             modModule.getMinecraftVersion(),
-            modModule.getModLoader()
+            modModule.getModLoader(),
+            modModule.getUser()
         );
     }
 
@@ -127,7 +129,9 @@ public class ModModuleDAO implements IModModuleDAO {
         return new ModModule(
             result.getInt("id"),
             result.getString("name"),
-            result.getString("minecraft_version")
+            result.getString("minecraft_version"),
+            new ModLoader(result.getInt("mod_loader_id")),
+            new User(result.getInt("user_id"))
         );
     }
 
