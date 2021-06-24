@@ -24,3 +24,10 @@ Foi implementada a camada DAO como prevista no diagrama de classe. Algumas porç
 - Boa parte do código foi refatorado para aumentar a legibilidade, seguindo os principios do Clean Code;
 - Foi criado um utilitario como wrapper para o JDBC chamado Clarice;
 - Foi implementado cadastro de login de usuario;
+
+# Semana 05
+- Foi implementada busca fulltext pela UI;
+- Foi implementada filtragem de ModFiles atráves de um formulario;
+- Foram adicionados folhas de estilo CSS para melhorar a aparencia da aplicação;
+- Foi adicionada uma fonte unicode com icones para melhorar a aparencia da aplicação;
+- Parte do código foi movido e refatorado para atender melhor ao padrão DDD (Domain Driven Desing);
