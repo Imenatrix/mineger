@@ -66,10 +66,10 @@ public class UserRespository implements IUserRepository {
         return userFactory.create(
             user,
             modModules,
-            modFiles,
-            modLoaders,
             fileModules,
+            modFiles,
             mods,
+            modLoaders,
             modOrigins
         );
     }

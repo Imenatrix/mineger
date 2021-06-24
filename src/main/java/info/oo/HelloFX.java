@@ -23,9 +23,13 @@ import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
-import info.oo.factories.ModFilePageFactory;
+import info.oo.factories.ModFilesFactory;
+import info.oo.factories.ModModulesFactory;
+import info.oo.factories.ModsFactory;
 import info.oo.factories.UserFactory;
-import info.oo.factories.interfaces.IModFilePageFactory;
+import info.oo.factories.interfaces.IModFilesFactory;
+import info.oo.factories.interfaces.IModModulesFactory;
+import info.oo.factories.interfaces.IModsFactory;
 import info.oo.factories.interfaces.IUserFactory;
 import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
@@ -59,8 +63,10 @@ public class HelloFX extends Application {
         IModModuleInstaller installer = new ModModuleInstaller();
         IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
 
-        IUserFactory userFactory = new UserFactory();
-        IModFilePageFactory modFilePageFactory = new ModFilePageFactory();
+        IModsFactory modsFactory = new ModsFactory();
+        IModFilesFactory modFilesFactory = new ModFilesFactory(modsFactory);
+        IModModulesFactory modModulesFactory = new ModModulesFactory(modFilesFactory);
+        IUserFactory userFactory = new UserFactory(modModulesFactory);
 
         IUserRepository userRepository = new UserRespository(
             userDAO,
@@ -73,7 +79,7 @@ public class HelloFX extends Application {
             userFactory
         );
 
-        IModFilePageRepository modFilePageRepository = new ModFilePageRepository(modFileDAO, modDAO, modLoaderDAO, modOriginDAO, modFilePageFactory);
+        IModFilePageRepository modFilePageRepository = new ModFilePageRepository(modFileDAO, modDAO, modLoaderDAO, modOriginDAO, modFilesFactory);
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();

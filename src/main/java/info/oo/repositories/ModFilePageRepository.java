@@ -10,7 +10,7 @@ import info.oo.entities.Mod;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModOrigin;
-import info.oo.factories.interfaces.IModFilePageFactory;
+import info.oo.factories.interfaces.IModFilesFactory;
 import info.oo.repositories.interfaces.IModFilePageRepository;
 
 public class ModFilePageRepository implements IModFilePageRepository {
@@ -19,14 +19,14 @@ public class ModFilePageRepository implements IModFilePageRepository {
     private IModDAO modDAO;
     private IModLoaderDAO modLoaderDAO;
     private IModOriginDAO modOriginDAO;
-    private IModFilePageFactory modFilePageFactory;
+    private IModFilesFactory modFilePageFactory;
 
     public ModFilePageRepository(
         IModFileDAO modFileDAO,
         IModDAO modDAO,
         IModLoaderDAO modLoaderDAO,
         IModOriginDAO modOriginDAO,
-        IModFilePageFactory modFilePageFactory
+        IModFilesFactory modFilePageFactory
     ) {
         this.modFileDAO = modFileDAO;
         this.modDAO = modDAO;
