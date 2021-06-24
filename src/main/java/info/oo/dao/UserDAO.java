@@ -27,7 +27,7 @@ public class UserDAO implements IUserDAO {
                 stmt.setString(1, login);
                 stmt.setString(2, password);
             },
-            result -> resultToLoginUser(result),
+            result -> resultToUser(result),
             null
         );
     }
@@ -65,21 +65,6 @@ public class UserDAO implements IUserDAO {
     }
 
     private User parseUserFromResult(ResultSet result) throws SQLException {
-        User user = new User(
-            result.getInt("id"),
-            result.getString("name"),
-            result.getString("login"),
-            result.getString("password")
-        );
-        return user;
-    }
-
-    private User resultToLoginUser(ResultSet result) throws SQLException {
-        result.next();
-        return parseLoginUserFromResult(result);
-    }
-
-    private User parseLoginUserFromResult(ResultSet result) throws SQLException {
         return new User(
             result.getInt("id"),
             result.getString("name")
