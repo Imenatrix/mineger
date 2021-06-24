@@ -24,6 +24,7 @@ import info.oo.gui.pages.Main;
 import info.oo.repositories.ModFilePageRepository;
 import info.oo.repositories.UserRepository;
 import info.oo.services.ModModuleInstaller;
+import info.oo.services.UserAuthenticator;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,14 +46,13 @@ public class HelloFX extends Application {
         ModOriginDAO modOriginDAO = new ModOriginDAO();
         ModModuleDAO modModuleDAO = new ModModuleDAO();
         FileModuleDAO fileModuleDAO = new FileModuleDAO();
-        ModModuleInstaller installer = new ModModuleInstaller();
         MinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
-
+        
         ModsFactory modsFactory = new ModsFactory();
         ModFilesFactory modFilesFactory = new ModFilesFactory(modsFactory);
         ModModulesFactory modModulesFactory = new ModModulesFactory(modFilesFactory);
         UserFactory userFactory = new UserFactory(modModulesFactory);
-
+        
         UserRepository userRepository = new UserRepository(
             userDAO,
             modModuleDAO,
@@ -63,8 +63,10 @@ public class HelloFX extends Application {
             modOriginDAO,
             userFactory
         );
-
         ModFilePageRepository modFilePageRepository = new ModFilePageRepository(modFileDAO, modDAO, modLoaderDAO, modOriginDAO, modFilesFactory);
+            
+        ModModuleInstaller installer = new ModModuleInstaller();
+        UserAuthenticator authenticator = new UserAuthenticator(userDAO);
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
@@ -73,7 +75,7 @@ public class HelloFX extends Application {
         Font.loadFont(getClass().getResourceAsStream("fonts/MaterialIcons-Regular.ttf"), 10);
         
         Login login = new Login(
-            userDAO,
+            authenticator,
             userRepository,
             user -> loadMainScene(
                 stage,
