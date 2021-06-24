@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import info.oo.dao.interfaces.IModModuleDAO;
-import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
@@ -39,32 +38,6 @@ public class ModModuleDAO implements IModModuleDAO {
                     : null
             ),
             null
-        );
-    }
-
-    public boolean addModFile(ModModule modModule, ModFile modFile) {
-        String query = "insert into file_module(mod_module_id, mod_file_id) values (?, ?);";
-        return 1 == Clarice.executeUpdateOr(
-            query,
-            stmt -> {
-                stmt.setInt(1, modModule.getId());
-                stmt.setInt(2, modFile.getId());
-            },
-            (updated, result) -> updated,
-            0
-        );
-    }
-
-    public boolean removeModFile(ModModule modModule, ModFile modFile) {
-        String query = "delete from file_module where mod_module_id = ? and mod_file_id = ?;";
-        return 1 == Clarice.executeUpdateOr(
-            query,
-            stmt -> {
-                stmt.setInt(1, modModule.getId());
-                stmt.setInt(2, modFile.getId());
-            },
-            (updated, result) -> updated,
-            0
         );
     }
 
