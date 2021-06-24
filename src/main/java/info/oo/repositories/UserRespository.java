@@ -76,30 +76,44 @@ public class UserRespository implements IUserRepository {
 
     public void save(User user) {
         User oldUser = getById(user.getId());
+
         ArrayList<ModModule> modModules = user.getModModules();
         ArrayList<ModModule> oldModModules = oldUser.getModModules();
-        UserModModulesUnitOfWork userModModulesUnitOfWork = new UserModModulesUnitOfWork(
+        ArrayList<ModModule> maintainedModModules = getMaintainedModModules(modModules, oldModModules);
+
+        createUserModModulesUnitOfWork(user, oldUser).commit();
+        for (ModModule modModule : maintainedModModules) {
+            creatModuleUnitOfWork(modModule, modModules, oldModModules).commit();
+        }
+    }
+
+    private ArrayList<ModModule> getMaintainedModModules(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+        ArrayList<ModModule> maintainedModModules = new ArrayList<ModModule>(modModules);
+        maintainedModModules.removeIf(item ->
+            !oldModModules.stream()
+                .map(item2 -> item2.getId())
+                .anyMatch(item2 -> item2 == item.getId())
+        );
+        return maintainedModModules;
+    }
+
+    private ModModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+        ModModule oldModModule = oldModModules.stream()
+            .filter(item -> item.getId() == modModule.getId())
+            .findFirst()
+            .get();
+        return new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
+    }
+
+    private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
+        ArrayList<ModModule> modModules = user.getModModules();
+        ArrayList<ModModule> oldModModules = oldUser.getModModules();
+        return new UserModModulesUnitOfWork(
             user,
             modModules,
             oldModModules,
             modModuleDAO
         );
-        userModModulesUnitOfWork.commit();
-
-        ArrayList<ModModule> mantainedModModules = new ArrayList<ModModule>(modModules);
-        mantainedModModules.removeIf(item ->
-            !oldModModules.stream()
-                .map(item2 -> item2.getId())
-                .anyMatch(item2 -> item2 == item.getId())
-        );
-        for (ModModule modModule : mantainedModModules) {
-            ModModule oldModModule = oldModModules.stream()
-                .filter(item -> item.getId() == modModule.getId())
-                .findFirst()
-                .get();
-            ModModuleUnitOfWork modModuleUnitOfWork = new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
-            modModuleUnitOfWork.commit();
-        }
     }
 
 }
