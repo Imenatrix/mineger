@@ -5,7 +5,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,29 +17,12 @@ import info.oo.utils.clarice.Clarice;
 
 public class ModDAO implements IModDAO {
 
-    private ArrayList<Mod> cache;
-
-    public ModDAO() {
-        this.cache = new ArrayList<Mod>();
-    }
-
     public Mod getById(int id) {
-        
-        Optional<Mod> optionalMod = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optionalMod.isPresent()) {
-            return optionalMod.get();
-        }
-
         String query = "select * from `mod` where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                Mod mod = resultToMod(result);
-                cache.add(mod);
-                return mod;
-            },
+            result -> resultToMod(result),
             null
         );
     }
@@ -85,7 +67,7 @@ public class ModDAO implements IModDAO {
             );
         }
         catch (MalformedURLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

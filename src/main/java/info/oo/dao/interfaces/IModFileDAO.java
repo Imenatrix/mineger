@@ -6,7 +6,6 @@ import info.oo.entities.FileModule;
 import info.oo.entities.ModFile;
 
 public interface IModFileDAO {
-    
     public ModFile getById(int id);
     public ArrayList<ModFile> getAllByModModuleId(int id);
     public ArrayList<ModFile> getByFileModules(ArrayList<FileModule> fileModules);

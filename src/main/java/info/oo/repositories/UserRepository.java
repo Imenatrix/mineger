@@ -16,12 +16,12 @@ import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.factories.interfaces.IUserFactory;
 import info.oo.repositories.interfaces.IUserRepository;
-import info.oo.repositories.unitsOfWork.ModModuleUnitOfWork;
+import info.oo.repositories.unitsOfWork.FileModuleUnitOfWork;
 import info.oo.repositories.unitsOfWork.UserModModulesUnitOfWork;
 
 import java.util.ArrayList;
 
-public class UserRespository implements IUserRepository {
+public class UserRepository implements IUserRepository {
 
     private IUserDAO userDAO;
     private IModModuleDAO modModuleDAO;
@@ -32,7 +32,7 @@ public class UserRespository implements IUserRepository {
     private IModOriginDAO modOriginDAO;
     private IUserFactory userFactory;
 
-    public UserRespository(
+    public UserRepository(
         IUserDAO userDAO,
         IModModuleDAO modModuleDAO,
         IModLoaderDAO modLoaderDAO,
@@ -80,11 +80,14 @@ public class UserRespository implements IUserRepository {
         ArrayList<ModModule> modModules = user.getModModules();
         ArrayList<ModModule> oldModModules = oldUser.getModModules();
         ArrayList<ModModule> maintainedModModules = getMaintainedModModules(modModules, oldModModules);
+        ArrayList<ModModule> oldMaintainedModModules = getMaintainedModModules(oldModModules, modModules);
 
-        createUserModModulesUnitOfWork(user, oldUser).commit();
-        for (ModModule modModule : maintainedModModules) {
-            creatModuleUnitOfWork(modModule, modModules, oldModModules).commit();
-        }
+        new UserModModulesUnitOfWork(user, modModules, oldModModules, modModuleDAO).commit();
+        new FileModuleUnitOfWork(maintainedModModules, oldMaintainedModModules, fileModuleDAO).commit();
+    }
+
+    public User insert(User user) {
+        return userDAO.insert(user);
     }
 
     private ArrayList<ModModule> getMaintainedModModules(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
@@ -95,25 +98,6 @@ public class UserRespository implements IUserRepository {
                 .anyMatch(item2 -> item2 == item.getId())
         );
         return maintainedModModules;
-    }
-
-    private ModModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
-        ModModule oldModModule = oldModModules.stream()
-            .filter(item -> item.getId() == modModule.getId())
-            .findFirst()
-            .get();
-        return new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
-    }
-
-    private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
-        ArrayList<ModModule> modModules = user.getModModules();
-        ArrayList<ModModule> oldModModules = oldUser.getModModules();
-        return new UserModModulesUnitOfWork(
-            user,
-            modModules,
-            oldModModules,
-            modModuleDAO
-        );
     }
 
 }

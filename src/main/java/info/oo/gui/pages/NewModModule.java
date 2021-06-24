@@ -41,7 +41,13 @@ public class NewModModule extends GridPane {
     private ObservableList<ModLoader> modLoaders;
     private IUserRepository userRepository;
 
-    public NewModModule(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IUserRepository userRepository) {
+    public NewModModule(
+        User user,
+        ObservableList<ModModule> modModules,
+        ObservableList<String> versions,
+        ObservableList<ModLoader> modLoaders,
+        IUserRepository userRepository
+    ) {
         super();
         this.user = user;
         this.modModules = modModules;
@@ -69,7 +75,7 @@ public class NewModModule extends GridPane {
     }
 
     @FXML
-    void initialize() {
+    private void initialize() {
         cbVersion.setItems(versions);
         cbModLoader.setItems(modLoaders);
         cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
@@ -99,12 +105,12 @@ public class NewModModule extends GridPane {
     }
 
     @FXML
-    void onBtnCancelAction(ActionEvent event) {
+    private void onBtnCancelAction(ActionEvent event) {
         close();
     }
 
     @FXML
-    void onBtnSaveAction(ActionEvent event) {
+    private void onBtnSaveAction(ActionEvent event) {
         ModModule modModule = new ModModule(
             txtName.getText(),
             cbVersion.getSelectionModel().getSelectedItem(),

@@ -12,6 +12,12 @@ import info.oo.utils.clarice.interfaces.Solver;
 import info.oo.utils.clarice.interfaces.UpdateSolver;
 
 public class Clarice {
+    
+    /* Encapsula lógica de execução de uma query JDBC;
+     * Chama o callback Preparer preparer para inserir dados em um PreparedStatement;
+     * Chama o callback Solver solver para resolver (serializar) um ResultSet;
+     */
+
     public static <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
         try (
             Connection conn = ConnectionFactory.getConnection();
@@ -21,10 +27,16 @@ public class Clarice {
             return solveResult(stmt, solver);
         }
         catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return or;
         }
     }
+
+    /* Encapsula lógica de execução de uma query de update JDBC;
+     * Chama o callback Preparer preparer para inserir dados em um PreparedStatement;
+     * Chama o callback UpdateSolver solver para resolver (serializar) um ResultSet;
+     * Passa o numero de colunas afetadas pela query para UpdateSolver solver;
+     */
 
     public static <T> T executeUpdateOr(String query, Preparer preparer, UpdateSolver<T> solver, T or) {
         try (
@@ -36,10 +48,14 @@ public class Clarice {
             return solveUpdateResult(updated, stmt, solver);
         }
         catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return or;
         }
     }
+
+    /* Utilitario para carregar múltiplos Integer em um PreparedStatement.
+     * Util para, por exemplo, inserir multiplos ids em uma query.
+     */
 
     public static void prepareIntegerIterator(PreparedStatement stmt, Iterator<Integer> iter) throws SQLException {
         for (int counter = 1; iter.hasNext(); counter++) {
@@ -47,7 +63,7 @@ public class Clarice {
         }
     }
 
-    public static <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
+    private static <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
         try (        
             ResultSet result = stmt.executeQuery();
         ) {
@@ -55,11 +71,12 @@ public class Clarice {
         }
     }
 
-    public static <T> T solveUpdateResult(int updated, PreparedStatement stmt, UpdateSolver<T> solver) throws SQLException {
+    private static <T> T solveUpdateResult(int updated, PreparedStatement stmt, UpdateSolver<T> solver) throws SQLException {
         try (        
             ResultSet result = stmt.getGeneratedKeys();
         ) {
             return solver.call(updated, result);
         }
     }
+
 }

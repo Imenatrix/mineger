@@ -49,7 +49,7 @@ public class Warning extends VBox {
     }
 
     @FXML
-    void onBtnDimissAction(ActionEvent event) {
+    private void onBtnDimissAction(ActionEvent event) {
         event.consume();
         close();
     }

@@ -11,14 +11,6 @@ import info.oo.dao.ModLoaderDAO;
 import info.oo.dao.ModModuleDAO;
 import info.oo.dao.ModOriginDAO;
 import info.oo.dao.UserDAO;
-import info.oo.dao.interfaces.IFileModuleDAO;
-import info.oo.dao.interfaces.IMinecraftVersionDAO;
-import info.oo.dao.interfaces.IModDAO;
-import info.oo.dao.interfaces.IModFileDAO;
-import info.oo.dao.interfaces.IModLoaderDAO;
-import info.oo.dao.interfaces.IModModuleDAO;
-import info.oo.dao.interfaces.IModOriginDAO;
-import info.oo.dao.interfaces.IUserDAO;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
@@ -27,18 +19,12 @@ import info.oo.factories.ModFilesFactory;
 import info.oo.factories.ModModulesFactory;
 import info.oo.factories.ModsFactory;
 import info.oo.factories.UserFactory;
-import info.oo.factories.interfaces.IModFilesFactory;
-import info.oo.factories.interfaces.IModModulesFactory;
-import info.oo.factories.interfaces.IModsFactory;
-import info.oo.factories.interfaces.IUserFactory;
 import info.oo.gui.pages.Login;
 import info.oo.gui.pages.Main;
 import info.oo.repositories.ModFilePageRepository;
-import info.oo.repositories.UserRespository;
-import info.oo.repositories.interfaces.IModFilePageRepository;
-import info.oo.repositories.interfaces.IUserRepository;
+import info.oo.repositories.UserRepository;
 import info.oo.services.ModModuleInstaller;
-import info.oo.services.interfaces.IModModuleInstaller;
+import info.oo.services.UserAuthenticator;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,22 +39,21 @@ public class HelloFX extends Application {
 
     public void start(Stage stage) throws IOException {
 
-        IModDAO modDAO = new ModDAO();
-        IUserDAO userDAO = new UserDAO();
-        IModFileDAO modFileDAO = new ModFileDAO();
-        IModLoaderDAO modLoaderDAO = new ModLoaderDAO();
-        IModOriginDAO modOriginDAO = new ModOriginDAO();
-        IModModuleDAO modModuleDAO = new ModModuleDAO();
-        IFileModuleDAO fileModuleDAO = new FileModuleDAO();
-        IModModuleInstaller installer = new ModModuleInstaller();
-        IMinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
-
-        IModsFactory modsFactory = new ModsFactory();
-        IModFilesFactory modFilesFactory = new ModFilesFactory(modsFactory);
-        IModModulesFactory modModulesFactory = new ModModulesFactory(modFilesFactory);
-        IUserFactory userFactory = new UserFactory(modModulesFactory);
-
-        IUserRepository userRepository = new UserRespository(
+        ModDAO modDAO = new ModDAO();
+        UserDAO userDAO = new UserDAO();
+        ModFileDAO modFileDAO = new ModFileDAO();
+        ModLoaderDAO modLoaderDAO = new ModLoaderDAO();
+        ModOriginDAO modOriginDAO = new ModOriginDAO();
+        ModModuleDAO modModuleDAO = new ModModuleDAO();
+        FileModuleDAO fileModuleDAO = new FileModuleDAO();
+        MinecraftVersionDAO minecraftVersionDAO = new MinecraftVersionDAO();
+        
+        ModsFactory modsFactory = new ModsFactory();
+        ModFilesFactory modFilesFactory = new ModFilesFactory(modsFactory);
+        ModModulesFactory modModulesFactory = new ModModulesFactory(modFilesFactory);
+        UserFactory userFactory = new UserFactory(modModulesFactory);
+        
+        UserRepository userRepository = new UserRepository(
             userDAO,
             modModuleDAO,
             modLoaderDAO,
@@ -78,8 +63,10 @@ public class HelloFX extends Application {
             modOriginDAO,
             userFactory
         );
-
-        IModFilePageRepository modFilePageRepository = new ModFilePageRepository(modFileDAO, modDAO, modLoaderDAO, modOriginDAO, modFilesFactory);
+        ModFilePageRepository modFilePageRepository = new ModFilePageRepository(modFileDAO, modDAO, modLoaderDAO, modOriginDAO, modFilesFactory);
+            
+        ModModuleInstaller installer = new ModModuleInstaller();
+        UserAuthenticator authenticator = new UserAuthenticator(userDAO);
 
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAll();
         ArrayList<String> minecraftVersions = minecraftVersionDAO.getAll();
@@ -87,27 +74,52 @@ public class HelloFX extends Application {
 
         Font.loadFont(getClass().getResourceAsStream("fonts/MaterialIcons-Regular.ttf"), 10);
         
-        Scene login = new Scene(new Login(userDAO, userRepository, user -> {
-            try {
-                Scene main = new Scene(loadMainPage(
-                    user,
-                    user.getModModules(),
-                    modLoaders,
-                    minecraftVersions,
-                    modOrigins,
-                    modFilePageRepository,
-                    userRepository,
-                    installer
-                ));
-                stage.setScene(main);
-                stage.centerOnScreen();
-            }
-            catch (IOException e) {
-                System.out.println(e);
-            }
-        }));
-        stage.setScene(login);
+        Login login = new Login(
+            authenticator,
+            userRepository,
+            user -> loadMainScene(
+                stage,
+                user,
+                modLoaders,
+                minecraftVersions,
+                modOrigins,
+                modFilePageRepository,
+                userRepository,
+                installer
+            )
+        );
+        Scene scene = new Scene(login);
+        stage.setScene(scene);
         stage.show();
+    }
+
+    private void loadMainScene(
+        Stage stage,
+        User user,
+        ArrayList<ModLoader> modLoaders,
+        ArrayList<String> minecraftVersions,
+        ArrayList<ModOrigin> modOrigins,
+        ModFilePageRepository modFilePageRepository,
+        UserRepository userRepository,
+        ModModuleInstaller installer
+    ) {
+        try {
+            Scene main = new Scene(loadMainPage(
+                user,
+                user.getModModules(),
+                modLoaders,
+                minecraftVersions,
+                modOrigins,
+                modFilePageRepository,
+                userRepository,
+                installer
+            ));
+            stage.setScene(main);
+            stage.centerOnScreen();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private Parent loadMainPage(
@@ -116,9 +128,9 @@ public class HelloFX extends Application {
         ArrayList<ModLoader> modLoaders,
         ArrayList<String> minecraftVersions,
         ArrayList<ModOrigin> modOrigins,
-        IModFilePageRepository modFilePageRepository,
-        IUserRepository userRepository,
-        IModModuleInstaller installer
+        ModFilePageRepository modFilePageRepository,
+        UserRepository userRepository,
+        ModModuleInstaller installer
     ) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("gui/pages/Main.fxml"));

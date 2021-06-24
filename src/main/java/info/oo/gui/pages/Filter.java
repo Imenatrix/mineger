@@ -44,33 +44,35 @@ public class Filter extends GridPane {
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<ModOrigin> modOrigins;
-    private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
-
+    
     private Integer modLoaderId;
     private Integer modOriginId;
     private String version;
     private Boolean nonAdded;
+    
+    private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
 
     public Filter(
         ObservableList<ModLoader> modLoaders,
         ObservableList<ModOrigin> modOrigins,
         ObservableList<String> versions,
-        QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply,
         Integer modLoaderId,
         Integer modOriginId,
         String version,
-        Boolean nonAdded
+        boolean nonAdded,
+        QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply
     ) {
         super();
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
         this.versions = versions;
-        this.onApply = onApply;
-
+        
         this.modLoaderId = modLoaderId;
         this.modOriginId = modOriginId;
         this.version = version;
         this.nonAdded = nonAdded;
+
+        this.onApply = onApply;
 
         loadFXML();
     }
@@ -93,63 +95,54 @@ public class Filter extends GridPane {
     }
 
     @FXML
-    void initialize() {
+    private void initialize() {
         cbVersion.setItems(versions);
         cbModLoader.setItems(modLoaders);
         cbOrigin.setItems(modOrigins);
+        trySetDefaultValues();
+        setCellFactories();
+    }
+
+    private void trySetDefaultValues() {
         try {
-            cbVersion.getSelectionModel().select(
-                versions.stream()
-                    .filter(item -> item.equals(version))
-                    .findFirst()
-                    .orElseGet(null)
-            );
-            cbModLoader.getSelectionModel().select(
-                modLoaders.stream()
-                    .filter(item -> item.getId() == modLoaderId)
-                    .findFirst()
-                    .orElseGet(null)
-            );
-            cbOrigin.getSelectionModel().select(
-                modOrigins.stream()
-                    .filter(item -> item.getId() == modOriginId)
-                    .findFirst()
-                    .orElseGet(null)
-            );
+            setDefaultValues();
         }
         catch (NullPointerException e) {
             e.printStackTrace();
         }
-        if (nonAdded != null) {
-            chkNonAdded.setSelected(nonAdded);
-        }
-        cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
-            @Override
-            protected void updateItem(ModLoader item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                }
-                else {
-                    setText(item.getName());
-                }
-            }
-        });
+    }
+
+    private void setDefaultValues() throws NullPointerException {
+        cbVersion.getSelectionModel().select(
+            versions.stream()
+                .filter(item -> item.equals(version))
+                .findFirst()
+                .orElseGet(null)
+        );
+        cbModLoader.getSelectionModel().select(
+            modLoaders.stream()
+                .filter(item -> item.getId() == modLoaderId)
+                .findFirst()
+                .orElseGet(null)
+        );
+        cbOrigin.getSelectionModel().select(
+            modOrigins.stream()
+                .filter(item -> item.getId() == modOriginId)
+                .findFirst()
+                .orElseGet(null)
+        );
+        chkNonAdded.setSelected(nonAdded);
+    }
+
+    private void setCellFactories() {
+        setCbOriginCellFactories();
+        setCbModLoaderCellFactories();
+    }
+
+    private void setCbOriginCellFactories() {
         cbOrigin.setCellFactory(combo -> new ListCell<ModOrigin>() {
             @Override
             protected void updateItem(ModOrigin item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                }
-                else {
-                    setText(item.getName());
-                }
-            }
-        });
-        cbModLoader.setButtonCell(new ListCell<ModLoader>() {
-            @Override
-            protected void updateItem(ModLoader item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
                     setText("");
@@ -173,14 +166,41 @@ public class Filter extends GridPane {
         });
     }
 
+    private void setCbModLoaderCellFactories() {
+        cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
+            @Override
+            protected void updateItem(ModLoader item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                }
+                else {
+                    setText(item.getName());
+                }
+            }
+        });
+        cbModLoader.setButtonCell(new ListCell<ModLoader>() {
+            @Override
+            protected void updateItem(ModLoader item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                }
+                else {
+                    setText(item.getName());
+                }
+            }
+        });
+    }
+
     @FXML
-    void onBtnCancelAction(ActionEvent event) {
+    private void onBtnCancelAction(ActionEvent event) {
         event.consume();
         close();
     }
 
     @FXML
-    void onBtnApplyAction(ActionEvent event) {
+    private void onBtnApplyAction(ActionEvent event) {
         event.consume();
         onApply.call(
             cbModLoader.getSelectionModel().getSelectedItem(),

@@ -35,38 +35,12 @@ public class ModFilePageRepository implements IModFilePageRepository {
         this.modFilePageFactory = modFilePageFactory;
     }
 
-    public int getTotalPages(
-        int limit,
-        Integer modLoaderId,
-        Integer modOriginId,
-        String minecraftVersion,
-        String search
-    ) {
-        return modFileDAO.getTotalPages(
-            limit,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+    public int getTotalPages(int limit, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
+        return modFileDAO.getTotalPages(limit, modLoaderId, modOriginId, minecraftVersion, search);
     }
     
-    public ArrayList<ModFile> getPage(
-        int limit,
-        int page,
-        Integer modLoaderId,
-        Integer modOriginId,
-        String minecraftVersion,
-        String search
-    ) {
-        ArrayList<ModFile> modFiles = modFileDAO.getPage(
-            limit,
-            page,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+    public ArrayList<ModFile> getPage(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
+        ArrayList<ModFile> modFiles = modFileDAO.getPage(limit, page, modLoaderId, modOriginId, minecraftVersion, search);
         ArrayList<Mod> mods = modDAO.getAllByModFiles(modFiles);
         ArrayList<ModLoader> modLoaders = modLoaderDAO.getAllByMods(mods);
         ArrayList<ModOrigin> modOrigins = modOriginDAO.getAllByMods(mods);

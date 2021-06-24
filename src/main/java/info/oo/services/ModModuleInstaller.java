@@ -49,7 +49,7 @@ public class ModModuleInstaller implements IModModuleInstaller {
             Files.createDirectories(mods);
         }
         catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -57,7 +57,7 @@ public class ModModuleInstaller implements IModModuleInstaller {
         try {
             Files.createDirectories(cache);
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -100,10 +100,11 @@ public class ModModuleInstaller implements IModModuleInstaller {
             stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
         }
         catch (FileNotFoundException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
+    
 }

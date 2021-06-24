@@ -152,7 +152,7 @@ public class ModFileDAO implements IModFileDAO {
             );
         }
         catch (MalformedURLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

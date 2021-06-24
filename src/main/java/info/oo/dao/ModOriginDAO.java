@@ -74,7 +74,7 @@ public class ModOriginDAO implements IModOriginDAO {
             );
         }
         catch (MalformedURLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

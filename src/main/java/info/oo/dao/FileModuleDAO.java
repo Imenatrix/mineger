@@ -28,6 +28,32 @@ public class FileModuleDAO implements IFileModuleDAO {
         );
     }
 
+    public boolean insert(FileModule fileModule) {
+        String query = "insert into file_module(mod_module_id, mod_file_id) values (?, ?);";
+        return 1 == Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, fileModule.getModModuleId());
+                stmt.setInt(2, fileModule.getModFileId());
+            },
+            (updated, result) -> updated,
+            0
+        );
+    }
+
+    public boolean delete(FileModule fileModule) {
+        String query = "delete from file_module where mod_module_id = ? and mod_file_id = ?;";
+        return 1 == Clarice.executeUpdateOr(
+            query,
+            stmt -> {
+                stmt.setInt(1, fileModule.getModModuleId());
+                stmt.setInt(2, fileModule.getModFileId());
+            },
+            (updated, result) -> updated,
+            0
+        );
+    }
+
     private ArrayList<FileModule> resultToFileModuleArrayList(ResultSet result) throws SQLException {
         ArrayList<FileModule> fileModules = new ArrayList<FileModule>();
         while (result.next()) {

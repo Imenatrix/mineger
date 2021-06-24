@@ -86,7 +86,7 @@ public class ModLoaderDAO implements IModLoaderDAO {
             );
         }
         catch (MalformedURLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

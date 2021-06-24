@@ -57,6 +57,8 @@ public class Main {
     @FXML
     private Button btnFilter;
 
+    private static final int limit = 20;
+
     private int page;
     private int totalPages;
     private int count;
@@ -74,7 +76,7 @@ public class Main {
     private IModFilePageRepository modFilePageRepository;
     private IUserRepository userRepository;
     private IModModuleInstaller installer;
-
+    
 
     public Main(
         User user,
@@ -89,6 +91,7 @@ public class Main {
         this.page = 0;
         this.totalPages = 1;
         this.count = 0;
+        this.nonAdded = true;
         this.user = user;
         this.modModules = modModules;
         this.minecraftVersions = minecraftVersions;
@@ -102,6 +105,12 @@ public class Main {
     @FXML
     public void initialize() {
         listModModules.setItems(modModules);
+        addListModModulesListeners();
+        setCellFactories();
+        updateLblPaginator(totalPages);
+    }
+
+    private void addListModModulesListeners() {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
@@ -113,11 +122,9 @@ public class Main {
                 minecraftVersion = modModule.getMinecraftVersion();
                 page = 0;
                 enableFilterButtons();
-                updateListModFiles(newValue);
+                updateListModFiles();
             }
         });
-        setCellFactories();
-        updateLblPaginator(totalPages);
     }
 
     private void updateLblPaginator(int totalPages) {
@@ -125,28 +132,23 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFilePageRepository.getTotalPages(
-            20,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+        totalPages = getTotalPages();
+    }
+
+    private int getTotalPages() {
+        return modFilePageRepository.getTotalPages(limit, modLoaderId, modOriginId, minecraftVersion, search);
     }
     
-    private void updateListModFiles(ModModule modModule) {
-        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(
-            20,
-            page,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+    private void updateListModFiles() {
+        ArrayList<ModFile> modFiles = getPage();
         updateTotalPages();
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+    }
+
+    private ArrayList<ModFile> getPage() {
+        return modFilePageRepository.getPage(limit, page, modLoaderId, modOriginId, minecraftVersion, search);
     }
 
     private void setCellFactories() {
@@ -182,8 +184,12 @@ public class Main {
         event.consume();
         if (page > 0) {
             page--;
-            updateLblPaginator(totalPages);
-            updateListModFiles(modModule);
+            if (nonAdded) {
+                updateListModFiles();
+            }
+            else {
+                filterOnlyAdded();
+            }
         }
     }
 
@@ -192,13 +198,17 @@ public class Main {
         event.consume();
         if (page < (totalPages - 1)) {
             page++;
-            updateLblPaginator(totalPages);
-            updateListModFiles(modModule);
+            if (nonAdded) {
+                updateListModFiles();
+            }
+            else {
+                filterOnlyAdded();
+            }
         }
     }
 
     @FXML
-    void onBtnNewAction(ActionEvent event) {
+    private void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
         NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, userRepository);
         Scene scene = new Scene(newModModule);
@@ -233,7 +243,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnInstallAction(ActionEvent event) {
+    private void onBtnInstallAction(ActionEvent event) {
         event.consume();
         Stage popup = new Stage();
         Warning warning = new Warning();
@@ -259,7 +269,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnSearchAction(ActionEvent event) {
+    private void onBtnSearchAction(ActionEvent event) {
         event.consume();
         if (txtBusca.getText().equals("")) {
             search = null;
@@ -267,11 +277,11 @@ public class Main {
         else {
             search = txtBusca.getText();
         }
-        updateListModFiles(modModule);
+        updateListModFiles();
     }
 
     @FXML
-    void onBtnFilterAction(ActionEvent event) {
+    private void onBtnFilterAction(ActionEvent event) {
         event.consume();
         if (txtBusca.getText().equals("")) {
             search = null;
@@ -281,45 +291,65 @@ public class Main {
             modLoaders,
             modOrigins,
             minecraftVersions,
-            (modLoader, modOrigin, minecraftVersion, nonAdded) -> {
-                this.nonAdded = nonAdded;
-                modLoaderId = modLoader == null ? null : modLoader.getId();
-                modOriginId = modOrigin == null ? null : modOrigin.getId();
-                this.minecraftVersion = minecraftVersion;
-                if (nonAdded) {
-                    updateListModFiles(modModule);
-                }
-                else {
-                    Stream<ModFile> modFileStream = modModule.getModFiles().stream();
-                    if (modLoaderId != null) {
-                        modFileStream = modFileStream.filter(
-                            item -> item.getMod().getModLoader().getId() == modLoaderId
-                        );
-                    }
-                    if (modOriginId != null) {
-                        modFileStream = modFileStream.filter(
-                            item -> item.getMod().getModOrigin().getId() == modOriginId
-                        );
-                    }
-                    if (minecraftVersion != null) {
-                        modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
-                    }
-                    ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
-                    updateLblPaginator(modFiles.size());
-                    setListModFilesCellFactory();
-                    listModFiles.setItems(FXCollections.observableArrayList(modFiles));
-                }
-            },
             modLoaderId,
             modOriginId,
             minecraftVersion,
-            nonAdded
+            nonAdded,
+            (
+                modLoader,
+                modOrigin,
+                minecraftVersion,
+                nonAdded
+            ) -> onFilterApply(
+                modLoader,
+                modOrigin,
+                minecraftVersion,
+                nonAdded
+            )
         );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
         popup.show();
         count = 0;
+    }
+
+    private void onFilterApply(ModLoader modLoader, ModOrigin modOrigin, String minecraftVersion, Boolean nonAdded) {
+        this.page = 0;
+        this.nonAdded = nonAdded;
+        this.modLoaderId = modLoader == null ? null : modLoader.getId();
+        this.modOriginId = modOrigin == null ? null : modOrigin.getId();
+        this.minecraftVersion = minecraftVersion;
+        if (nonAdded) {
+            updateListModFiles();
+        }
+        else {
+            filterOnlyAdded();
+        }
+    }
+
+    private void filterOnlyAdded() {
+        Stream<ModFile> modFileStream = modModule.getModFiles().stream();
+        if (modLoaderId != null) {
+            modFileStream = modFileStream.filter(
+                item -> item.getMod().getModLoader().getId() == modLoaderId
+            );
+        }
+        if (modOriginId != null) {
+            modFileStream = modFileStream.filter(
+                item -> item.getMod().getModOrigin().getId() == modOriginId
+            );
+        }
+        if (minecraftVersion != null) {
+            modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
+        }
+        ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
+        totalPages = (int) Math.ceil(modFiles.size() / (float) limit);
+        updateLblPaginator(totalPages);
+        setListModFilesCellFactory();
+        listModFiles.setItems(FXCollections.observableArrayList(
+            modFiles.subList(page * limit, Math.min(modFiles.size(), (page + 1) * limit))
+        ));
     }
 
 }
