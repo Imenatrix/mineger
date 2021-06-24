@@ -128,15 +128,23 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFilePageRepository.getTotalPages(limit, modLoaderId, modOriginId, minecraftVersion, search);
+        totalPages = getTotalPages();
+    }
+
+    private int getTotalPages() {
+        return modFilePageRepository.getTotalPages(limit, modLoaderId, modOriginId, minecraftVersion, search);
     }
     
     private void updateListModFiles() {
-        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(limit, page, modLoaderId, modOriginId, minecraftVersion, search);
+        ArrayList<ModFile> modFiles = getPage();
         updateTotalPages();
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+    }
+
+    private ArrayList<ModFile> getPage() {
+        return modFilePageRepository.getPage(limit, page, modLoaderId, modOriginId, minecraftVersion, search);
     }
 
     private void setCellFactories() {
