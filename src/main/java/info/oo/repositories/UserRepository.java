@@ -21,7 +21,7 @@ import info.oo.repositories.unitsOfWork.UserModModulesUnitOfWork;
 
 import java.util.ArrayList;
 
-public class UserRespository implements IUserRepository {
+public class UserRepository implements IUserRepository {
 
     private IUserDAO userDAO;
     private IModModuleDAO modModuleDAO;
@@ -32,7 +32,7 @@ public class UserRespository implements IUserRepository {
     private IModOriginDAO modOriginDAO;
     private IUserFactory userFactory;
 
-    public UserRespository(
+    public UserRepository(
         IUserDAO userDAO,
         IModModuleDAO modModuleDAO,
         IModLoaderDAO modLoaderDAO,
