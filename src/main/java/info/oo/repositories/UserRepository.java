@@ -82,8 +82,8 @@ public class UserRepository implements IUserRepository {
         ArrayList<ModModule> maintainedModModules = getMaintainedModModules(modModules, oldModModules);
         ArrayList<ModModule> oldMaintainedModModules = getMaintainedModModules(oldModModules, modModules);
 
-        createUserModModulesUnitOfWork(user, oldUser).commit();
-        createFileModuleUnitOfWork(maintainedModModules, oldMaintainedModModules).commit();
+        new UserModModulesUnitOfWork(user, modModules, oldModModules, modModuleDAO).commit();
+        new FileModuleUnitOfWork(maintainedModModules, oldMaintainedModModules, fileModuleDAO).commit();
     }
 
     public User insert(User user) {
@@ -98,21 +98,6 @@ public class UserRepository implements IUserRepository {
                 .anyMatch(item2 -> item2 == item.getId())
         );
         return maintainedModModules;
-    }
-
-    private FileModuleUnitOfWork createFileModuleUnitOfWork(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
-        return new FileModuleUnitOfWork(modModules, oldModModules, fileModuleDAO);
-    }
-
-    private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
-        ArrayList<ModModule> modModules = user.getModModules();
-        ArrayList<ModModule> oldModModules = oldUser.getModModules();
-        return new UserModModulesUnitOfWork(
-            user,
-            modModules,
-            oldModModules,
-            modModuleDAO
-        );
     }
 
 }
