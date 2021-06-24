@@ -16,7 +16,7 @@ import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.factories.interfaces.IUserFactory;
 import info.oo.repositories.interfaces.IUserRepository;
-import info.oo.repositories.unitsOfWork.ModModuleUnitOfWork;
+import info.oo.repositories.unitsOfWork.FileModuleUnitOfWork;
 import info.oo.repositories.unitsOfWork.UserModModulesUnitOfWork;
 
 import java.util.ArrayList;
@@ -101,12 +101,12 @@ public class UserRepository implements IUserRepository {
         return maintainedModModules;
     }
 
-    private ModModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+    private FileModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
         ModModule oldModModule = oldModModules.stream()
             .filter(item -> item.getId() == modModule.getId())
             .findFirst()
             .get();
-        return new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
+        return new FileModuleUnitOfWork(modModule, oldModModule, fileModuleDAO);
     }
 
     private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
