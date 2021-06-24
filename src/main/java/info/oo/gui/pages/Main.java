@@ -333,7 +333,8 @@ public class Main {
             modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
         }
         ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
-        updateLblPaginator(modFiles.size());
+        totalPages = (int) Math.ceil(modFiles.size() / 20.0);
+        updateLblPaginator(totalPages);
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
