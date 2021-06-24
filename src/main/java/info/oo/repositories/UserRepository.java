@@ -80,11 +80,10 @@ public class UserRepository implements IUserRepository {
         ArrayList<ModModule> modModules = user.getModModules();
         ArrayList<ModModule> oldModModules = oldUser.getModModules();
         ArrayList<ModModule> maintainedModModules = getMaintainedModModules(modModules, oldModModules);
+        ArrayList<ModModule> oldMaintainedModModules = getMaintainedModModules(oldModModules, modModules);
 
         createUserModModulesUnitOfWork(user, oldUser).commit();
-        for (ModModule modModule : maintainedModModules) {
-            creatModuleUnitOfWork(modModule, modModules, oldModModules).commit();
-        }
+        createFileModuleUnitOfWork(maintainedModModules, oldMaintainedModModules).commit();
     }
 
     public User insert(User user) {
@@ -101,12 +100,8 @@ public class UserRepository implements IUserRepository {
         return maintainedModModules;
     }
 
-    private FileModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
-        ModModule oldModModule = oldModModules.stream()
-            .filter(item -> item.getId() == modModule.getId())
-            .findFirst()
-            .get();
-        return new FileModuleUnitOfWork(modModule, oldModModule, fileModuleDAO);
+    private FileModuleUnitOfWork createFileModuleUnitOfWork(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+        return new FileModuleUnitOfWork(modModules, oldModModules, fileModuleDAO);
     }
 
     private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
