@@ -8,6 +8,10 @@ public class ModLoader {
     private String name;
     private URL url;
 
+    public ModLoader(int id) {
+        this.id = id;
+    }
+
     public ModLoader(int id, String name, URL url) {
         this.id = id;
         this.name = name;

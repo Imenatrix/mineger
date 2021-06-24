@@ -5,7 +5,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.entities.ModOrigin;
@@ -13,29 +12,12 @@ import info.oo.utils.clarice.Clarice;
 
 public class ModOriginDAO implements IModOriginDAO {
 
-    private ArrayList<ModOrigin> cache;
-
-    public ModOriginDAO() {
-        cache = new ArrayList<ModOrigin>();
-    }
-
     public ModOrigin getById(int id) {
-        
-        Optional<ModOrigin> optionalModOrigin = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optionalModOrigin.isPresent()) {
-            return optionalModOrigin.get();
-        }
-
         String query = "select * from mod_origin where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                ModOrigin modOrigin = resultToModOrigin(result);
-                cache.add(modOrigin);
-                return modOrigin;
-            },
+            result -> resultToModOrigin(result),
             null
         );
 

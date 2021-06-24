@@ -6,14 +6,14 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import info.oo.dao.interfaces.IModFileDAO;
-import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.ModOrigin;
 import info.oo.entities.User;
 import info.oo.gui.components.ModPod;
+import info.oo.repositories.interfaces.IModFilePageRepository;
+import info.oo.repositories.interfaces.IUserRepository;
 import info.oo.services.interfaces.IModModuleInstaller;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -71,8 +71,8 @@ public class Main {
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<String> minecraftVersions;
     private ObservableList<ModOrigin> modOrigins;
-    private IModFileDAO modFileDAO;
-    private IModModuleDAO modModuleDAO;
+    private IModFilePageRepository modFilePageRepository;
+    private IUserRepository userRepository;
     private IModModuleInstaller installer;
 
 
@@ -82,8 +82,8 @@ public class Main {
         ObservableList<ModLoader> modLoaders,
         ObservableList<String> minecraftVersions,
         ObservableList<ModOrigin> modOrigins,
-        IModFileDAO modFileDAO,
-        IModModuleDAO modModuleDAO,
+        IModFilePageRepository modFilePageRepository,
+        IUserRepository userRepository,
         IModModuleInstaller installer
     ) {
         this.page = 0;
@@ -94,8 +94,8 @@ public class Main {
         this.minecraftVersions = minecraftVersions;
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
-        this.modFileDAO = modFileDAO;
-        this.modModuleDAO = modModuleDAO;
+        this.modFilePageRepository = modFilePageRepository;
+        this.userRepository = userRepository;
         this.installer = installer;
     }
 
@@ -125,7 +125,7 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFileDAO.getTotalPages(
+        totalPages = modFilePageRepository.getTotalPages(
             20,
             modLoaderId,
             modOriginId,
@@ -135,7 +135,7 @@ public class Main {
     }
     
     private void updateListModFiles(ModModule modModule) {
-        ArrayList<ModFile> modFiles = modFileDAO.getPaginated(
+        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(
             20,
             page,
             modLoaderId,
@@ -171,8 +171,9 @@ public class Main {
 
     private void setListModFilesCellFactory() {
         listModFiles.setCellFactory(list -> new ModPod(
+            user,
             modModule,
-            modModuleDAO
+            userRepository
         ));
     }
 
@@ -199,7 +200,7 @@ public class Main {
     @FXML
     void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
-        NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, modModuleDAO);
+        NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, userRepository);
         Scene scene = new Scene(newModModule);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setScene(scene);
@@ -213,7 +214,7 @@ public class Main {
         if (modModule != null) {
             modModules.remove(modModule);
             user.getModModules().remove(modModule);
-            modModuleDAO.delete(modModule);
+            userRepository.save(user);
         }
     }
 
@@ -292,7 +293,7 @@ public class Main {
                     Stream<ModFile> modFileStream = modModule.getModFiles().stream();
                     if (modLoaderId != null) {
                         modFileStream = modFileStream.filter(
-                            item -> item.getMod().modLoader().getId() == modLoaderId
+                            item -> item.getMod().getModLoader().getId() == modLoaderId
                         );
                     }
                     if (modOriginId != null) {

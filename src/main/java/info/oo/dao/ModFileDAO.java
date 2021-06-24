@@ -5,51 +5,21 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 
-import info.oo.dao.interfaces.IModDAO;
 import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.entities.Mod;
 import info.oo.entities.ModFile;
 import info.oo.utils.clarice.Clarice;
 
 public class ModFileDAO implements IModFileDAO {
 
-    private IModDAO modDAO;
-    private ArrayList<ModFile> cache;
-
-    public ModFileDAO(IModDAO modDAO) {
-        this.modDAO = modDAO;
-        this.cache = new ArrayList<ModFile>();
-    }
-
     public ModFile getById(int id) {
-        
-        Optional<ModFile> optionalModFile = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optionalModFile.isPresent()) {
-            return optionalModFile.get();
-        }
-
         String query = "select * from mod_file where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                ModFile modFile = resultToModFile(result);
-                cache.add(modFile);
-                return modFile;
-            },
+            result ->  resultToModFile(result),
             null
-        );
-    }
-    
-    public ArrayList<ModFile> getAll() {
-        String query = "select * from mod_file;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModFileArrayList(result),
-            new ArrayList<ModFile>()
         );
     }
 
@@ -102,7 +72,7 @@ public class ModFileDAO implements IModFileDAO {
         );
     }
 
-    public ArrayList<ModFile> getPaginated(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
+    public ArrayList<ModFile> getPage(int limit, int page, Integer modLoaderId, Integer modOriginId, String minecraftVersion, String search) {
         String query =
             "select f.* from " +
                 "mod_file f join " +
@@ -161,7 +131,7 @@ public class ModFileDAO implements IModFileDAO {
                 result.getString("file_name"),
                 new URL(result.getString("url")),
                 result.getString("minecraft_version"),
-                modDAO.getById(result.getInt("mod_id"))
+                new Mod(result.getInt("mod_id"))
             );
         }
         catch (MalformedURLException e) {

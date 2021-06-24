@@ -8,20 +8,16 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import info.oo.dao.interfaces.IModDAO;
-import info.oo.dao.interfaces.IModLoaderDAO;
-import info.oo.dao.interfaces.IModOriginDAO;
 import info.oo.entities.Mod;
+import info.oo.entities.ModLoader;
+import info.oo.entities.ModOrigin;
 import info.oo.utils.clarice.Clarice;
 
 public class ModDAO implements IModDAO {
 
-    private IModLoaderDAO modLoaderDAO;
-    private IModOriginDAO modOriginDAO;
     private ArrayList<Mod> cache;
 
-    public ModDAO(IModLoaderDAO modLoaderDAO, IModOriginDAO modOriginDAO) {
-        this.modLoaderDAO = modLoaderDAO;
-        this.modOriginDAO = modOriginDAO;
+    public ModDAO() {
         this.cache = new ArrayList<Mod>();
     }
 
@@ -45,24 +41,6 @@ public class ModDAO implements IModDAO {
             null
         );
     }
-    
-    public ArrayList<Mod> getAll() {
-        String query = "select * from `mod`;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModArrayList(result),
-            new ArrayList<Mod>()
-        );
-    }
-
-    private ArrayList<Mod> resultToModArrayList(ResultSet result) throws SQLException{
-        ArrayList<Mod> mods = new ArrayList<Mod>();
-        while(result.next()) {
-            mods.add(parseModFromResult(result));
-        }
-        return mods;
-    }
 
     private Mod resultToMod(ResultSet result) throws SQLException {
         result.next();
@@ -76,8 +54,8 @@ public class ModDAO implements IModDAO {
                 result.getString("name"),
                 new URL(result.getString("url")),
                 result.getString("summary"),
-                modLoaderDAO.getById(result.getInt("mod_loader_id")),
-                modOriginDAO.getById(result.getInt("mod_origin_id"))
+                new ModLoader(result.getInt("mod_loader_id")),
+                new ModOrigin(result.getInt("mod_origin_id"))
             );
         }
         catch (MalformedURLException e) {

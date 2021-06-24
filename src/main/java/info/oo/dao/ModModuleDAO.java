@@ -4,33 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import info.oo.dao.interfaces.IModFileDAO;
-import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.dao.interfaces.IModModuleDAO;
 import info.oo.entities.ModFile;
+import info.oo.entities.ModLoader;
 import info.oo.entities.ModModule;
 import info.oo.entities.User;
 import info.oo.utils.clarice.Clarice;
 
 public class ModModuleDAO implements IModModuleDAO {
-
-    private IModFileDAO modFileDAO;
-    private IModLoaderDAO modLoaderDAO;
-
-    public ModModuleDAO(IModFileDAO modFileDAO, IModLoaderDAO modLoaderDAO) {
-        this.modFileDAO = modFileDAO;
-        this.modLoaderDAO = modLoaderDAO;
-    }
-    
-    public ArrayList<ModModule> getAll() {
-        String query = "select * from mod_module;";
-        return Clarice.executeQueryOr(
-            query,
-            stmt -> {},
-            result -> resultToModModuleArrayList(result),
-            new ArrayList<ModModule>()
-        );
-    }
 
     public ArrayList<ModModule> getAllByUserId(int id) {
         String query = "select * from mod_module where user_id = ?;";
@@ -129,8 +110,8 @@ public class ModModuleDAO implements IModModuleDAO {
             id,
             modModule.getName(),
             modModule.getMinecraftVersion(),
-            new ArrayList<ModFile>(),
-            modModule.getModLoader()
+            modModule.getModLoader(),
+            modModule.getUser()
         );
     }
 
@@ -139,8 +120,8 @@ public class ModModuleDAO implements IModModuleDAO {
             result.getInt("id"),
             result.getString("name"),
             result.getString("minecraft_version"),
-            modFileDAO.getAllByModModuleId(result.getInt("id")),
-            modLoaderDAO.getById(result.getInt("mod_loader_id"))
+            new ModLoader(result.getInt("mod_loader_id")),
+            new User(result.getInt("user_id"))
         );
     }
 

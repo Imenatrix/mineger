@@ -5,7 +5,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import info.oo.dao.interfaces.IModLoaderDAO;
 import info.oo.entities.ModLoader;
@@ -13,29 +12,12 @@ import info.oo.utils.clarice.Clarice;
 
 public class ModLoaderDAO implements IModLoaderDAO {
 
-    private ArrayList<ModLoader> cache;
-
-    public ModLoaderDAO() {
-        cache = new ArrayList<ModLoader>();
-    }
-
     public ModLoader getById(int id) {
-        
-        Optional<ModLoader> optionalModLoader = cache.stream().filter(item -> item.getId() == id).findFirst();
-
-        if (optionalModLoader.isPresent()) {
-            return optionalModLoader.get();
-        }
-
         String query = "select * from mod_loader where id = ?";
         return Clarice.executeQueryOr(
             query,
             stmt -> stmt.setInt(1, id),
-            result -> {
-                ModLoader modLoader = resultToModLoader(result);
-                cache.add(modLoader);
-                return modLoader;
-            },
+            result -> resultToModLoader(result),
             null
         );
     }
