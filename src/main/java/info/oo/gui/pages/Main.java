@@ -313,11 +313,11 @@ public class Main {
             updateListModFiles(modModule);
         }
         else {
-            filterOnlyAdded(minecraftVersion);
+            filterOnlyAdded();
         }
     }
 
-    private void filterOnlyAdded(String minecraftVersion) {
+    private void filterOnlyAdded() {
         Stream<ModFile> modFileStream = modModule.getModFiles().stream();
         if (modLoaderId != null) {
             modFileStream = modFileStream.filter(
