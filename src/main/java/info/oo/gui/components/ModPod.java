@@ -30,7 +30,8 @@ public class ModPod extends ListCell<ModFile> {
     @FXML
     private Label lblSummary;
 
-    @FXML HBox container;
+    @FXML
+    private HBox container;
 
     @FXML
     private Button btnInstall;
@@ -95,7 +96,7 @@ public class ModPod extends ListCell<ModFile> {
     }
 
     @FXML
-    void onBtnInstallAction(ActionEvent event) {
+    private void onBtnInstallAction(ActionEvent event) {
         if (isInstalled()) {
             user.getModModules().stream()
                 .filter(item -> item.getId() == modModule.getId())

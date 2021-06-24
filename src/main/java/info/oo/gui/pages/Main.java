@@ -208,7 +208,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnNewAction(ActionEvent event) {
+    private void onBtnNewAction(ActionEvent event) {
         Stage popup = new Stage();
         NewModModule newModModule = new NewModModule(user, modModules, minecraftVersions, modLoaders, userRepository);
         Scene scene = new Scene(newModModule);
@@ -243,7 +243,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnInstallAction(ActionEvent event) {
+    private void onBtnInstallAction(ActionEvent event) {
         event.consume();
         Stage popup = new Stage();
         Warning warning = new Warning();
@@ -269,7 +269,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnSearchAction(ActionEvent event) {
+    private void onBtnSearchAction(ActionEvent event) {
         event.consume();
         if (txtBusca.getText().equals("")) {
             search = null;
@@ -281,7 +281,7 @@ public class Main {
     }
 
     @FXML
-    void onBtnFilterAction(ActionEvent event) {
+    private void onBtnFilterAction(ActionEvent event) {
         event.consume();
         if (txtBusca.getText().equals("")) {
             search = null;

@@ -55,7 +55,7 @@ public class Register extends VBox {
     }
 
     @FXML
-    void onBtnRegisterAction(ActionEvent event) {
+    private void onBtnRegisterAction(ActionEvent event) {
         String name = txtName.getText();
         String login = txtLogin.getText();
         String password = txtPassword.getText();
@@ -75,7 +75,7 @@ public class Register extends VBox {
     }
 
     @FXML
-    void onBtnCancelAction(ActionEvent event) {
+    private void onBtnCancelAction(ActionEvent event) {
         goBack();
     }
 

@@ -53,7 +53,7 @@ public class Login extends VBox {
     }
 
     @FXML
-    void onBtnLoginAction(ActionEvent event) {
+    private void onBtnLoginAction(ActionEvent event) {
         String login = txtLogin.getText();
         String password = txtPassword.getText();
         Integer userId = authenticator.authenticate(login, password);
@@ -67,7 +67,7 @@ public class Login extends VBox {
     }
 
     @FXML
-    void onBtnRegisterAction(ActionEvent event) {
+    private void onBtnRegisterAction(ActionEvent event) {
         Stage stage = (Stage) getScene().getWindow();
         stage.setScene(
             new Scene(

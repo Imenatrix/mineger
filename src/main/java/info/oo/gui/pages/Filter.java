@@ -95,7 +95,7 @@ public class Filter extends GridPane {
     }
 
     @FXML
-    void initialize() {
+    private void initialize() {
         cbVersion.setItems(versions);
         cbModLoader.setItems(modLoaders);
         cbOrigin.setItems(modOrigins);
@@ -194,13 +194,13 @@ public class Filter extends GridPane {
     }
 
     @FXML
-    void onBtnCancelAction(ActionEvent event) {
+    private void onBtnCancelAction(ActionEvent event) {
         event.consume();
         close();
     }
 
     @FXML
-    void onBtnApplyAction(ActionEvent event) {
+    private void onBtnApplyAction(ActionEvent event) {
         event.consume();
         onApply.call(
             cbModLoader.getSelectionModel().getSelectedItem(),
