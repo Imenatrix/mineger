@@ -5,9 +5,13 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IModLoaderDAO;
+import info.oo.entities.Mod;
 import info.oo.entities.ModLoader;
+import info.oo.entities.ModModule;
 import info.oo.utils.clarice.Clarice;
 
 public class ModLoaderDAO implements IModLoaderDAO {
@@ -27,6 +31,34 @@ public class ModLoaderDAO implements IModLoaderDAO {
         return Clarice.executeQueryOr(
             query,
             stmt -> {},
+            result -> resultToModLoaderArrayList(result),
+            new ArrayList<ModLoader>()
+        );
+    }
+
+    public ArrayList<ModLoader> getAllByModModules(ArrayList<ModModule> modModules) {
+        String wildcards = modModules.stream()
+            .map(item -> item.getModLoader().getId())
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        Stream<Integer> ids = modModules.stream().map(item -> item.getModLoader().getId());
+        return getAllByIds(ids, wildcards);
+    }
+
+    public ArrayList<ModLoader> getAllByMods(ArrayList<Mod> mods) {
+        String wildcards = mods.stream()
+            .map(item -> item.getModLoader().getId())
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        Stream<Integer> ids = mods.stream().map(item -> item.getModLoader().getId());
+        return getAllByIds(ids, wildcards);
+    }
+
+    private ArrayList<ModLoader> getAllByIds(Stream<Integer> ids, String wildcards) {
+        String query = "select * from mod_loader where id in (" + wildcards + ")";
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> Clarice.prepareIntegerIterator(stmt, ids.iterator()),
             result -> resultToModLoaderArrayList(result),
             new ArrayList<ModLoader>()
         );
