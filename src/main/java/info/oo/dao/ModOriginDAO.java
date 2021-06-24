@@ -5,8 +5,11 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IModOriginDAO;
+import info.oo.entities.Mod;
 import info.oo.entities.ModOrigin;
 import info.oo.utils.clarice.Clarice;
 
@@ -28,6 +31,21 @@ public class ModOriginDAO implements IModOriginDAO {
         return Clarice.executeQueryOr(
             query,
             stmt -> {},
+            result -> resultToModOriginArrayList(result),
+            new ArrayList<ModOrigin>()
+        );
+    }
+
+    public ArrayList<ModOrigin> getAllByMods(ArrayList<Mod> mods) {
+        String wildcards = mods.stream()
+            .map(item -> item.getModOrigin().getId())
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        String query = "select * from mod_origin where id in (" + wildcards + ")";
+        Stream<Integer> ids = mods.stream().map(item -> item.getModOrigin().getId());
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> Clarice.prepareIntegerIterator(stmt, ids.iterator()),
             result -> resultToModOriginArrayList(result),
             new ArrayList<ModOrigin>()
         );
