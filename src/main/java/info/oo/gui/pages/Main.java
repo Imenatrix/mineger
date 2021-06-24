@@ -89,6 +89,7 @@ public class Main {
         this.page = 0;
         this.totalPages = 1;
         this.count = 0;
+        this.nonAdded = true;
         this.user = user;
         this.modModules = modModules;
         this.minecraftVersions = minecraftVersions;
