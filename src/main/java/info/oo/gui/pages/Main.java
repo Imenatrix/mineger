@@ -114,7 +114,7 @@ public class Main {
                 minecraftVersion = modModule.getMinecraftVersion();
                 page = 0;
                 enableFilterButtons();
-                updateListModFiles(newValue);
+                updateListModFiles();
             }
         });
         setCellFactories();
@@ -135,7 +135,7 @@ public class Main {
         );
     }
     
-    private void updateListModFiles(ModModule modModule) {
+    private void updateListModFiles() {
         ArrayList<ModFile> modFiles = modFilePageRepository.getPage(
             20,
             page,
@@ -184,7 +184,7 @@ public class Main {
         if (page > 0) {
             page--;
             if (nonAdded) {
-                updateListModFiles(modModule);
+                updateListModFiles();
             }
             else {
                 filterOnlyAdded();
@@ -198,7 +198,7 @@ public class Main {
         if (page < (totalPages - 1)) {
             page++;
             if (nonAdded) {
-                updateListModFiles(modModule);
+                updateListModFiles();
             }
             else {
                 filterOnlyAdded();
@@ -276,7 +276,7 @@ public class Main {
         else {
             search = txtBusca.getText();
         }
-        updateListModFiles(modModule);
+        updateListModFiles();
     }
 
     @FXML
@@ -320,7 +320,7 @@ public class Main {
         this.modOriginId = modOrigin == null ? null : modOrigin.getId();
         this.minecraftVersion = minecraftVersion;
         if (nonAdded) {
-            updateListModFiles(modModule);
+            updateListModFiles();
         }
         else {
             filterOnlyAdded();
