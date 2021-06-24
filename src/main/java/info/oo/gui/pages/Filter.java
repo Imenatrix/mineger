@@ -59,7 +59,7 @@ public class Filter extends GridPane {
         Integer modLoaderId,
         Integer modOriginId,
         String version,
-        Boolean nonAdded,
+        boolean nonAdded,
         QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply
     ) {
         super();
@@ -99,33 +99,39 @@ public class Filter extends GridPane {
         cbVersion.setItems(versions);
         cbModLoader.setItems(modLoaders);
         cbOrigin.setItems(modOrigins);
+        trySetDefaultValues();
+        setCellFactories();
+    }
+
+    private void trySetDefaultValues() {
         try {
-            cbVersion.getSelectionModel().select(
-                versions.stream()
-                    .filter(item -> item.equals(version))
-                    .findFirst()
-                    .orElseGet(null)
-            );
-            cbModLoader.getSelectionModel().select(
-                modLoaders.stream()
-                    .filter(item -> item.getId() == modLoaderId)
-                    .findFirst()
-                    .orElseGet(null)
-            );
-            cbOrigin.getSelectionModel().select(
-                modOrigins.stream()
-                    .filter(item -> item.getId() == modOriginId)
-                    .findFirst()
-                    .orElseGet(null)
-            );
+            setDefaultValues();
         }
         catch (NullPointerException e) {
             e.printStackTrace();
         }
-        if (nonAdded != null) {
-            chkNonAdded.setSelected(nonAdded);
-        }
-        setCellFactories();
+    }
+
+    private void setDefaultValues() throws NullPointerException {
+        cbVersion.getSelectionModel().select(
+            versions.stream()
+                .filter(item -> item.equals(version))
+                .findFirst()
+                .orElseGet(null)
+        );
+        cbModLoader.getSelectionModel().select(
+            modLoaders.stream()
+                .filter(item -> item.getId() == modLoaderId)
+                .findFirst()
+                .orElseGet(null)
+        );
+        cbOrigin.getSelectionModel().select(
+            modOrigins.stream()
+                .filter(item -> item.getId() == modOriginId)
+                .findFirst()
+                .orElseGet(null)
+        );
+        chkNonAdded.setSelected(nonAdded);
     }
 
     private void setCellFactories() {
