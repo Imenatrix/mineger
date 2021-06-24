@@ -57,6 +57,8 @@ public class Main {
     @FXML
     private Button btnFilter;
 
+    private static final int limit = 20;
+
     private int page;
     private int totalPages;
     private int count;
@@ -74,7 +76,7 @@ public class Main {
     private IModFilePageRepository modFilePageRepository;
     private IUserRepository userRepository;
     private IModModuleInstaller installer;
-
+    
 
     public Main(
         User user,
@@ -126,11 +128,11 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFilePageRepository.getTotalPages(20, modLoaderId, modOriginId, minecraftVersion, search);
+        totalPages = modFilePageRepository.getTotalPages(limit, modLoaderId, modOriginId, minecraftVersion, search);
     }
     
     private void updateListModFiles() {
-        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(20, page, modLoaderId, modOriginId, minecraftVersion, search);
+        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(limit, page, modLoaderId, modOriginId, minecraftVersion, search);
         updateTotalPages();
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
@@ -330,11 +332,11 @@ public class Main {
             modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
         }
         ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
-        totalPages = (int) Math.ceil(modFiles.size() / 20.0);
+        totalPages = (int) Math.ceil(modFiles.size() / (float) limit);
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
         listModFiles.setItems(FXCollections.observableArrayList(
-            modFiles.subList(page * 20, Math.min(modFiles.size(), (page + 1) * 20))
+            modFiles.subList(page * limit, Math.min(modFiles.size(), (page + 1) * limit))
         ));
     }
 
