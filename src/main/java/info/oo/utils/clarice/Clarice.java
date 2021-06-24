@@ -21,7 +21,7 @@ public class Clarice {
             return solveResult(stmt, solver);
         }
         catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return or;
         }
     }
@@ -36,7 +36,7 @@ public class Clarice {
             return solveUpdateResult(updated, stmt, solver);
         }
         catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return or;
         }
     }

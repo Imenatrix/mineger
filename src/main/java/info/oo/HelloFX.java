@@ -116,7 +116,7 @@ public class HelloFX extends Application {
             stage.centerOnScreen();
         }
         catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 

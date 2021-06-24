@@ -17,7 +17,7 @@ public class DBConfig {
             loadConfigFile(configFile);
         }
         catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
