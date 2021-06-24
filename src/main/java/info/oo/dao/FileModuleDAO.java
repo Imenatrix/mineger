@@ -3,18 +3,26 @@ package info.oo.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IFileModuleDAO;
 import info.oo.entities.FileModule;
+import info.oo.entities.ModModule;
 import info.oo.utils.clarice.Clarice;
 
 public class FileModuleDAO implements IFileModuleDAO {
     
-    public ArrayList<FileModule> getAllByModModuleId(int id) {
-        String query = "select * from file_module where mod_module_id = ?";
+    public ArrayList<FileModule> getAllByModModules(ArrayList<ModModule> modModules) {
+
+        String wildcards = modModules.stream()
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        String query = "select f.* from file_module f join mod_module m where f.mod_module_id = m.id and m.id in (" + wildcards + ")";
+        Stream<Integer> ids = modModules.stream().map(item -> item.getId());
         return Clarice.executeQueryOr(
             query,
-            stmt -> stmt.setInt(1, id),
+            stmt -> Clarice.prepareIntegerIterator(stmt, ids.iterator()),
             result -> resultToFileModuleArrayList(result),
             new ArrayList<FileModule>()
         );
