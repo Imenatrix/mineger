@@ -44,33 +44,35 @@ public class Filter extends GridPane {
     private ObservableList<String> versions;
     private ObservableList<ModLoader> modLoaders;
     private ObservableList<ModOrigin> modOrigins;
-    private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
-
+    
     private Integer modLoaderId;
     private Integer modOriginId;
     private String version;
     private Boolean nonAdded;
+    
+    private QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply;
 
     public Filter(
         ObservableList<ModLoader> modLoaders,
         ObservableList<ModOrigin> modOrigins,
         ObservableList<String> versions,
-        QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply,
         Integer modLoaderId,
         Integer modOriginId,
         String version,
-        Boolean nonAdded
+        Boolean nonAdded,
+        QuadriCallback<ModLoader, ModOrigin, String, Boolean> onApply
     ) {
         super();
         this.modLoaders = modLoaders;
         this.modOrigins = modOrigins;
         this.versions = versions;
-        this.onApply = onApply;
-
+        
         this.modLoaderId = modLoaderId;
         this.modOriginId = modOriginId;
         this.version = version;
         this.nonAdded = nonAdded;
+
+        this.onApply = onApply;
 
         loadFXML();
     }

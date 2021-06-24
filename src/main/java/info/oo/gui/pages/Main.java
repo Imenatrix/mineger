@@ -281,11 +281,11 @@ public class Main {
             modLoaders,
             modOrigins,
             minecraftVersions,
-            (modLoader, modOrigin, minecraftVersion, nonAdded) -> onFilter(modLoader, modOrigin, minecraftVersion, nonAdded),
             modLoaderId,
             modOriginId,
             minecraftVersion,
-            nonAdded
+            nonAdded,
+            (modLoader, modOrigin, minecraftVersion, nonAdded) -> onFilter(modLoader, modOrigin, minecraftVersion, nonAdded)
         );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
