@@ -285,7 +285,7 @@ public class Main {
             modOriginId,
             minecraftVersion,
             nonAdded,
-            (modLoader, modOrigin, minecraftVersion, nonAdded) -> onFilter(modLoader, modOrigin, minecraftVersion, nonAdded)
+            (modLoader, modOrigin, minecraftVersion, nonAdded) -> onFilterApply(modLoader, modOrigin, minecraftVersion, nonAdded)
         );
         Scene scene = new Scene(filter);
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -294,7 +294,7 @@ public class Main {
         count = 0;
     }
 
-    private void onFilter(ModLoader modLoader, ModOrigin modOrigin, String minecraftVersion, Boolean nonAdded) {
+    private void onFilterApply(ModLoader modLoader, ModOrigin modOrigin, String minecraftVersion, Boolean nonAdded) {
         this.nonAdded = nonAdded;
         this.modLoaderId = modLoader == null ? null : modLoader.getId();
         this.modOriginId = modOrigin == null ? null : modOrigin.getId();
