@@ -182,8 +182,12 @@ public class Main {
         event.consume();
         if (page > 0) {
             page--;
-            updateLblPaginator(totalPages);
-            updateListModFiles(modModule);
+            if (nonAdded) {
+                updateListModFiles(modModule);
+            }
+            else {
+                filterOnlyAdded();
+            }
         }
     }
 
@@ -192,8 +196,12 @@ public class Main {
         event.consume();
         if (page < (totalPages - 1)) {
             page++;
-            updateLblPaginator(totalPages);
-            updateListModFiles(modModule);
+            if (nonAdded) {
+                updateListModFiles(modModule);
+            }
+            else {
+                filterOnlyAdded();
+            }
         }
     }
 
@@ -337,7 +345,9 @@ public class Main {
         totalPages = (int) Math.ceil(modFiles.size() / 20.0);
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
-        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
+        listModFiles.setItems(FXCollections.observableArrayList(
+            modFiles.subList(page * 20, Math.min(modFiles.size(), (page + 1) * 20))
+        ));
     }
 
 }
