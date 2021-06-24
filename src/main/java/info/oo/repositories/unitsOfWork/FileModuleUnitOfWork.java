@@ -16,31 +16,42 @@ public class FileModuleUnitOfWork {
     public FileModuleUnitOfWork(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules, IFileModuleDAO fileModuleDAO) {
 
         this.fileModuleDAO = fileModuleDAO;
-        inserted = new ArrayList<FileModule>();
-        deleted = new ArrayList<FileModule>();
+        this.inserted = new ArrayList<FileModule>();
+        this.deleted = new ArrayList<FileModule>();
 
         for (ModModule modModule : modModules) {
 
-            ModModule oldModModule = oldModModules.stream()
-                .filter(item -> item.getId() == modModule.getId())
-                .findFirst()
-                .get();
+            ModModule oldModModule = getOldModModule(oldModModules, modModule);
 
             ArrayList<ModFile> modFiles = modModule.getModFiles();
             ArrayList<ModFile> oldModFiles = oldModModule.getModFiles();
     
-            for (ModFile modFile : modFiles) {
-                if (!oldModFiles.stream().map(item -> item.getId()).anyMatch(item -> item == modFile.getId())) {
-                    inserted.add(new FileModule(modFile.getId(), modModule.getId()));
-                }
-            }
-    
-            for (ModFile modFile : oldModFiles) {
-                if (!modFiles.stream().map(item -> item.getId()).anyMatch(item -> item == modFile.getId())) {
-                    deleted.add(new FileModule(modFile.getId(), modModule.getId()));
-                }
+            addInsertedModFiles(modModule, modFiles, oldModFiles);
+            addDeletedModFiles(modModule, modFiles, oldModFiles);
+        }
+    }
+
+    private void addDeletedModFiles(ModModule modModule, ArrayList<ModFile> modFiles, ArrayList<ModFile> oldModFiles) {
+        for (ModFile modFile : oldModFiles) {
+            if (!modFiles.stream().map(item -> item.getId()).anyMatch(item -> item == modFile.getId())) {
+                deleted.add(new FileModule(modFile.getId(), modModule.getId()));
             }
         }
+    }
+
+    private void addInsertedModFiles(ModModule modModule, ArrayList<ModFile> modFiles, ArrayList<ModFile> oldModFiles) {
+        for (ModFile modFile : modFiles) {
+            if (!oldModFiles.stream().map(item -> item.getId()).anyMatch(item -> item == modFile.getId())) {
+                inserted.add(new FileModule(modFile.getId(), modModule.getId()));
+            }
+        }
+    }
+
+    private ModModule getOldModModule(ArrayList<ModModule> oldModModules, ModModule modModule) {
+        return oldModModules.stream()
+            .filter(item -> item.getId() == modModule.getId())
+            .findFirst()
+            .get();
     }
 
     public void commit() {
