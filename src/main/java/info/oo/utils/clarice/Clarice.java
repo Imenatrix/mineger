@@ -47,7 +47,7 @@ public class Clarice {
         }
     }
 
-    public static <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
+    private static <T> T solveResult(PreparedStatement stmt, Solver<T> solver) throws SQLException {
         try (        
             ResultSet result = stmt.executeQuery();
         ) {
@@ -55,7 +55,7 @@ public class Clarice {
         }
     }
 
-    public static <T> T solveUpdateResult(int updated, PreparedStatement stmt, UpdateSolver<T> solver) throws SQLException {
+    private static <T> T solveUpdateResult(int updated, PreparedStatement stmt, UpdateSolver<T> solver) throws SQLException {
         try (        
             ResultSet result = stmt.getGeneratedKeys();
         ) {
