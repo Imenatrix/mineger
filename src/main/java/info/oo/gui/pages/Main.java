@@ -126,24 +126,11 @@ public class Main {
     }
 
     private void updateTotalPages() {
-        totalPages = modFilePageRepository.getTotalPages(
-            20,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+        totalPages = modFilePageRepository.getTotalPages(20, modLoaderId, modOriginId, minecraftVersion, search);
     }
     
     private void updateListModFiles() {
-        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(
-            20,
-            page,
-            modLoaderId,
-            modOriginId,
-            minecraftVersion,
-            search
-        );
+        ArrayList<ModFile> modFiles = modFilePageRepository.getPage(20, page, modLoaderId, modOriginId, minecraftVersion, search);
         updateTotalPages();
         updateLblPaginator(totalPages);
         setListModFilesCellFactory();
