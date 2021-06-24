@@ -116,4 +116,5 @@ public class ModPod extends ListCell<ModFile> {
         }
         updateBtnInstallText();
     }
+    
 }

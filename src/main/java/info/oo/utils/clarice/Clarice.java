@@ -12,6 +12,7 @@ import info.oo.utils.clarice.interfaces.Solver;
 import info.oo.utils.clarice.interfaces.UpdateSolver;
 
 public class Clarice {
+    
     public static <T> T executeQueryOr(String query, Preparer preparer, Solver<T> solver, T or) {
         try (
             Connection conn = ConnectionFactory.getConnection();
@@ -62,4 +63,5 @@ public class Clarice {
             return solver.call(updated, result);
         }
     }
+
 }

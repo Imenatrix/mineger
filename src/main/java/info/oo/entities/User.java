@@ -84,4 +84,5 @@ public class User {
             + password + " modModules: " 
             + modModules + " }";
     }
+    
 }

@@ -41,7 +41,13 @@ public class NewModModule extends GridPane {
     private ObservableList<ModLoader> modLoaders;
     private IUserRepository userRepository;
 
-    public NewModModule(User user, ObservableList<ModModule> modModules, ObservableList<String> versions, ObservableList<ModLoader> modLoaders, IUserRepository userRepository) {
+    public NewModModule(
+        User user,
+        ObservableList<ModModule> modModules,
+        ObservableList<String> versions,
+        ObservableList<ModLoader> modLoaders,
+        IUserRepository userRepository
+    ) {
         super();
         this.user = user;
         this.modModules = modModules;
