@@ -5,8 +5,11 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IModFileDAO;
+import info.oo.entities.FileModule;
 import info.oo.entities.Mod;
 import info.oo.entities.ModFile;
 import info.oo.utils.clarice.Clarice;
@@ -20,6 +23,20 @@ public class ModFileDAO implements IModFileDAO {
             stmt -> stmt.setInt(1, id),
             result ->  resultToModFile(result),
             null
+        );
+    }
+
+    public ArrayList<ModFile> getByFileModules(ArrayList<FileModule> fileModules) {
+        String wildcards = fileModules.stream()
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        String query = "select * from mod_file where id in (" + wildcards + ")";
+        Stream<Integer> ids = fileModules.stream().map(item -> item.getModFileId());
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> Clarice.prepareIntegerIterator(stmt, ids.iterator()),
+            result -> resultToModFileArrayList(result),
+            new ArrayList<ModFile>()
         );
     }
 

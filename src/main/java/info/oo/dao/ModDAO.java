@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import info.oo.dao.interfaces.IModDAO;
 import info.oo.entities.Mod;
+import info.oo.entities.ModFile;
 import info.oo.entities.ModLoader;
 import info.oo.entities.ModOrigin;
 import info.oo.utils.clarice.Clarice;
@@ -40,6 +43,29 @@ public class ModDAO implements IModDAO {
             },
             null
         );
+    }
+
+    public ArrayList<Mod> getAllByModFiles(ArrayList<ModFile> modFiles) {
+        String wildcards = modFiles.stream()
+            .map(item -> item.getMod().getId())
+            .map(item -> "?")
+            .collect(Collectors.joining(","));
+        String query = "select * from `mod` where id in (" + wildcards + ")";
+        Stream<Integer> ids = modFiles.stream().map(item -> item.getMod().getId());
+        return Clarice.executeQueryOr(
+            query,
+            stmt -> Clarice.prepareIntegerIterator(stmt, ids.iterator()),
+            result -> resultToModFileArrayList(result),
+            new ArrayList<Mod>()
+        );
+    }
+
+    private ArrayList<Mod> resultToModFileArrayList(ResultSet result) throws SQLException {
+        ArrayList<Mod> mods = new ArrayList<Mod>();
+        while (result.next()) {
+            mods.add(parseModFromResult(result));
+        }
+        return mods;
     }
 
     private Mod resultToMod(ResultSet result) throws SQLException {

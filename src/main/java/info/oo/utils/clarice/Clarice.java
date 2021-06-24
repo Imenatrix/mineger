@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
 
 import info.oo.utils.clarice.interfaces.Preparer;
 import info.oo.utils.clarice.interfaces.Solver;
@@ -37,6 +38,12 @@ public class Clarice {
         catch (SQLException e) {
             System.out.println(e);
             return or;
+        }
+    }
+
+    public static void prepareIntegerIterator(PreparedStatement stmt, Iterator<Integer> iter) throws SQLException {
+        for (int counter = 1; iter.hasNext(); counter++) {
+            stmt.setInt(counter, iter.next());
         }
     }
 

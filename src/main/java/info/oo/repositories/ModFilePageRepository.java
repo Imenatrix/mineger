@@ -67,46 +67,10 @@ public class ModFilePageRepository implements IModFilePageRepository {
             minecraftVersion,
             search
         );
-        ArrayList<Mod> mods = fetchModsFromModFiles(modFiles);
-        ArrayList<ModLoader> modLoaders = fetchModLoadersFromMods(mods);
-        ArrayList<ModOrigin> modOrigins = fetchModOriginsFromMods(mods);
+        ArrayList<Mod> mods = modDAO.getAllByModFiles(modFiles);
+        ArrayList<ModLoader> modLoaders = modLoaderDAO.getAllByMods(mods);
+        ArrayList<ModOrigin> modOrigins = modOriginDAO.getAllByMods(mods);
         return modFilePageFactory.create(modFiles, mods, modLoaders, modOrigins);
-    }
-
-    private ArrayList<ModLoader> fetchModLoadersFromMods(ArrayList<Mod> mods) {
-        ArrayList<ModLoader> modLoaders = new ArrayList<ModLoader>();
-        for (Mod mod : mods) {
-            int modLoaderId = mod.getModLoader().getId();
-            if (!modLoaders.stream().map(item -> item.getId()).anyMatch(item -> item == modLoaderId)) {
-                ModLoader modLoader = modLoaderDAO.getById(modLoaderId);
-                modLoaders.add(modLoader);
-            }
-        }
-        return modLoaders;
-    }
-
-    private ArrayList<ModOrigin> fetchModOriginsFromMods(ArrayList<Mod> mods) {
-        ArrayList<ModOrigin> modOrigins = new ArrayList<ModOrigin>();
-        for (Mod mod : mods) {
-            int modOriginId = mod.getModOrigin().getId();
-            if (!modOrigins.stream().map(item -> item.getId()).anyMatch(item -> item == modOriginId)) {
-                ModOrigin modOrigin = modOriginDAO.getById(modOriginId);
-                modOrigins.add(modOrigin);
-            }
-        }
-        return modOrigins;
-    }
-
-    private ArrayList<Mod> fetchModsFromModFiles(ArrayList<ModFile> modFiles) {
-        ArrayList<Mod> mods = new ArrayList<Mod>();
-        for (ModFile modFile : modFiles) {
-            int modId = modFile.getMod().getId();
-            if (!mods.stream().map(item -> item.getId()).anyMatch(item -> item == modId)) {
-                Mod mod = modDAO.getById(modId);
-                mods.add(mod);
-            }
-        }
-        return mods;
     }
     
 }

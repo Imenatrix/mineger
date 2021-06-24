@@ -56,12 +56,12 @@ public class UserRespository implements IUserRepository {
 
         User user = userDAO.getById(id);
         ArrayList<ModModule> modModules = modModuleDAO.getAllByUserId(id);
-        ArrayList<ModLoader> modLoaders = fetchModLoadersFromModModules(modModules);
-        ArrayList<FileModule> fileModules = fetchFileModulesFromModModules(modModules);
-        ArrayList<ModFile> modFiles = fetchModFilesFromFileModules(fileModules);
-        ArrayList<Mod> mods = fetchModsFromModFiles(modFiles);
-        ArrayList<ModOrigin> modOrigins = fetchModOriginsFromMods(mods);
-        updateModLoadersFromMods(modLoaders, mods);
+        ArrayList<ModLoader> modLoaders = modLoaderDAO.getAllByModModules(modModules);
+        ArrayList<FileModule> fileModules = fileModuleDAO.getAllByModModules(modModules);
+        ArrayList<ModFile> modFiles = modFileDAO.getByFileModules(fileModules);
+        ArrayList<Mod> mods = modDAO.getAllByModFiles(modFiles);
+        ArrayList<ModOrigin> modOrigins = modOriginDAO.getAllByMods(mods);
+        modLoaders.addAll(modLoaderDAO.getAllByMods(mods));
 
         return userFactory.create(
             user,
@@ -76,99 +76,44 @@ public class UserRespository implements IUserRepository {
 
     public void save(User user) {
         User oldUser = getById(user.getId());
+
         ArrayList<ModModule> modModules = user.getModModules();
         ArrayList<ModModule> oldModModules = oldUser.getModModules();
-        UserModModulesUnitOfWork userModModulesUnitOfWork = new UserModModulesUnitOfWork(
+        ArrayList<ModModule> maintainedModModules = getMaintainedModModules(modModules, oldModModules);
+
+        createUserModModulesUnitOfWork(user, oldUser).commit();
+        for (ModModule modModule : maintainedModModules) {
+            creatModuleUnitOfWork(modModule, modModules, oldModModules).commit();
+        }
+    }
+
+    private ArrayList<ModModule> getMaintainedModModules(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+        ArrayList<ModModule> maintainedModModules = new ArrayList<ModModule>(modModules);
+        maintainedModModules.removeIf(item ->
+            !oldModModules.stream()
+                .map(item2 -> item2.getId())
+                .anyMatch(item2 -> item2 == item.getId())
+        );
+        return maintainedModModules;
+    }
+
+    private ModModuleUnitOfWork creatModuleUnitOfWork(ModModule modModule, ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
+        ModModule oldModModule = oldModModules.stream()
+            .filter(item -> item.getId() == modModule.getId())
+            .findFirst()
+            .get();
+        return new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
+    }
+
+    private UserModModulesUnitOfWork createUserModModulesUnitOfWork(User user, User oldUser) {
+        ArrayList<ModModule> modModules = user.getModModules();
+        ArrayList<ModModule> oldModModules = oldUser.getModModules();
+        return new UserModModulesUnitOfWork(
             user,
             modModules,
             oldModModules,
             modModuleDAO
         );
-        userModModulesUnitOfWork.commit();
-
-        ArrayList<ModModule> mantainedModModules = new ArrayList<ModModule>(modModules);
-        mantainedModModules.removeIf(item ->
-            !oldModModules.stream()
-                .map(item2 -> item2.getId())
-                .anyMatch(item2 -> item2 == item.getId())
-        );
-        for (ModModule modModule : mantainedModModules) {
-            ModModule oldModModule = oldModModules.stream()
-                .filter(item -> item.getId() == modModule.getId())
-                .findFirst()
-                .get();
-            ModModuleUnitOfWork modModuleUnitOfWork = new ModModuleUnitOfWork(modModule, oldModModule, modModuleDAO);
-            modModuleUnitOfWork.commit();
-        }
-    }
-
-    private void updateModLoadersFromMods(ArrayList<ModLoader> modLoaders, ArrayList<Mod> mods) {
-        for (Mod mod : mods) {
-            int modLoaderId = mod.getModLoader().getId();
-            if (!modLoaders.stream().map(item -> item.getId()).anyMatch(item -> item == modLoaderId)) {
-                ModLoader modLoader = modLoaderDAO.getById(modLoaderId);
-                modLoaders.add(modLoader);
-            }
-        }
-    }
-
-    private ArrayList<ModOrigin> fetchModOriginsFromMods(ArrayList<Mod> mods) {
-        ArrayList<ModOrigin> modOrigins = new ArrayList<ModOrigin>();
-        for (Mod mod : mods) {
-            int modOriginId = mod.getModOrigin().getId();
-            if (!modOrigins.stream().map(item -> item.getId()).anyMatch(item -> item == modOriginId)) {
-                ModOrigin modOrigin = modOriginDAO.getById(modOriginId);
-                modOrigins.add(modOrigin);
-            }
-        }
-        return modOrigins;
-    }
-
-    private ArrayList<Mod> fetchModsFromModFiles(ArrayList<ModFile> modFiles) {
-        ArrayList<Mod> mods = new ArrayList<Mod>();
-        for (ModFile modFile : modFiles) {
-            int modId = modFile.getMod().getId();
-            if (!mods.stream().map(item -> item.getId()).anyMatch(item -> item == modId)) {
-                Mod mod = modDAO.getById(modId);
-                mods.add(mod);
-            }
-        }
-        return mods;
-    }
-
-    private ArrayList<ModFile> fetchModFilesFromFileModules(ArrayList<FileModule> fileModules) {
-        ArrayList<ModFile> modFiles = new ArrayList<ModFile>();
-        for (FileModule fileModule : fileModules) {
-            int modFileId = fileModule.getModFileId();
-            if (!modFiles.stream().map(item -> item.getId()).anyMatch(item -> item == modFileId)) {
-                ModFile modFile = modFileDAO.getById(modFileId);
-                modFiles.add(modFile);
-            }
-        }
-        return modFiles;
-    }
-
-    private ArrayList<FileModule> fetchFileModulesFromModModules(ArrayList<ModModule> modModules) {
-        ArrayList<FileModule> fileModules = new ArrayList<FileModule>();
-        for (ModModule modModule : modModules) {
-            int modModuleId = modModule.getId();
-            if (!fileModules.stream().map(item -> item.getModModuleId()).anyMatch(item -> item == modModuleId)) {
-                fileModules.addAll(fileModuleDAO.getAllByModModuleId(modModuleId));
-            }
-        }
-        return fileModules;
-    }
-
-    private ArrayList<ModLoader> fetchModLoadersFromModModules(ArrayList<ModModule> modModules) {
-        ArrayList<ModLoader> modLoaders = new ArrayList<ModLoader>();
-        for (ModModule modModule : modModules) {
-            int modLoaderId = modModule.getModLoader().getId();
-            if (!modLoaders.stream().map(item -> item.getId()).anyMatch(item -> item == modLoaderId)) {
-                ModLoader modLoader = modLoaderDAO.getById(modLoaderId);
-                modLoaders.add(modLoader);
-            }
-        }
-        return modLoaders;
     }
 
 }
