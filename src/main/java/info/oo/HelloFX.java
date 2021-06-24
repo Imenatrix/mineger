@@ -72,27 +72,52 @@ public class HelloFX extends Application {
 
         Font.loadFont(getClass().getResourceAsStream("fonts/MaterialIcons-Regular.ttf"), 10);
         
-        Scene login = new Scene(new Login(userDAO, userRepository, user -> {
-            try {
-                Scene main = new Scene(loadMainPage(
-                    user,
-                    user.getModModules(),
-                    modLoaders,
-                    minecraftVersions,
-                    modOrigins,
-                    modFilePageRepository,
-                    userRepository,
-                    installer
-                ));
-                stage.setScene(main);
-                stage.centerOnScreen();
-            }
-            catch (IOException e) {
-                System.out.println(e);
-            }
-        }));
-        stage.setScene(login);
+        Login login = new Login(
+            userDAO,
+            userRepository,
+            user -> loadMainScene(
+                stage,
+                user,
+                modLoaders,
+                minecraftVersions,
+                modOrigins,
+                modFilePageRepository,
+                userRepository,
+                installer
+            )
+        );
+        Scene scene = new Scene(login);
+        stage.setScene(scene);
         stage.show();
+    }
+
+    private void loadMainScene(
+        Stage stage,
+        User user,
+        ArrayList<ModLoader> modLoaders,
+        ArrayList<String> minecraftVersions,
+        ArrayList<ModOrigin> modOrigins,
+        ModFilePageRepository modFilePageRepository,
+        UserRepository userRepository,
+        ModModuleInstaller installer
+    ) {
+        try {
+            Scene main = new Scene(loadMainPage(
+                user,
+                user.getModModules(),
+                modLoaders,
+                minecraftVersions,
+                modOrigins,
+                modFilePageRepository,
+                userRepository,
+                installer
+            ));
+            stage.setScene(main);
+            stage.centerOnScreen();
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     private Parent loadMainPage(
