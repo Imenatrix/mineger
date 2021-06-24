@@ -305,6 +305,7 @@ public class Main {
     }
 
     private void onFilterApply(ModLoader modLoader, ModOrigin modOrigin, String minecraftVersion, Boolean nonAdded) {
+        this.page = 0;
         this.nonAdded = nonAdded;
         this.modLoaderId = modLoader == null ? null : modLoader.getId();
         this.modOriginId = modOrigin == null ? null : modOrigin.getId();
