@@ -125,18 +125,15 @@ public class Filter extends GridPane {
         if (nonAdded != null) {
             chkNonAdded.setSelected(nonAdded);
         }
-        cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
-            @Override
-            protected void updateItem(ModLoader item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                }
-                else {
-                    setText(item.getName());
-                }
-            }
-        });
+        setCellFactories();
+    }
+
+    private void setCellFactories() {
+        setCbOriginCellFactories();
+        setCbModLoaderCellFactories();
+    }
+
+    private void setCbOriginCellFactories() {
         cbOrigin.setCellFactory(combo -> new ListCell<ModOrigin>() {
             @Override
             protected void updateItem(ModOrigin item, boolean empty) {
@@ -149,7 +146,22 @@ public class Filter extends GridPane {
                 }
             }
         });
-        cbModLoader.setButtonCell(new ListCell<ModLoader>() {
+        cbOrigin.setButtonCell(new ListCell<ModOrigin>() {
+            @Override
+            protected void updateItem(ModOrigin item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                }
+                else {
+                    setText(item.getName());
+                }
+            }
+        });
+    }
+
+    private void setCbModLoaderCellFactories() {
+        cbModLoader.setCellFactory(combo -> new ListCell<ModLoader>() {
             @Override
             protected void updateItem(ModLoader item, boolean empty) {
                 super.updateItem(item, empty);
@@ -161,9 +173,9 @@ public class Filter extends GridPane {
                 }
             }
         });
-        cbOrigin.setButtonCell(new ListCell<ModOrigin>() {
+        cbModLoader.setButtonCell(new ListCell<ModLoader>() {
             @Override
-            protected void updateItem(ModOrigin item, boolean empty) {
+            protected void updateItem(ModLoader item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
                     setText("");
