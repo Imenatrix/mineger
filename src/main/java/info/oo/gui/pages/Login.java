@@ -71,7 +71,7 @@ public class Login extends VBox {
         Stage stage = (Stage) getScene().getWindow();
         stage.setScene(
             new Scene(
-                new Register(userDAO, getScene())
+                new Register(userRepository, getScene())
             )
         );
         stage.centerOnScreen();

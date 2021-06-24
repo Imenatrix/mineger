@@ -2,7 +2,7 @@ package info.oo.gui.pages;
 
 import java.io.IOException;
 
-import info.oo.dao.interfaces.IUserDAO;
+import info.oo.repositories.interfaces.IUserRepository;
 import info.oo.entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -31,13 +31,13 @@ public class Register extends VBox {
     @FXML
     private Label lblError;
 
-    private IUserDAO userDAO;
+    private IUserRepository userRepository;
     private Scene previous;
 
-    public Register(IUserDAO userDAO, Scene previous) {
+    public Register(IUserRepository userRepository, Scene previous) {
         super();
         loadFXML();
-        this.userDAO = userDAO;
+        this.userRepository = userRepository;
         this.previous = previous;
         Platform.runLater(() -> requestFocus());
     }
@@ -61,7 +61,7 @@ public class Register extends VBox {
         String password = txtPassword.getText();
         String confirmPassword = txtConfirmPassword.getText();
         if (password.equals(confirmPassword)) {
-            User user = userDAO.insert(new User(name, login, password));
+            User user = userRepository.insert(new User(name, login, password));
             if (user == null) {
                 lblError.setText("Nome de usuário inválido");
             }
