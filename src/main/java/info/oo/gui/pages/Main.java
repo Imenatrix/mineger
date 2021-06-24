@@ -281,35 +281,7 @@ public class Main {
             modLoaders,
             modOrigins,
             minecraftVersions,
-            (modLoader, modOrigin, minecraftVersion, nonAdded) -> {
-                this.nonAdded = nonAdded;
-                modLoaderId = modLoader == null ? null : modLoader.getId();
-                modOriginId = modOrigin == null ? null : modOrigin.getId();
-                this.minecraftVersion = minecraftVersion;
-                if (nonAdded) {
-                    updateListModFiles(modModule);
-                }
-                else {
-                    Stream<ModFile> modFileStream = modModule.getModFiles().stream();
-                    if (modLoaderId != null) {
-                        modFileStream = modFileStream.filter(
-                            item -> item.getMod().getModLoader().getId() == modLoaderId
-                        );
-                    }
-                    if (modOriginId != null) {
-                        modFileStream = modFileStream.filter(
-                            item -> item.getMod().getModOrigin().getId() == modOriginId
-                        );
-                    }
-                    if (minecraftVersion != null) {
-                        modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
-                    }
-                    ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
-                    updateLblPaginator(modFiles.size());
-                    setListModFilesCellFactory();
-                    listModFiles.setItems(FXCollections.observableArrayList(modFiles));
-                }
-            },
+            (modLoader, modOrigin, minecraftVersion, nonAdded) -> onFilter(modLoader, modOrigin, minecraftVersion, nonAdded),
             modLoaderId,
             modOriginId,
             minecraftVersion,
@@ -320,6 +292,40 @@ public class Main {
         popup.setScene(scene);
         popup.show();
         count = 0;
+    }
+
+    private void onFilter(ModLoader modLoader, ModOrigin modOrigin, String minecraftVersion, Boolean nonAdded) {
+        this.nonAdded = nonAdded;
+        this.modLoaderId = modLoader == null ? null : modLoader.getId();
+        this.modOriginId = modOrigin == null ? null : modOrigin.getId();
+        this.minecraftVersion = minecraftVersion;
+        if (nonAdded) {
+            updateListModFiles(modModule);
+        }
+        else {
+            filterOnlyAdded(minecraftVersion);
+        }
+    }
+
+    private void filterOnlyAdded(String minecraftVersion) {
+        Stream<ModFile> modFileStream = modModule.getModFiles().stream();
+        if (modLoaderId != null) {
+            modFileStream = modFileStream.filter(
+                item -> item.getMod().getModLoader().getId() == modLoaderId
+            );
+        }
+        if (modOriginId != null) {
+            modFileStream = modFileStream.filter(
+                item -> item.getMod().getModOrigin().getId() == modOriginId
+            );
+        }
+        if (minecraftVersion != null) {
+            modFileStream = modFileStream.filter(item -> item.getMinecraftVersion().equals(minecraftVersion));
+        }
+        ArrayList<ModFile> modFiles = new ArrayList<ModFile>(modFileStream.collect(Collectors.toList()));
+        updateLblPaginator(modFiles.size());
+        setListModFilesCellFactory();
+        listModFiles.setItems(FXCollections.observableArrayList(modFiles));
     }
 
 }
