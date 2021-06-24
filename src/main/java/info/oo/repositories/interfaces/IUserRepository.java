@@ -6,4 +6,5 @@ public interface IUserRepository {
     
     public User getById(int id);
     public void save(User user);
+    public User insert(User user);
 }

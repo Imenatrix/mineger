@@ -87,6 +87,10 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    public User insert(User user) {
+        return userDAO.insert(user);
+    }
+
     private ArrayList<ModModule> getMaintainedModModules(ArrayList<ModModule> modModules, ArrayList<ModModule> oldModModules) {
         ArrayList<ModModule> maintainedModModules = new ArrayList<ModModule>(modModules);
         maintainedModModules.removeIf(item ->
