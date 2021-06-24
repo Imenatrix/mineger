@@ -105,6 +105,12 @@ public class Main {
     @FXML
     public void initialize() {
         listModModules.setItems(modModules);
+        addListModModulesListeners();
+        setCellFactories();
+        updateLblPaginator(totalPages);
+    }
+
+    private void addListModModulesListeners() {
         listModModules.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ModModule>() {
             @Override
             public void changed(ObservableValue<? extends ModModule> observable, ModModule oldValue, ModModule newValue) {
@@ -119,8 +125,6 @@ public class Main {
                 updateListModFiles();
             }
         });
-        setCellFactories();
-        updateLblPaginator(totalPages);
     }
 
     private void updateLblPaginator(int totalPages) {
